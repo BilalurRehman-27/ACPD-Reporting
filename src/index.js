@@ -4,7 +4,7 @@ import "./index.css";
 import history from './history';
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { Router } from "react-router-dom";
+import { Router } from "react-router";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import rootReducer from "./rootReducers";
