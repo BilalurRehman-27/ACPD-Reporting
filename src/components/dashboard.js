@@ -40,7 +40,7 @@ class Dashboard extends React.Component {
         <Layout>
           <Header style={{ background: "#fff", padding: 0 }}>
             <center>
-              <h1>Dashboard</h1>
+              <h1>Reporting Dashboard</h1>
             </center>
           </Header>
           <Content
