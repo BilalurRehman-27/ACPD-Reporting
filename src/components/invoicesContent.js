@@ -1,6 +1,6 @@
 import React from "react";
 import { Table } from "antd";
-import reqwest from "reqwest";
+//import reqwest from "reqwest";
 
 class InvoicesContent extends React.Component {
   state = {
@@ -32,32 +32,32 @@ class InvoicesContent extends React.Component {
   fetch = (params = {}) => {
     console.log("params:", params);
     this.setState({ loading: true });
-    reqwest({
-      url: "https://randomuser.me/api",
-      method: "get",
-      data: {
-        results: 10,
-        ...params
-      },
-      type: "json"
-    }).then(data => {
-      const pagination = { ...this.state.pagination };
-      // Read total count from server
-      // pagination.total = data.totalCount;
-      pagination.total = 200;
-      this.setState({
-        loading: false,
-        data: data.results,
-        pagination
-      });
-    });
+    // reqwest({
+    //   url: "https://randomuser.me/api",
+    //   method: "get",
+    //   data: {
+    //     results: 10,
+    //     ...params
+    //   },
+    //   type: "json"
+    // }).then(data => {
+    //   const pagination = { ...this.state.pagination };
+    //   // Read total count from server
+    //   // pagination.total = data.totalCount;
+    //   pagination.total = 200;
+    //   this.setState({
+    //     loading: false,
+    //     data: data.results,
+    //     pagination
+    //   });
+    // });
   };
 
   render() {
     const columns = [
       {
         title: "ID",
-        dataIndex: "",        
+        dataIndex: "",
         render: () => {
           return 1;
         },
@@ -65,16 +65,16 @@ class InvoicesContent extends React.Component {
       },
       {
         title: "Company",
-        dataIndex: "name",        
+        dataIndex: "name",
         render: name => {
           return 'Company Name';
         },
-        fixed: "left", 
-        width:80       
+        fixed: "left",
+        width: 80
       },
       {
         title: "First Name",
-        dataIndex: "name",        
+        dataIndex: "name",
         render: name => {
           return `${name.title} ${name.first}`;
         },
@@ -83,7 +83,7 @@ class InvoicesContent extends React.Component {
       },
       {
         title: "Last Name",
-        dataIndex: "name",        
+        dataIndex: "name",
         render: name => {
           return `${name.title} ${name.last}`;
         },

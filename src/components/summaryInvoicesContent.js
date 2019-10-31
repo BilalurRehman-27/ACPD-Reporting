@@ -1,6 +1,6 @@
 import React from "react";
 import { Table } from "antd";
-import reqwest from "reqwest";
+//import reqwest from "reqwest";
 
 class SummaryInvoicesContent extends React.Component {
   state = {
@@ -32,29 +32,29 @@ class SummaryInvoicesContent extends React.Component {
   fetch = (params = {}) => {
     console.log("params:", params);
     this.setState({ loading: true });
-    reqwest({
-      url: "https://randomuser.me/api",
-      method: "get",
-      data: {
-        results: 10,
-        ...params
-      },
-      type: "json"
-    }).then(data => {
-      const pagination = { ...this.state.pagination };
-      // Read total count from server
-      // pagination.total = data.totalCount;
-      pagination.total = 200;
-      this.setState({
-        loading: false,
-        data: data.results,
-        pagination
-      });
-    });
+    // reqwest({
+    //   url: "https://randomuser.me/api",
+    //   method: "get",
+    //   data: {
+    //     results: 10,
+    //     ...params
+    //   },
+    //   type: "json"
+    // }).then(data => {
+    //   const pagination = { ...this.state.pagination };
+    //   // Read total count from server
+    //   // pagination.total = data.totalCount;
+    //   pagination.total = 200;
+    //   this.setState({
+    //     loading: false,
+    //     data: data.results,
+    //     pagination
+    //   });
+    // });
   };
 
   render() {
-    const columns = [     
+    const columns = [
       {
         title: "Country",
         dataIndex: "gender",
@@ -94,10 +94,10 @@ class SummaryInvoicesContent extends React.Component {
         render: () => {
           return '-';
         }
-      },      
+      },
       {
         title: "",
-        dataIndex: "email",        
+        dataIndex: "email",
       }
     ];
     return (
