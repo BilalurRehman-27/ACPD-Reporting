@@ -31,7 +31,7 @@ class InvoicesContent extends React.Component {
 
   fetch = (params = {}) => {
     console.log("params:", params);
-    this.setState({ loading: true });
+    this.setState({ loading: false });
     // reqwest({
     //   url: "https://randomuser.me/api",
     //   method: "get",
