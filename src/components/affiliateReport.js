@@ -24,10 +24,10 @@ class AffiliateReport extends React.Component {
                 margin: "24px 16px",
                 padding: 15,
                 background: "#fff",
-                minHeight: 450,
+                minHeight: "100vh",
                 textAlign: "center"
               }}
-            >              
+            >
               <AffiliateReportContent />
             </Content>
             <FooterMenu />

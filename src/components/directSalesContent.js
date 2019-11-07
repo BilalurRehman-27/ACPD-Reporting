@@ -161,7 +161,7 @@ class DirectSalesContent extends React.Component {
           spinning={loading}
         >
           <MonthlySaleSearchCriteria ref={this.setSearchCriteria} />
-          <div style={{ marginLeft: '68%', marginBottom: '2%' }}>
+          <div style={{ marginLeft: '85%', marginBottom: '2%' }}>
             <Button
               type="primary"
               htmlType="submit"

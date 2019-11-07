@@ -1,17 +1,19 @@
 import React from "react";
-import { Table } from "antd";
-//import reqwest from "reqwest";
+import { connect } from 'react-redux';
+import { Table, Button, Spin, Icon, message } from "antd";
+import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
+import { getSummaryDirectSales } from '../actions/actions'
 
 class SummaryInvoicesContent extends React.Component {
-  state = {
-    data: [],
-    pagination: {},
-    loading: false,
-    searchText: ""
-  };
-
-  componentDidMount() {
-    this.fetch();
+  constructor(props) {
+    super(props);
+    this.state = {
+      list: [],
+      pagination: {},
+      loading: false,
+      searchText: "",
+    };
+    this.setSearchCriteria = React.createRef();
   }
 
   handleTableChange = (pagination, filters, sorter) => {
@@ -29,93 +31,175 @@ class SummaryInvoicesContent extends React.Component {
     });
   };
 
-  fetch = (params = {}) => {
-    console.log("params:", params);
-    this.setState({ loading: false });
-    // reqwest({
-    //   url: "https://randomuser.me/api",
-    //   method: "get",
-    //   data: {
-    //     results: 10,
-    //     ...params
-    //   },
-    //   type: "json"
-    // }).then(data => {
-    //   const pagination = { ...this.state.pagination };
-    //   // Read total count from server
-    //   // pagination.total = data.totalCount;
-    //   pagination.total = 200;
-    //   this.setState({
-    //     loading: false,
-    //     data: data.results,
-    //     pagination
-    //   });
-    // });
-  };
+  fetch = (params = {}) => { };
 
+  handleClick = async () => {
+    const searchResult = await this.setSearchCriteria.current.validateFields();
+    this.props.getSummaryDirectSales(searchResult);
+  }
+
+  handleExport = async () => {
+    // const searchResult = await this.setSearchCriteria.current.validateFields();
+    // this.props.getSummaryDirectSales(searchResult);
+    message.warn("Work in progress");
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.list !== this.props.list) {
+      console.log(this.props.list);
+      const { list } = this.props
+      const pagination = { ...this.state.pagination };
+      // Read total count from server
+      // pagination.total = data.totalCount;
+      pagination.total = list.length;
+      this.setState({
+        loading: false,
+        list: list,
+        pagination
+      });
+    }
+  }
   render() {
+    const { loading } = this.props;
+    const { list, pagination } = this.state;
     const columns = [
       {
         title: "Country",
-        dataIndex: "gender",
-        render: () => {
-          return "Pakistan";
+        dataIndex: "Country",
+      },
+      {
+        title: "AAT",
+        dataIndex: "AAT",
+        render: (value) => {
+          return value ? value : '-';
         }
-        // filters: [
-        //   { text: "Male", value: "male" },
-        //   { text: "Female", value: "female" }
-        // ],
       },
       {
         title: "ACCA",
-        dataIndex: "gender",
-        render: () => {
-          return "100.00";
+        dataIndex: "ACCA",
+        render: (value) => {
+          return value ? value : '-';
         }
       },
-
+      {
+        title: "AIA",
+        dataIndex: "AIA",
+        render: (value) => {
+          return value ? value : '-';
+        }
+      },
+      {
+        title: "CA ANZ",
+        dataIndex: "CA ANZ",
+        render: (value) => {
+          return value ? value : '-';
+        }
+      },
       {
         title: "CAI",
-        dataIndex: "gender",
-        render: () => {
-          return "17.0";
+        dataIndex: "CAI",
+        render: (value) => {
+          return value ? value : '-';
+        }
+      },
+      {
+        title: "CAIT",
+        dataIndex: "CAIT",
+        render: (value) => {
+          return value ? value : '-';
+        }
+      },
+      {
+        title: "ICSA",
+        dataIndex: "ICSA",
+        render: (value) => {
+          return value ? value : '-';
+        }
+      },
+      {
+        title: "IFA",
+        dataIndex: "IFA",
+        render: (value) => {
+          return value ? value : '-';
         }
       },
       {
         title: "No Code",
-        dataIndex: "gender",
-        render: () => {
-          return "50.0";
+        dataIndex: "No Code",
+        render: (value) => {
+          return value ? value : '-';
         }
       },
       {
         title: "Other",
-        dataIndex: "gender",
-        render: () => {
-          return '-';
+        dataIndex: "Other",
+        render: (value) => {
+          return value ? value : '-';
         }
       },
-      {
-        title: "",
-        dataIndex: "email",
-      }
     ];
     return (
       <>
         <h1> Summary Invoices</h1>
+        <div style={{ 'text-align': 'right' }}>
+          <Button
+            type="ghost"
+            htmlType="submit"
+            style={{ "background-color": "#4c4c4c33" }}
+            onClick={this.handleExport}
+            title='Export to Excel'>
+            <Icon type="file-excel" theme="filled" />
+            Excel
+          </Button>
+        </div>
+
         <hr />
-        <Table
-          scroll={{ x: 1290 }}
-          columns={columns}
-          rowKey={record => record.login.uuid}
-          dataSource={this.state.data}
-          pagination={this.state.pagination}
-          loading={this.state.loading}
-          onChange={this.handleTableChange}
-        />
+        <Spin
+          tip='Please wait !!! While we get the content...'
+          spinning={loading}
+        >
+          <MonthlySaleSearchCriteria
+            ref={this.setSearchCriteria}
+            isSummaryContent={true} />
+          <div style={{ marginLeft: '85%', marginBottom: '2%' }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              onClick={this.handleClick}>
+              Search
+          </Button>
+          </div>
+          {list.length > 0 &&
+            <Table
+              columns={columns}
+              rowKey={record => record.OrderId}
+              dataSource={list}
+              pagination={pagination}
+              loading={loading}
+              onChange={this.handleTableChange}
+            />}
+        </Spin>
       </>
     );
   }
 }
 
-export default SummaryInvoicesContent;
+const mapStateToProps = (state) => {
+  const { posReducer } = state;
+  if (posReducer !== null)
+    return {
+      list: posReducer.data,
+      loading: posReducer.loading,
+      error: posReducer.error,
+    };
+  return {
+    list: null,
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    getSummaryDirectSales: searchCriteria => dispatch(getSummaryDirectSales(searchCriteria))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SummaryInvoicesContent);

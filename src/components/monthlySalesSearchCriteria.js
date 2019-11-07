@@ -21,7 +21,7 @@ class SearchCriteria extends React.Component {
   };
 
   render() {
-    const { isSummaryDSContent } = this.props;
+    const { isSummaryContent } = this.props;
     const { getFieldDecorator } = this.props.form;
     return (
       <>
@@ -83,7 +83,7 @@ class SearchCriteria extends React.Component {
                 <Option value="2026">2026</Option>
                 <Option value="2027">2027</Option>
                 <Option value="2028">2028</Option>
-                <Option value="2029">2029></Option>
+                <Option value="2029">2029</Option>
                 <Option value="2030">2030</Option>
               </Select>,
             )}
@@ -101,7 +101,7 @@ class SearchCriteria extends React.Component {
               </Select>,
             )}
           </Form.Item>
-          {isSummaryDSContent && <Form.Item label="Category">
+          {isSummaryContent && <Form.Item label="Category">
             {getFieldDecorator('category', {
               rules: [{ required: true, message: 'Please select category!' }],
             })(

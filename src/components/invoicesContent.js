@@ -1,17 +1,19 @@
 import React from "react";
-import { Table } from "antd";
-//import reqwest from "reqwest";
+import { connect } from 'react-redux';
+import { Table, Button, Spin } from "antd";
+import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
+import { getInvoicesData } from '../actions/actions'
 
 class InvoicesContent extends React.Component {
-  state = {
-    data: [],
-    pagination: {},
-    loading: false,
-    searchText: ""
-  };
-
-  componentDidMount() {
-    this.fetch();
+  constructor(props) {
+    super(props);
+    this.state = {
+      list: [],
+      pagination: {},
+      loading: false,
+      searchText: "",
+    };
+    this.setSearchCriteria = React.createRef();
   }
 
   handleTableChange = (pagination, filters, sorter) => {
@@ -29,66 +31,71 @@ class InvoicesContent extends React.Component {
     });
   };
 
-  fetch = (params = {}) => {
-    console.log("params:", params);
-    this.setState({ loading: false });
-    // reqwest({
-    //   url: "https://randomuser.me/api",
-    //   method: "get",
-    //   data: {
-    //     results: 10,
-    //     ...params
-    //   },
-    //   type: "json"
-    // }).then(data => {
-    //   const pagination = { ...this.state.pagination };
-    //   // Read total count from server
-    //   // pagination.total = data.totalCount;
-    //   pagination.total = 200;
-    //   this.setState({
-    //     loading: false,
-    //     data: data.results,
-    //     pagination
-    //   });
-    // });
-  };
+  fetch = (params = {}) => { };
+
+  handleClick = async () => {
+    const searchResult = await this.setSearchCriteria.current.validateFields();
+    console.log(searchResult);
+    this.props.getInvoicesData(searchResult);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.list !== this.props.list) {
+      console.log(this.props.list);
+      const { list } = this.props
+      const pagination = { ...this.state.pagination };
+      // Read total count from server
+      // pagination.total = data.totalCount;
+      pagination.total = list.length;
+      this.setState({
+        loading: false,
+        list: list,
+        pagination
+      });
+    }
+  }
 
   render() {
+    const { loading } = this.props;
+    const { list, pagination } = this.state;
     const columns = [
       {
         title: "ID",
-        dataIndex: "",
-        render: () => {
-          return 1;
+        dataIndex: "Invoices",
+        sorter: true,
+        render: id => {
+          return id;
         },
         fixed: "left"
       },
       {
-        title: "Company",
-        dataIndex: "name",
+        title: "Company Name",
+        dataIndex: "CompanyName",
+        sorter: true,
         render: name => {
-          return 'Company Name';
+          return `${name}`;
         },
         fixed: "left",
-        width: 80
+        width: 100
       },
       {
         title: "First Name",
-        dataIndex: "name",
+        dataIndex: "FirstName",
+        sorter: true,
         render: name => {
-          return `${name.title} ${name.first}`;
+          return `${name}`;
         },
         fixed: "left",
-        width: 80
+        width: 100
       },
       {
         title: "Last Name",
-        dataIndex: "name",
-        render: name => {
-          return `${name.title} ${name.last}`;
+        dataIndex: "LastName",
+        sorter: true,
+        render: lastName => {
+          return `${lastName}`;
         },
-        fixed: "left",
-        width: 80
+        width: 100
       },
       {
         title: "Country",
@@ -103,98 +110,92 @@ class InvoicesContent extends React.Component {
       },
       {
         title: "Total Price",
-        dataIndex: "gender",
-        render: () => {
-          return "100.00";
-        }
+        dataIndex: "TotalPrice",
       },
 
       {
         title: "Total Tax",
-        dataIndex: "gender",
-        render: () => {
-          return "17.0";
-        }
+        dataIndex: "TotalTax",
       },
       {
-        title: "Revenue",
-        dataIndex: "gender",
-        render: () => {
-          return "50.0";
-        }
-      },
-      {
-        title: "Created Date",
-        dataIndex: "gender",
-        render: () => {
-          return new Date().toLocaleDateString();
+        title: "Revenue Date",
+        dataIndex: "CreatedDate",
+        render: date => {
+          return new Date(date).toLocaleDateString()
         }
       },
       {
         title: "Item Name",
-        dataIndex: "gender",
-        render: () => {
-          return "Alternative Test";
-        }
+        dataIndex: "OrderItemName",
+        width: 200
       },
       {
-        title: "Quantity",
-        dataIndex: "gender",
-        render: () => {
-          return "1";
-        }
+        title: "Units",
+        dataIndex: "Units",
       },
+
       {
         title: "Orders",
-        dataIndex: "gender",
-        render: () => {
-          return "1";
-        }
+        dataIndex: "Orders",
       },
       {
         title: "Promo Code",
-        dataIndex: "gender",
-        render: () => {
-          return "Acca101";
-        }
+        dataIndex: "PromotionalCode",
       },
       {
         title: "Ref By",
-        dataIndex: "gender",
-        render: () => {
-          return "Bilal";
-        }
-      },
-      {
-        title: "Gender",
-        dataIndex: "gender",
-        filters: [
-          { text: "Male", value: "male" },
-          { text: "Female", value: "female" }
-        ]
-      },
-      {
-        title: "Email",
-        dataIndex: "email",
+        dataIndex: "RefBy",
         fixed: "right"
-      }
+      },
     ];
     return (
       <>
         <h1> Invoices</h1>
         <hr />
-        <Table
-          scroll={{ x: 1300 }}
-          columns={columns}
-          rowKey={record => record.login.uuid}
-          dataSource={this.state.data}
-          pagination={this.state.pagination}
-          loading={this.state.loading}
-          onChange={this.handleTableChange}
-        />
+        <Spin
+          tip='Please wait !!! While we get the content...'
+          spinning={loading}
+        >
+          <MonthlySaleSearchCriteria ref={this.setSearchCriteria} />
+          <div style={{ marginLeft: '85%', marginBottom: '2%' }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              onClick={this.handleClick}>
+              Search
+          </Button>
+          </div>
+          {list.length > 0 && <Table
+            scroll={{ x: 1350 }}
+            columns={columns}
+            rowKey={record => record.RowNumber}
+            dataSource={list}
+            pagination={pagination}
+            loading={loading}
+            onChange={this.handleTableChange}
+          />}
+        </Spin>
       </>
     );
   }
 }
 
-export default InvoicesContent;
+const mapStateToProps = (state) => {
+  const { posReducer } = state;
+  if (posReducer !== null)
+    return {
+      list: posReducer.data,
+      loading: posReducer.loading,
+      error: posReducer.error,
+    };
+  return {
+    list: null,
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    getInvoicesData: searchCriteria => dispatch(getInvoicesData(searchCriteria))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(InvoicesContent);

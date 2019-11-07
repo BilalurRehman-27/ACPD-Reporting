@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { Table, Button, Spin } from "antd";
+import { Table, Button, Spin, Icon, message } from "antd";
 import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
 import { getSummaryDirectSales } from '../actions/actions'
 
@@ -53,6 +53,14 @@ class SummaryDirectSalesContent extends React.Component {
       });
     }
   }
+
+
+  handleExport = async () => {
+    // const searchResult = await this.setSearchCriteria.current.validateFields();
+    // this.props.getSummaryDirectSales(searchResult);
+    message.warn("Work in progress");
+  }
+
 
   render() {
     const { loading } = this.props;
@@ -136,6 +144,17 @@ class SummaryDirectSalesContent extends React.Component {
     return (
       <>
         <h1>Summary Direct Sales</h1>
+        <div style={{ 'text-align': 'right' }}>
+          <Button
+            type="ghost"
+            htmlType="submit"
+            style={{ "background-color": "#4c4c4c33" }}
+            onClick={this.handleExport}
+            title='Export to Excel'>
+            <Icon type="file-excel" theme="filled" />
+            Excel
+          </Button>
+        </div>
         <hr />
         <Spin
           tip='Please wait !!! While we get the content...'
@@ -143,8 +162,8 @@ class SummaryDirectSalesContent extends React.Component {
         >
           <MonthlySaleSearchCriteria
             ref={this.setSearchCriteria}
-            isSummaryDSContent={true} />
-          <div style={{ marginLeft: '68%', marginBottom: '2%' }}>
+            isSummaryContent={true} />
+          <div style={{ marginLeft: '85%', marginBottom: '2%' }}>
             <Button
               type="primary"
               htmlType="submit"
@@ -153,7 +172,6 @@ class SummaryDirectSalesContent extends React.Component {
           </Button>
           </div>
           {list.length > 0 && <Table
-            scroll={{ x: 1290 }}
             columns={columns}
             rowKey={record => record.OrderId}
             dataSource={list}

@@ -28,7 +28,7 @@ class Dashboard extends React.Component {
     const { selectedReport } = this.state;
     switch (selectedReport) {
       case "monthlyReport":
-        return <Redirect to="/monthlyReport" />;
+        return <Redirect to="/directSales" />;
       case "affiliateReport":
         return <Redirect to="/affiliateReport" />;
       case "invoiceData":
@@ -48,7 +48,7 @@ class Dashboard extends React.Component {
               margin: "24px 16px",
               padding: 15,
               background: "#fff",
-              minHeight: 450,
+              height: "calc(100vh - 15vh)",
               textAlign: "center"
             }}
           >

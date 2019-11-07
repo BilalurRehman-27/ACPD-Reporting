@@ -32,7 +32,7 @@ class SideMenu extends React.Component {
           selectedKeys={[navigationKey]}
           onClick={this.handleClick}
         >
-          <Menu.Item key="0">
+          <Menu.Item key="0" hidden={true}>
             <Icon type="dashboard" />
             <span className="nav-text"> Monthly Reports</span>
             <NavLink to="/monthlyReport" />

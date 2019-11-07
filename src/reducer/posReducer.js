@@ -6,6 +6,12 @@ import {
   GET_SUMMARY_DIRECT_SALES,
   GET_SUMMARY_DIRECT_SALES_SUCCESS,
   GET_SUMMARY_DIRECT_SALES_ERROR,
+  GET_INVOICE_SALES,
+  GET_INVOICE_SALES_SUCCESS,
+  GET_INVOICE_SALES_ERROR,
+  GET_SUMMARY_INVOICE_SALES,
+  GET_SUMMARY_INVOICE_SALES_SUCCESS,
+  GET_SUMMARY_INVOICE_SALES_ERROR,
 } from '../actions/actions'
 const posReducerDefaultState = {
   loading: false,
@@ -44,6 +50,40 @@ export default (state = posReducerDefaultState, action = {}) => {
         loading: false,
       };
     case GET_SUMMARY_DIRECT_SALES_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+    case GET_INVOICE_SALES:
+      return {
+        ...state,
+        loading: true,
+      }
+    case GET_INVOICE_SALES_SUCCESS:
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+    case GET_INVOICE_SALES_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+    case GET_SUMMARY_INVOICE_SALES:
+      return {
+        ...state,
+        loading: true,
+      };
+    case GET_SUMMARY_INVOICE_SALES_SUCCESS:
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+    case GET_SUMMARY_INVOICE_SALES_ERROR:
       return {
         ...state,
         error: action.error,
