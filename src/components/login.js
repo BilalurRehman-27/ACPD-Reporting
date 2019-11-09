@@ -37,7 +37,7 @@ class LoginForm extends React.Component {
         isValidLogin: false,
         isLoading: false,
         errorMessage: err.response.data.error_description,
-        error: err.response,
+        error: err.response && err.response.statusText,
         visible: true,
       })
     })
