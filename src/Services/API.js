@@ -1,8 +1,8 @@
 import axios from 'axios'
 import qs from 'qs'
 const LOGIN_URL = '//52.151.114.149/acpdreporting';
-const DIRECT_SALES_BASE_URL = 'http://52.151.114.149/acpdreporting/api/DirectSales';
-const INVOICES_BASE_URL = 'http://52.151.114.149/acpdreporting/api/invoice';
+const DIRECT_SALES_BASE_URL = '//52.151.114.149/acpdreporting/api/DirectSales';
+const INVOICES_BASE_URL = '//52.151.114.149/acpdreporting/api/invoice';
 
 const config = {
   headers: {
