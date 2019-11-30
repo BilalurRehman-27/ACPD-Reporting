@@ -1,25 +1,22 @@
 import React from "react";
 import { Layout } from "antd";
+import "../App.css";
 import HeaderMenu from "./header";
 import FooterMenu from "./footer";
-import SideMenu from "./sideMenu";
-import InvoicesContent from './invoicesContent'
-import { Redirect } from "react-router-dom";
+import AuthorRoyaltiesContent from "./authorRoyaltiesContent";
+
 const { Content } = Layout;
 
-class Invoices extends React.Component {
+class AuthorRoyalties extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   render() {
-    const isSessionValid = localStorage.getItem('Access_Token');
-    if (!isSessionValid) return <Redirect to="/" />;
     return (
-      <>
+      <div>
         <Layout>
-          <SideMenu navKey="3" />
           <Layout>
             <HeaderMenu />
             <Content
@@ -31,14 +28,14 @@ class Invoices extends React.Component {
                 textAlign: "center"
               }}
             >
-              <InvoicesContent />
+              <AuthorRoyaltiesContent />
             </Content>
             <FooterMenu />
           </Layout>
         </Layout>
-      </>
+      </div>
     );
   }
 }
 
-export default Invoices;
+export default AuthorRoyalties;

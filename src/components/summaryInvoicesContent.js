@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from 'react-redux';
 import { Table, Button, Spin, Icon, message } from "antd";
 import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
-import { getSummaryDirectSales } from '../actions/actions'
+import { getSummaryInvoiceSales } from '../actions/actions'
 
 class SummaryInvoicesContent extends React.Component {
   constructor(props) {
@@ -35,12 +35,12 @@ class SummaryInvoicesContent extends React.Component {
 
   handleClick = async () => {
     const searchResult = await this.setSearchCriteria.current.validateFields();
-    this.props.getSummaryDirectSales(searchResult);
+    this.props.getSummaryInvoiceSales(searchResult);
   }
 
   handleExport = async () => {
     // const searchResult = await this.setSearchCriteria.current.validateFields();
-    // this.props.getSummaryDirectSales(searchResult);
+    // this.props.getSummaryInvoiceSales(searchResult);
     message.warn("Work in progress");
   }
 
@@ -198,7 +198,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getSummaryDirectSales: searchCriteria => dispatch(getSummaryDirectSales(searchCriteria))
+    getSummaryInvoiceSales: searchCriteria => dispatch(getSummaryInvoiceSales(searchCriteria))
   };
 };
 

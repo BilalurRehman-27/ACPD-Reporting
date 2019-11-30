@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 const PageNotFound = () => {
   return (
-    <div>
+    <Fragment>
       <head>
         <meta charSet='utf-8' />
         <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
@@ -36,13 +36,13 @@ const PageNotFound = () => {
               Sorry but the page you are looking for does not exist, have been
               removed. name changed or is temporarily unavailable
             </p>
-            <NavLink exact to='/home'>
+            <NavLink exact to='/dashboard'>
               Go To Homepage
             </NavLink>
           </div>
         </div>
       </body>
-    </div>
+    </Fragment>
   );
 };
 

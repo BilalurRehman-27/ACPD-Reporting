@@ -4,7 +4,7 @@ import HeaderMenu from "./header";
 import FooterMenu from "./footer";
 import SideMenu from "./sideMenu";
 import DirectSalesContent from './directSalesContent'
-
+import { Redirect } from "react-router-dom";
 const { Content } = Layout;
 
 class DirectSales extends React.Component {
@@ -14,6 +14,8 @@ class DirectSales extends React.Component {
   }
 
   render() {
+    const isSessionValid = localStorage.getItem('Access_Token');
+    if (!isSessionValid) return <Redirect to="/" />;
     return (
       <>
         <Layout>

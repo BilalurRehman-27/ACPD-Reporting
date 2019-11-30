@@ -20,7 +20,7 @@ class HeaderDesign extends React.Component {
   };
 
   handleLogoutClick = () => {
-    localStorage.removeItem('uid');
+    localStorage.removeItem('Access_Token');
     this.setState({
       isLoggedOutSuccessful: true
     })

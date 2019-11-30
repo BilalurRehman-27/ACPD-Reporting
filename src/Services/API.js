@@ -1,8 +1,8 @@
 import axios from 'axios'
 import qs from 'qs'
-const LOGIN_URL = '//52.151.114.149/acpdreporting';
-const DIRECT_SALES_BASE_URL = '//52.151.114.149/acpdreporting/api/DirectSales';
-const INVOICES_BASE_URL = '//52.151.114.149/acpdreporting/api/invoice';
+const BASE_URL = 'http://52.151.114.149/acpdreporting';
+const DIRECT_SALES_BASE_URL = 'http://52.151.114.149/acpdreporting/api/DirectSales';
+const INVOICES_BASE_URL = 'http://52.151.114.149/acpdreporting/api/invoice';
 
 const config = {
   headers: {
@@ -17,7 +17,7 @@ const apiCall = {
       'username': name,
       'password': password
     }
-    return axios.post(LOGIN_URL + '/token', qs.stringify(requestLogin), config);
+    return axios.post(BASE_URL + '/token', qs.stringify(requestLogin), config);
   },
   GetMonthlyDirectSales(data) {
     return axios.get(DIRECT_SALES_BASE_URL + `/GetDirectSales?month=${data.month}&year=${data.year}&currency=${data.currency}`);
@@ -49,5 +49,36 @@ const apiCall = {
         return null;
     }
   },
+  GetAffiliatedSalesReport(data) {
+    if (data) {
+      return axios.get(BASE_URL + `/api/AffiliateSales/GetAffiliateData?name=${data.name}&year=${data.year}`);
+    }
+    else {
+      return axios.get(BASE_URL + `/api/AffiliateSales/GetAffiliateData`);
+    }
+  },
+  GetAuthorRoyaltySalesReport(data) {
+    if (data) {
+      return axios.get(BASE_URL + `/api/AuthorRoyalty/GetAuthorRoyalty?name=${data.name}&year=${data.year}`);
+    }
+    else {
+      return axios.get(BASE_URL + `/api/AuthorRoyalty/GetAuthorRoyalty`);
+    }
+  },
+  GetYearList() {
+    return axios.get(BASE_URL + `/api/lookup/GetYearList`)
+  },
+  GetProfList() {
+    return axios.get(BASE_URL + `/api/lookup/GetProfBodyList`)
+  },
+  GetAuthorList() {
+    return axios.get(BASE_URL + `/api/lookup/GetAuthorList`)
+  },
+  DownloadAffiliateReport() {
+    return axios.get(BASE_URL + `/api/AffiliateSales/DownloadReport`)
+  },
+  DownloadAuthorRoyaltyReport() {
+    return axios.get(BASE_URL + `/api/AuthorRoyalty/DownloadReport`)
+  }
 }
 export { apiCall };

@@ -25,6 +25,8 @@ class Dashboard extends React.Component {
     });
   }
   render() {
+    const isSessionValid = localStorage.getItem('Access_Token');
+    if (!isSessionValid) return <Redirect to="/" />;
     const { selectedReport } = this.state;
     switch (selectedReport) {
       case "monthlyReport":
@@ -33,6 +35,9 @@ class Dashboard extends React.Component {
         return <Redirect to="/affiliateReport" />;
       case "invoiceData":
         return <Redirect to="/invoiceData" />;
+      case "royalAuthority":
+        return <Redirect to="/authorRoyalties" />;
+
       default:
     }
     return (
@@ -78,7 +83,8 @@ class Dashboard extends React.Component {
                 Invoice Data
               </Button>
             </div>
-            <Button style={buttonsStyle} size="large" type="danger">
+            <Button style={buttonsStyle} size="large" type="danger"
+              onClick={() => this.handleClick("royalAuthority")}>
               Author Royalties
             </Button>
             <Button style={buttonsStyle} size="large" type="default">

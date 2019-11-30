@@ -9,7 +9,8 @@ import Invoices from "./components/invoices";
 import SummaryInvoices from "./components/summaryInvoices";
 import AffiliateReport from "./components/affiliateReport";
 import InvoiceData from "./components/invoiceData"
-
+import Page404 from "./components/pageNotFound";
+import AuthorRoyalties from './components/authorRoyalties'
 function App() {
   return (
     <div>
@@ -22,8 +23,9 @@ function App() {
         <Route path="/invoices" component={Invoices} />
         <Route path="/summaryInvoices" component={SummaryInvoices} />
         <Route path="/affiliateReport" component={AffiliateReport} />
+        <Route path="/authorRoyalties" component={AuthorRoyalties} />
         <Route path="/invoiceData" component={InvoiceData} />
-
+        <Route component={Page404} />
       </Switch>
     </div>
   );

@@ -4,7 +4,7 @@ import HeaderMenu from "./header";
 import FooterMenu from "./footer";
 import SideMenu from "./sideMenu";
 import SummaryInvoicesContent from './summaryInvoicesContent'
-
+import { Redirect } from "react-router-dom";
 const { Content } = Layout;
 
 class SummaryInvoices extends React.Component {
@@ -14,6 +14,8 @@ class SummaryInvoices extends React.Component {
   }
 
   render() {
+    const isSessionValid = localStorage.getItem('Access_Token');
+    if (!isSessionValid) return <Redirect to="/" />;
     return (
       <>
         <Layout>

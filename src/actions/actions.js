@@ -15,6 +15,35 @@ export const GET_SUMMARY_INVOICE_SALES = 'GET_INVOICE_SALES';
 export const GET_SUMMARY_INVOICE_SALES_SUCCESS = 'GET_SUMMARY_INVOICE_SALES_SUCCESS';
 export const GET_SUMMARY_INVOICE_SALES_ERROR = 'GET_SUMMARY_INVOICE_SALES_ERROR';
 
+
+export const GET_AFFILIATED_SALES = 'GET_AFFILIATED_SALES';
+export const GET_AFFILIATED_SALES_SUCCESS = 'GET_AFFILIATED_SALES_SUCCESS';
+export const GET_AFFILIATED_SALES_ERROR = 'GET_AFFILIATED_SALES_ERROR';
+
+export const GET_YEAR_LIST = 'GET_YEAR_LIST';
+export const GET_YEAR_LIST_SUCCESS = 'GET_YEAR_LIST_SUCCESS';
+export const GET_YEAR_LIST_ERROR = 'GET_YEAR_LIST_ERROR';
+
+export const GET_PROF_LIST = 'GET_PROF_LIST';
+export const GET_PROF_LIST_SUCCESS = 'GET_PROF_LIST_SUCCESS';
+export const GET_PROF_LIST_ERROR = 'GET_PROF_LIST_ERROR';
+
+export const GET_AFFILIATE_REPORT = 'GET_AFFILIATE_REPORT';
+export const GET_AFFILIATE_REPORT_SUCCESS = 'GET_AFFILIATE_REPORT_SUCCESS';
+export const GET_AFFILIATE_REPORT_ERROR = 'GET_AFFILIATE_REPORT_ERROR';
+
+export const GET_AUTHOR_ROYALTY_REPORT = 'GET_AUTHOR_ROYALTY_REPORT';
+export const GET_AUTHOR_ROYALTY_REPORT_SUCCESS = 'GET_AUTHOR_ROYALTY_REPORT_SUCCESS';
+export const GET_AUTHOR_ROYALTY_REPORT_ERROR = 'GET_AUTHOR_ROYALTY_REPORT_ERROR';
+
+export const GET_AUTHOR_LIST = 'GET_AUTHOR_LIST';
+export const GET_AUTHOR_LIST_SUCCESS = 'GET_AUTHOR_LIST_SUCCESS';
+export const GET_AUTHOR_LIST_ERROR = 'GET_AUTHOR_LIST_ERROR';
+
+export const GET_AUTHOR_ROYALTY_SALES = 'GET_AUTHOR_ROYALTY_SALES'
+export const GET_AUTHOR_ROYALTY_SALES_SUCCESS = 'GET_AUTHOR_ROYALTY_SALES_SUCCESS'
+export const GET_AUTHOR_ROYALTY_SALES_ERROR = 'GET_AUTHOR_ROYALTY_SALES_ERROR'
+
 // Monthly DirectSales
 export const _requestDirectSales = () => {
   return {
@@ -130,6 +159,208 @@ export const getSummaryInvoiceSales = (data) => {
       dispatch(_getSummaryInvoiceSalesSuccess(data.data))
     }).catch((error) => {
       dispatch(_getSummaryInvoiceSalesError(error))
+    })
+  }
+}
+
+//Affiliate Sales
+export const _requestAffiliatedSalesReports = () => {
+  return {
+    type: GET_AFFILIATED_SALES
+  };
+}
+export const _getAffiliatedSalesReportsSuccess = (data) => {
+  return {
+    type: GET_AFFILIATED_SALES_SUCCESS,
+    payload: data,
+  }
+}
+export const _getAffiliatedSalesReportsError = (error) => {
+  return {
+    type: GET_AFFILIATED_SALES_ERROR,
+    error,
+  }
+}
+export const getAffiliatedSalesReports = (data) => {
+  return dispatch => {
+    dispatch(_requestAffiliatedSalesReports());
+    apiCall.GetAffiliatedSalesReport(data).then(data => {
+      dispatch(_getAffiliatedSalesReportsSuccess(data.data))
+    }).catch((error) => {
+      dispatch(_getAffiliatedSalesReportsError(error))
+    })
+  }
+}
+
+//Year List
+export const _requestYearList = () => {
+  return {
+    type: GET_YEAR_LIST
+  };
+}
+export const _getYearListSuccess = (data) => {
+  return {
+    type: GET_YEAR_LIST_SUCCESS,
+    payload: data,
+  }
+}
+export const _getYearListError = (error) => {
+  return {
+    type: GET_YEAR_LIST_ERROR,
+    error,
+  }
+}
+export const getYearList = (data) => {
+  return dispatch => {
+    dispatch(_requestYearList());
+    apiCall.GetYearList(data).then(data => {
+      dispatch(_getYearListSuccess(data.data))
+    }).catch((error) => {
+      dispatch(_getYearListError(error))
+    })
+  }
+}
+
+//Prof List
+export const _requestProfList = () => {
+  return {
+    type: GET_PROF_LIST
+  };
+}
+export const _getProfListSuccess = (data) => {
+  return {
+    type: GET_PROF_LIST_SUCCESS,
+    payload: data,
+  }
+}
+export const _getProfListError = (error) => {
+  return {
+    type: GET_PROF_LIST_ERROR,
+    error,
+  }
+}
+export const getProfBodyList = (data) => {
+  return dispatch => {
+    dispatch(_requestProfList());
+    apiCall.GetProfList(data).then(data => {
+      dispatch(_getProfListSuccess(data.data))
+    }).catch((error) => {
+      dispatch(_getProfListError(error))
+    })
+  }
+}
+
+//Author List
+export const _requestAuthorList = () => {
+  return {
+    type: GET_AUTHOR_LIST
+  };
+}
+export const _getAuthorListSuccess = (data) => {
+  return {
+    type: GET_AUTHOR_LIST_SUCCESS,
+    payload: data,
+  }
+}
+export const _getAuthorListError = (error) => {
+  return {
+    type: GET_AUTHOR_LIST_ERROR,
+    error,
+  }
+}
+export const getAuthorList = (data) => {
+  return dispatch => {
+    dispatch(_requestAuthorList());
+    apiCall.GetAuthorList(data).then(data => {
+      dispatch(_getAuthorListSuccess(data.data))
+    }).catch((error) => {
+      dispatch(_getAuthorListError(error))
+    })
+  }
+}
+
+//Export Affiliate Report
+export const _requestDownloadAffiliateReport = () => {
+  return {
+    type: GET_AFFILIATE_REPORT
+  };
+}
+export const _getDownloadAffiliateReportSuccess = (data) => {
+  return {
+    type: GET_AFFILIATE_REPORT_SUCCESS,
+    payload: data,
+  }
+}
+export const _getDownloadAffiliateReportError = (error) => {
+  return {
+    type: GET_AFFILIATE_REPORT_ERROR,
+    error,
+  }
+}
+export const downloadAffiliateReport = () => {
+  return dispatch => {
+    dispatch(_requestDownloadAffiliateReport());
+    apiCall.DownloadAffiliateReport().then(data => {
+      dispatch(_getDownloadAffiliateReportSuccess(data.data))
+    }).catch((error) => {
+      dispatch(_getDownloadAffiliateReportError(error))
+    })
+  }
+}
+
+export const _requestAuthorRoyaltiesSale = () => {
+  return {
+    type: GET_AUTHOR_ROYALTY_SALES
+  };
+}
+export const _getAuthorRoyaltiesSaleSuccess = (data) => {
+  return {
+    type: GET_AUTHOR_ROYALTY_SALES_SUCCESS,
+    payload: data,
+  }
+}
+export const _getAuthorRoyaltiesSaleError = (error) => {
+  return {
+    type: GET_AUTHOR_ROYALTY_SALES_ERROR,
+    error,
+  }
+}
+export const getAuthorRoyaltiesSale = (data) => {
+  return dispatch => {
+    dispatch(_requestAuthorRoyaltiesSale());
+    apiCall.GetAuthorRoyaltySalesReport(data).then(data => {
+      dispatch(_getAuthorRoyaltiesSaleSuccess(data.data))
+    }).catch((error) => {
+      dispatch(_getAuthorRoyaltiesSaleError(error))
+    })
+  }
+}
+
+//Export Author Royalties Report
+export const _requestDownloadAuthorRoyaltyReport = () => {
+  return {
+    type: GET_AUTHOR_ROYALTY_REPORT
+  };
+}
+export const _getDownloadAuthorRoyaltyReportSuccess = (data) => {
+  return {
+    type: GET_AUTHOR_ROYALTY_REPORT_SUCCESS,
+    payload: data,
+  }
+}
+export const _getDownloadAuthorRoyaltyReportError = (error) => {
+  return {
+    type: GET_AUTHOR_ROYALTY_REPORT_ERROR,
+    error,
+  }
+}
+export const downloadAuthorRoyalties = () => {
+  return dispatch => {
+    dispatch(_requestDownloadAuthorRoyaltyReport());
+    apiCall.DownloadAuthorRoyaltyReport().then(data => {
+      dispatch(_getDownloadAuthorRoyaltyReportSuccess(data.data))
+    }).catch((error) => {
+      dispatch(_getDownloadAuthorRoyaltyReportError(error))
     })
   }
 }
