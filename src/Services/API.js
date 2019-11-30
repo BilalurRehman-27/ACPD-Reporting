@@ -58,8 +58,20 @@ const apiCall = {
     }
   },
   GetAuthorRoyaltySalesReport(data) {
+    debugger;
     if (data) {
-      return axios.get(BASE_URL + `/api/AuthorRoyalty/GetAuthorRoyalty?name=${data.name}&year=${data.year}`);
+      const { name, year } = data;
+      if (name && year)
+        return axios.get(BASE_URL + `/api/AuthorRoyalty/GetAuthorRoyalty?name=${data.name}&year=${data.year}`);
+      if (name) {
+        return axios.get(BASE_URL + `/api/AuthorRoyalty/GetAuthorRoyalty?name=${data.name}`);
+      }
+      if (year) {
+        return axios.get(BASE_URL + `/api/AuthorRoyalty/GetAuthorRoyalty?year=${data.year}`);
+      }
+      else {
+        return axios.get(BASE_URL + `/api/AuthorRoyalty/GetAuthorRoyalty`);
+      }
     }
     else {
       return axios.get(BASE_URL + `/api/AuthorRoyalty/GetAuthorRoyalty`);

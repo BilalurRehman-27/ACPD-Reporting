@@ -41,7 +41,6 @@ class AuthorRoyaltiesContent extends React.Component {
   }
   handleExport = async () => {
     const responseData = await this.props.downloadAuthorRoyalties();
-    ;
     message.success(responseData);
   }
   fetch = (params = {}) => {
@@ -55,7 +54,7 @@ class AuthorRoyaltiesContent extends React.Component {
     if (prevProps.list !== this.props.list) {
       const { list, yearList, authorList } = this.props
       const pagination = { ...this.state.pagination };
-      pagination.total = list.length;
+      pagination.total = list && list.length;
 
       this.setState({
         loading: false,
