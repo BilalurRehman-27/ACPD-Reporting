@@ -58,7 +58,7 @@ const apiCall = {
     }
   },
   GetAuthorRoyaltySalesReport(data) {
-    debugger;
+
     if (data) {
       const { name, year } = data;
       if (name && year)
