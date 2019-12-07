@@ -44,6 +44,10 @@ export const GET_AUTHOR_ROYALTY_SALES = 'GET_AUTHOR_ROYALTY_SALES'
 export const GET_AUTHOR_ROYALTY_SALES_SUCCESS = 'GET_AUTHOR_ROYALTY_SALES_SUCCESS'
 export const GET_AUTHOR_ROYALTY_SALES_ERROR = 'GET_AUTHOR_ROYALTY_SALES_ERROR'
 
+export const GET_CURRENCY_LIST = 'GET_CURRENCY_LIST';
+export const GET_CURRENCY_LIST_SUCCESS = 'GET_CURRENCY_LIST_SUCCESS';
+export const GET_CURRENCY_LIST_ERROR = 'GET_CURRENCY_LIST_ERROR';
+
 // Monthly DirectSales
 export const _requestDirectSales = () => {
   return {
@@ -361,6 +365,35 @@ export const downloadAuthorRoyalties = () => {
       dispatch(_getDownloadAuthorRoyaltyReportSuccess(data.data))
     }).catch((error) => {
       dispatch(_getDownloadAuthorRoyaltyReportError(error))
+    })
+  }
+}
+
+// Currency List
+export const _requestCurrencyList = () => {
+  return {
+    type: GET_CURRENCY_LIST
+  };
+}
+export const _getCurrencyListSuccess = (data) => {
+  return {
+    type: GET_CURRENCY_LIST_SUCCESS,
+    payload: data,
+  }
+}
+export const _getCurrencyListError = (error) => {
+  return {
+    type: GET_CURRENCY_LIST_ERROR,
+    error,
+  }
+}
+export const getCurrencyList = () => {
+  return dispatch => {
+    dispatch(_requestCurrencyList());
+    apiCall.GetCurrencyList().then(data => {
+      dispatch(_getCurrencyListSuccess(data.data))
+    }).catch((error) => {
+      dispatch(_getCurrencyListError(error))
     })
   }
 }

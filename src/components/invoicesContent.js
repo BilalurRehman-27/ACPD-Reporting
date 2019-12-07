@@ -1,7 +1,8 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { Button, Icon, Upload, message } from "antd";
-import { getInvoicesData } from '../actions/actions'
+import { Table, Button, Spin } from "antd";
+import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
+import { getInvoicesData, getYearList, getCurrencyList } from '../actions/actions'
 
 class InvoicesContent extends React.Component {
   constructor(props) {
@@ -15,36 +16,157 @@ class InvoicesContent extends React.Component {
     this.setSearchCriteria = React.createRef();
   }
 
+  handleTableChange = (pagination, filters, sorter) => {
+    const pager = { ...this.state.pagination };
+    pager.current = pagination.current;
+    this.setState({
+      pagination: pager
+    });
+    this.fetch({
+      results: pagination.pageSize,
+      page: pagination.current,
+      sortField: sorter.field,
+      sortOrder: sorter.order,
+      ...filters
+    });
+  };
+
+  componentDidMount() {
+    this.setState({ loading: true });
+    this.props.getYearList();
+    this.props.getCurrencyList();
+  }
+
+  fetch = (params = {}) => { };
+
+  handleClick = async () => {
+    const searchResult = await this.setSearchCriteria.current.validateFields();
+    this.props.getInvoicesData(searchResult);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.list !== this.props.list) {
+      console.log(this.props.list);
+      const { list } = this.props
+      const pagination = { ...this.state.pagination };
+      // Read total count from server
+      // pagination.total = data.totalCount;
+      pagination.total = list.length;
+      this.setState({
+        loading: false,
+        list: list,
+        pagination
+      });
+    }
+  }
+
   render() {
-    const props = {
-      name: 'file',
-      action: 'http://52.151.114.149/acpdreporting/api/invoice/UpdateInvoiceData',
-      headers: {
-        'Content-Type': 'multipart/form-data'
+    const { loading, currencyList, yearList } = this.props;
+    const { list, pagination } = this.state;
+    const columns = [
+      {
+        title: "Company Name",
+        dataIndex: "CompanyName",
+        sorter: true,
+        render: name => {
+          return `${name}`;
+        },
+        fixed: "left",
+        width: 100
       },
-      onChange(info) {
-        if (info.file.status !== 'uploading') {
-          console.log(info.file, info.fileList);
-        }
-        if (info.file.status === 'done') {
-          message.success(`${info.file.name} file uploaded successfully`);
-        } else if (info.file.status === 'error') {
-          message.error(`${info.file.name} file upload failed.`);
+      {
+        title: "First Name",
+        dataIndex: "FirstName",
+        sorter: true,
+        render: name => {
+          return `${name}`;
+        },
+        fixed: "left",
+        width: 100
+      },
+      {
+        title: "Last Name",
+        dataIndex: "LastName",
+        sorter: true,
+        render: lastName => {
+          return `${lastName}`;
+        },
+        width: 100
+      },
+      {
+        title: "Country",
+        dataIndex: "Country",
+      },
+      {
+        title: "Total Price",
+        dataIndex: "TotalPrice",
+      },
+
+      {
+        title: "Total Tax",
+        dataIndex: "TotalTax",
+      },
+      {
+        title: "Revenue Date",
+        dataIndex: "CreatedDate",
+        render: date => {
+          return new Date(date).toLocaleDateString()
         }
       },
-    };
+      {
+        title: "Item Name",
+        dataIndex: "OrderItemName",
+        width: 200
+      },
+      {
+        title: "Units",
+        dataIndex: "Units",
+      },
+
+      {
+        title: "Orders",
+        dataIndex: "Orders",
+      },
+      {
+        title: "Ref By",
+        dataIndex: "RefBy",
+      },
+      {
+        title: "Promo Code",
+        dataIndex: "PromotionalCode",
+        fixed: "right"
+      },
+    ];
     return (
       <>
         <h1> Invoices</h1>
         <hr />
-        <Upload {...props}
-          accept=".xlsx, .csv, .png"
-          showUploadList={true}
+        <Spin
+          tip='Please wait !!! While we get the content...'
+          spinning={loading}
         >
-          <Button>
-            <Icon type="upload" /> Click to Upload
-    </Button>
-        </Upload>
+          <MonthlySaleSearchCriteria ref={this.setSearchCriteria}
+            yearList={yearList}
+            currencyList={currencyList}
+          />
+          <div style={{ marginLeft: '85%', marginBottom: '2%' }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              onClick={this.handleClick}>
+              Search
+          </Button>
+          </div>
+          {list.length > 0 && <Table
+            scroll={{ x: 1350 }}
+            columns={columns}
+            rowKey={record => record.RowNumber}
+            dataSource={list}
+            pagination={pagination}
+            loading={loading}
+            onChange={this.handleTableChange}
+          />}
+        </Spin>
       </>
     );
   }
@@ -52,9 +174,11 @@ class InvoicesContent extends React.Component {
 
 const mapStateToProps = (state) => {
   const { posReducer } = state;
-  if (posReducer !== null)
+  if (posReducer !== null && posReducer.data !== null && posReducer.yearsList && posReducer.currencyList)
     return {
       list: posReducer.data,
+      yearList: posReducer.yearsList ? posReducer.yearsList : null,
+      currencyList: posReducer.currencyList ? posReducer.currencyList : null,
       loading: posReducer.loading,
       error: posReducer.error,
     };
@@ -64,7 +188,9 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getInvoicesData: searchCriteria => dispatch(getInvoicesData(searchCriteria))
+    getInvoicesData: searchCriteria => dispatch(getInvoicesData(searchCriteria)),
+    getYearList: () => dispatch(getYearList()),
+    getCurrencyList: () => dispatch(getCurrencyList()),
   };
 };
 

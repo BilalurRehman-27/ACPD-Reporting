@@ -1,8 +1,9 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { Table, Button, Spin } from "antd";
+import { Table, Button, Spin, Icon, message } from "antd";
+import { apiCall } from '../Services/API'
 import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
-import { getDirectSales } from '../actions/actions'
+import { getDirectSales, getYearList, getCurrencyList } from '../actions/actions'
 
 class DirectSalesContent extends React.Component {
   constructor(props) {
@@ -11,9 +12,16 @@ class DirectSalesContent extends React.Component {
       list: [],
       pagination: {},
       loading: false,
-      searchText: "",
+      currencyList: [],
+      yearList: [],
     };
     this.setSearchCriteria = React.createRef();
+  }
+
+  componentDidMount() {
+    this.setState({ loading: true });
+    this.props.getYearList();
+    this.props.getCurrencyList();
   }
 
   handleTableChange = (pagination, filters, sorter) => {
@@ -41,7 +49,6 @@ class DirectSalesContent extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.list !== this.props.list) {
-      console.log(this.props.list);
       const { list } = this.props
       const pagination = { ...this.state.pagination };
       // Read total count from server
@@ -55,19 +62,17 @@ class DirectSalesContent extends React.Component {
     }
   }
 
+  handleExport = async () => {
+    const searchResult = await this.setSearchCriteria.current.validateFields();
+    apiCall.DownloadDirectSalesMonthlyReport(searchResult);
+    message.success("Done");
+  }
+
+
   render() {
-    const { loading } = this.props;
+    const { loading, currencyList, yearList } = this.props;
     const { list, pagination } = this.state;
     const columns = [
-      {
-        title: "ID",
-        dataIndex: "OrderId",
-        sorter: true,
-        render: id => {
-          return id;
-        },
-        fixed: "left"
-      },
       {
         title: "First Name",
         dataIndex: "FirstName",
@@ -90,14 +95,10 @@ class DirectSalesContent extends React.Component {
       },
       {
         title: "Country",
-        dataIndex: "gender",
-        render: () => {
-          return "Pakistan";
+        dataIndex: "Country",
+        render: country => {
+          return `${country}`;
         }
-        // filters: [
-        //   { text: "Male", value: "male" },
-        //   { text: "Female", value: "female" }
-        // ],
       },
       {
         title: "Total Price",
@@ -124,10 +125,6 @@ class DirectSalesContent extends React.Component {
         dataIndex: "OrderItemName",
       },
       {
-        title: "Item Code",
-        dataIndex: "OrderItemCode",
-      },
-      {
         title: "Quantity",
         dataIndex: "Quantity",
 
@@ -137,30 +134,37 @@ class DirectSalesContent extends React.Component {
         dataIndex: "Orders",
       },
       {
+        title: "Ref By",
+        dataIndex: "RefBy",
+      },
+      {
         title: "Promo Code",
         dataIndex: "PromotionalCode",
-
-      },
-      {
-        title: "Status",
-        dataIndex: "Status",
-
-      },
-      {
-        title: "Currency",
-        dataIndex: "CurrencyCode",
-        fixed: "right"
+        fixed: 'right',
       },
     ];
     return (
       <>
         <h1> Direct Sales</h1>
+        <div style={{ 'textAlign': 'right' }}>
+          <Button
+            type="ghost"
+            htmlType="submit"
+            style={{ "backgroundColor": "#4c4c4c33" }}
+            onClick={this.handleExport}
+            title='Export to Excel'>
+            <Icon type="file-excel" theme="filled" />
+            Download Excel
+          </Button>
+        </div>
         <hr />
         <Spin
           tip='Please wait !!! While we get the content...'
           spinning={loading}
         >
-          <MonthlySaleSearchCriteria ref={this.setSearchCriteria} />
+          <MonthlySaleSearchCriteria ref={this.setSearchCriteria}
+            yearList={yearList}
+            currencyList={currencyList} />
           <div style={{ marginLeft: '85%', marginBottom: '2%' }}>
             <Button
               type="primary"
@@ -185,11 +189,14 @@ class DirectSalesContent extends React.Component {
 }
 const mapStateToProps = (state) => {
   const { posReducer } = state;
-  if (posReducer !== null)
+  if (posReducer !== null && posReducer.data !== null && posReducer.yearsList && posReducer.currencyList)
     return {
       list: posReducer.data,
+      yearList: posReducer.yearsList ? posReducer.yearsList : null,
+      currencyList: posReducer.currencyList ? posReducer.currencyList : null,
       loading: posReducer.loading,
       error: posReducer.error,
+
     };
   return {
     list: null,
@@ -197,7 +204,9 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getDirectSales: searchCriteria => dispatch(getDirectSales(searchCriteria))
+    getDirectSales: searchCriteria => dispatch(getDirectSales(searchCriteria)),
+    getYearList: () => dispatch(getYearList()),
+    getCurrencyList: () => dispatch(getCurrencyList()),
   };
 };
 

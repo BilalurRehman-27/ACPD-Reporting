@@ -41,7 +41,6 @@ class AffiliateReportContent extends React.Component {
   }
   handleExport = async () => {
     const responseData = await this.props.downloadAffiliateReport();
-    ;
     message.success(responseData);
   }
   fetch = (params = {}) => {
@@ -148,7 +147,7 @@ class AffiliateReportContent extends React.Component {
             onClick={this.handleExport}
             title='Export to Excel'>
             <Icon type="file-excel" theme="filled" />
-            Excel
+            Download Excel
           </Button>
         </div>
 

@@ -33,6 +33,9 @@ import {
   GET_AUTHOR_ROYALTY_REPORT,
   GET_AUTHOR_ROYALTY_REPORT_SUCCESS,
   GET_AUTHOR_ROYALTY_REPORT_ERROR,
+  GET_CURRENCY_LIST,
+  GET_CURRENCY_LIST_SUCCESS,
+  GET_CURRENCY_LIST_ERROR,
 } from '../actions/actions'
 const posReducerDefaultState = {
   loading: false,
@@ -224,6 +227,23 @@ export default (state = posReducerDefaultState, action = {}) => {
         loading: false,
       };
     case GET_AUTHOR_ROYALTY_SALES_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+    case GET_CURRENCY_LIST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case GET_CURRENCY_LIST_SUCCESS:
+      return {
+        ...state,
+        currencyList: action.payload,
+        loading: false,
+      };
+    case GET_CURRENCY_LIST_ERROR:
       return {
         ...state,
         error: action.error,

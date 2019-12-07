@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from 'react-redux';
 import { Table, Button, Spin, Icon, message } from "antd";
 import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
-import { getSummaryInvoiceSales } from '../actions/actions'
+import { getSummaryInvoiceSales, getYearList, getCurrencyList } from '../actions/actions'
 
 class SummaryInvoicesContent extends React.Component {
   constructor(props) {
@@ -30,6 +30,13 @@ class SummaryInvoicesContent extends React.Component {
       ...filters
     });
   };
+
+  componentDidMount() {
+    this.setState({ loading: true });
+    this.props.getYearList();
+    this.props.getCurrencyList();
+  }
+
 
   fetch = (params = {}) => { };
 
@@ -60,7 +67,7 @@ class SummaryInvoicesContent extends React.Component {
     }
   }
   render() {
-    const { loading } = this.props;
+    const { loading, currencyList, yearList } = this.props;
     const { list, pagination } = this.state;
     const columns = [
       {
@@ -141,15 +148,15 @@ class SummaryInvoicesContent extends React.Component {
     return (
       <>
         <h1> Summary Invoices</h1>
-        <div style={{ 'text-align': 'right' }}>
+        <div style={{ 'textAlign': 'right' }}>
           <Button
             type="ghost"
             htmlType="submit"
-            style={{ "background-color": "#4c4c4c33" }}
+            style={{ "backgroundColor": "#4c4c4c33" }}
             onClick={this.handleExport}
             title='Export to Excel'>
             <Icon type="file-excel" theme="filled" />
-            Excel
+            Download Excel
           </Button>
         </div>
 
@@ -160,6 +167,8 @@ class SummaryInvoicesContent extends React.Component {
         >
           <MonthlySaleSearchCriteria
             ref={this.setSearchCriteria}
+            yearList={yearList}
+            currencyList={currencyList}
             isSummaryContent={true} />
           <div style={{ marginLeft: '85%', marginBottom: '2%' }}>
             <Button
@@ -186,9 +195,11 @@ class SummaryInvoicesContent extends React.Component {
 
 const mapStateToProps = (state) => {
   const { posReducer } = state;
-  if (posReducer !== null)
+  if (posReducer !== null && posReducer.data !== null && posReducer.yearsList && posReducer.currencyList)
     return {
       list: posReducer.data,
+      yearList: posReducer.yearsList ? posReducer.yearsList : null,
+      currencyList: posReducer.currencyList ? posReducer.currencyList : null,
       loading: posReducer.loading,
       error: posReducer.error,
     };
@@ -198,7 +209,9 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getSummaryInvoiceSales: searchCriteria => dispatch(getSummaryInvoiceSales(searchCriteria))
+    getSummaryInvoiceSales: searchCriteria => dispatch(getSummaryInvoiceSales(searchCriteria)),
+    getYearList: () => dispatch(getYearList()),
+    getCurrencyList: () => dispatch(getCurrencyList()),
   };
 };
 

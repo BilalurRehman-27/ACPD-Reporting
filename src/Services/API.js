@@ -86,11 +86,18 @@ const apiCall = {
   GetAuthorList() {
     return axios.get(BASE_URL + `/api/lookup/GetAuthorList`)
   },
+  GetCurrencyList() {
+    return axios.get(BASE_URL + `/api/lookup/GetCurrencyList`)
+  },
   DownloadAffiliateReport() {
     return axios.get(BASE_URL + `/api/AffiliateSales/DownloadReport`)
   },
   DownloadAuthorRoyaltyReport() {
     return axios.get(BASE_URL + `/api/AuthorRoyalty/DownloadReport`)
+  },
+  DownloadDirectSalesMonthlyReport(data) {
+    const downloadURL = BASE_URL + `/api/Invoice/MonthlyReport?month=${data.month}&year=${data.year}&currency=${data.currency}`;
+    window.open(downloadURL, '_blank');
   }
 }
 export { apiCall };

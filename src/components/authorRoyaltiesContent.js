@@ -110,7 +110,7 @@ class AuthorRoyaltiesContent extends React.Component {
             onClick={this.handleExport}
             title='Export to Excel'>
             <Icon type="file-excel" theme="filled" />
-            Excel
+            Download Excel
           </Button>
         </div>
 

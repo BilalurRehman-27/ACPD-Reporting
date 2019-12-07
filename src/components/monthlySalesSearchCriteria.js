@@ -21,14 +21,14 @@ class SearchCriteria extends React.Component {
   };
 
   render() {
-    const { isSummaryContent } = this.props;
+    const { isSummaryContent, yearList, currencyList } = this.props;
     const { getFieldDecorator } = this.props.form;
     return (
       <>
         <Form layout="inline" style={{ margin: '2%' }} onSubmit={this.handleSubmit}>
           <Form.Item label="Month">
             {getFieldDecorator('month', {
-              rules: [{ required: true, message: 'Please select valid month!' }],
+              rules: [{ required: false, message: 'Please select valid month!' }],
             })(
               <Select style={{ width: 170 }}
                 placeholder="Select Month"
@@ -45,70 +45,42 @@ class SearchCriteria extends React.Component {
                 <Option value="10">October</Option>
                 <Option value="11">November</Option>
                 <Option value="12">December</Option>
-              </Select>,
+              </Select>
             )}
           </Form.Item>
-          <Form.Item label="Year">
+          {yearList && yearList.length && <Form.Item label="Year">
             {getFieldDecorator('year', {
-              rules: [{ required: true, message: 'Please select year!' }],
+              rules: [{ required: false, message: 'Please select year!' }],
             })(
-              <Select style={{ width: 170 }}
-                placeholder="Select Year"
-              >
-                <Option value="2001">2001</Option>
-                <Option value="2002">2002</Option>
-                <Option value="2003">2003</Option>
-                <Option value="2004">2004</Option>
-                <Option value="2005">2005</Option>
-                <Option value="2006">2006</Option>
-                <Option value="2007">2007</Option>
-                <Option value="2008">2008</Option>
-                <Option value="2009">2009</Option>
-                <Option value="2010">2010</Option>
-                <Option value="2011">2011</Option>
-                <Option value="2012">2012</Option>
-                <Option value="2013">2013</Option>
-                <Option value="2014">2014</Option>
-                <Option value="2015">2015</Option>
-                <Option value="2016">2016</Option>
-                <Option value="2017">2017</Option>
-                <Option value="2018">2018</Option>
-                <Option value="2019">2019</Option>
-              </Select>,
-            )}
-          </Form.Item>
-          <Form.Item label="Currency">
+              <Select style={{ width: 170 }} placeholder="Select Year">
+                {yearList.map((value, index) => <Option key={index} value={value}>{value}</Option>)}
+              </Select>)}
+          </Form.Item>}
+          {currencyList && currencyList.length && <Form.Item label="Currency">
             {getFieldDecorator('currency', {
-              rules: [{ required: true, message: 'Please select currency!' }],
+              rules: [{ required: false, message: 'Please select currency!' }],
             })(
               <Select style={{ width: 170 }}
                 placeholder="Select currency"
               >
-                <Option value="GBP">GBP</Option>
-                <Option value="dollar">Dollar</Option>
-                <Option value="pounds">Pounds</Option>
+                {currencyList.map((value, index) => <Option key={value.CurrencyId} value={value.CurrencyCode}>{value.CurrencyName}</Option>)}
               </Select>,
             )}
-          </Form.Item>
+          </Form.Item>}
           {isSummaryContent && <Form.Item label="Category">
             {getFieldDecorator('category', {
-              rules: [{ required: true, message: 'Please select category!' }],
+              initialValue: "1",
+              rules: [{ required: false, message: 'Please select category!' }],
             })(
               <Select style={{ width: 170 }}
                 placeholder="Select category"
               >
-                <Option value="1">Revenue</Option>
-                <Option value="2">Order</Option>
-                <Option value="3">Summary</Option>
+                <Option key="1" value="1">Revenue</Option>
+                <Option key="2" value="2">Order</Option>
+                <Option key="3" value="3">Summary</Option>
               </Select>,
             )}
           </Form.Item>}
-          {/*
-          <Form.Item wrapperCol={{ span: 12, offset: 5 }}>
-            <Button type="primary" htmlType="submit">
-              Search
-          </Button>
-          </Form.Item> */}
         </Form>
       </>
     )
