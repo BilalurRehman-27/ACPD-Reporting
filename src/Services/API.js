@@ -98,6 +98,15 @@ const apiCall = {
   DownloadDirectSalesMonthlyReport(data) {
     const downloadURL = BASE_URL + `/api/Invoice/MonthlyReport?month=${data.month}&year=${data.year}&currency=${data.currency}`;
     window.open(downloadURL, '_blank');
-  }
+  },
+  UpdateInvoiceData(data) {
+    data.Mode = '2';
+    return axios.post('http://52.151.114.149/acpdreporting/api/invoice/UpdateInvoiceData', data)
+  },
+  AddInvoiceData(data) {
+    data.Mode = '1'
+    delete data.isNewObject;
+    return axios.post('http://52.151.114.149/acpdreporting/api/invoice/UpdateInvoiceData', data)
+  },
 }
 export { apiCall };

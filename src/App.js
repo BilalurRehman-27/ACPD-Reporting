@@ -8,10 +8,15 @@ import SummaryDirectSales from "./components/summaryDS";
 import Invoices from "./components/invoices";
 import SummaryInvoices from "./components/summaryInvoices";
 import AffiliateReport from "./components/affiliateReport";
-import InvoiceData from "./components/invoiceData"
+import InvoiceData from "./components/invoiceData";
 import Page404 from "./components/pageNotFound";
-import AuthorRoyalties from './components/authorRoyalties'
-import UploadInvoiceData from './components/uploadInvoiceData'
+import AuthorRoyalties from './components/authorRoyalties';
+import UploadInvoiceData from './components/uploadInvoiceData';
+import UploadExcelInvoice from './components/uploadExcelInvoice';
+import UploadCSVInvoice from './components/uploadCSVInvoice';
+import Miscellaneous from './components/miscellaneous';
+import MiscellaneousPart2 from './components/miscellaneousPart2';
+
 function App() {
   return (
     <div>
@@ -27,6 +32,11 @@ function App() {
         <Route path="/authorRoyalties" component={AuthorRoyalties} />
         <Route path="/invoiceData" component={InvoiceData} />
         <Route path="/uploadInvoiceData" component={UploadInvoiceData} />
+        <Route path="/uploadExcelInvoice" component={UploadExcelInvoice} />
+        <Route path="/uploadCSVInvoice" component={UploadCSVInvoice} />
+        <Route path="/miscellaneous" component={Miscellaneous} />
+        <Route path="/miscellaneousPart2" component={MiscellaneousPart2} />
+        <Route path="/uploadCSVInvoice" component={UploadCSVInvoice} />
         <Route component={Page404} />
       </Switch>
     </div>
@@ -34,3 +44,4 @@ function App() {
 }
 
 export default App;
+

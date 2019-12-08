@@ -37,7 +37,8 @@ class Dashboard extends React.Component {
         return <Redirect to="/uploadInvoiceData" />;
       case "royalAuthority":
         return <Redirect to="/authorRoyalties" />;
-
+      case "misc":
+        return <Redirect to="/miscellaneous" />;
       default:
     }
     return (
@@ -87,7 +88,8 @@ class Dashboard extends React.Component {
               onClick={() => this.handleClick("royalAuthority")}>
               Author Royalties
             </Button>
-            <Button style={buttonsStyle} size="large" type="default">
+            <Button style={buttonsStyle} size="large" type="default"
+              onClick={() => this.handleClick("misc")}>
               Misc
             </Button>
           </Content>
