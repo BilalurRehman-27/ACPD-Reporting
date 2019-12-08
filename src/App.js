@@ -11,6 +11,7 @@ import AffiliateReport from "./components/affiliateReport";
 import InvoiceData from "./components/invoiceData"
 import Page404 from "./components/pageNotFound";
 import AuthorRoyalties from './components/authorRoyalties'
+import UploadInvoiceData from './components/uploadInvoiceData'
 function App() {
   return (
     <div>
@@ -25,6 +26,7 @@ function App() {
         <Route path="/affiliateReport" component={AffiliateReport} />
         <Route path="/authorRoyalties" component={AuthorRoyalties} />
         <Route path="/invoiceData" component={InvoiceData} />
+        <Route path="/uploadInvoiceData" component={UploadInvoiceData} />
         <Route component={Page404} />
       </Switch>
     </div>

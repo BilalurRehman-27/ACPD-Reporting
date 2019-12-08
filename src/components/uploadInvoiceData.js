@@ -1,7 +1,11 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { Button, Icon, Upload, message } from "antd";
+import { Button, Icon, Upload, message, Layout } from "antd";
 import { getInvoicesData } from '../actions/actions'
+import HeaderMenu from "./header";
+import FooterMenu from "./footer";
+
+const { Content } = Layout;
 
 class InvoicesContent extends React.Component {
   constructor(props) {
@@ -18,9 +22,11 @@ class InvoicesContent extends React.Component {
   render() {
     const props = {
       name: 'file',
+      type: 'POST',
       action: 'http://52.151.114.149/acpdreporting/api/invoice/UpdateInvoiceData',
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryoCoWNN0H9G5MODKB',
       },
       onChange(info) {
         if (info.file.status !== 'uploading') {
@@ -34,17 +40,32 @@ class InvoicesContent extends React.Component {
       },
     };
     return (
-      <>
-        <h1> Invoices</h1>
-        <hr />
-        <Upload {...props}
-          accept=".xlsx, .csv, .png"
-          showUploadList={true}
-        >
-          <Button>
-            <Icon type="upload" /> Click to Upload
+      <><Layout>
+        <Layout>
+          <HeaderMenu />
+          <Content
+            style={{
+              margin: "24px 16px",
+              padding: 15,
+              background: "#fff",
+              minHeight: "100vh",
+              textAlign: "center"
+            }}
+          >
+            <h1>Upload Invoice ( Excel & CSV Only)</h1>
+            <hr></hr>
+            <Upload {...props}
+              accept=".xlsx, .csv"
+              showUploadList={true}
+            >
+              <Button>
+                <Icon type="upload" /> Click to Upload
     </Button>
-        </Upload>
+            </Upload>
+          </Content>
+          <FooterMenu />
+        </Layout>
+      </Layout>
       </>
     );
   }

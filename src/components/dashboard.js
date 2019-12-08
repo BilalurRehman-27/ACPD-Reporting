@@ -34,7 +34,7 @@ class Dashboard extends React.Component {
       case "affiliateReport":
         return <Redirect to="/affiliateReport" />;
       case "invoiceData":
-        return <Redirect to="/invoiceData" />;
+        return <Redirect to="/uploadInvoiceData" />;
       case "royalAuthority":
         return <Redirect to="/authorRoyalties" />;
 
