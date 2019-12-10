@@ -1,12 +1,7 @@
 import React from "react";
-import { Table, Layout } from "antd";
-import HeaderMenu from "./header";
-import FooterMenu from "./footer";
-import MiscellaneousSideMenu from './miscellaneousSideMenu';
+import { Table } from "antd";
 
-const { Content } = Layout;
-
-class MiscellaneousPart2 extends React.Component {
+class PromotionCodesContent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,7 +19,7 @@ class MiscellaneousPart2 extends React.Component {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
-        render: text => <a>{text}</a>,
+        render: text => <span>{text}</span>,
       },
       {
         title: 'Age',
@@ -59,29 +54,12 @@ class MiscellaneousPart2 extends React.Component {
     ];
     return (
       <>
-        <Layout>
-          <MiscellaneousSideMenu navKey="2" />
-          <Layout>
-            <HeaderMenu />
-            <Content
-              style={{
-                margin: "24px 16px",
-                padding: 15,
-                background: "#fff",
-                minHeight: "100vh",
-                textAlign: "center"
-              }}
-            >
-              <h1>Miscellaneous Part2</h1>
-              <hr></hr>
-              <Table columns={columns} dataSource={data} />
-            </Content>
-            <FooterMenu />
-          </Layout>
-        </Layout>
+        <h1>Promotion Codes</h1>
+        <hr />
+        <Table columns={columns} dataSource={data} />
       </>
     );
   }
 }
 
-export default MiscellaneousPart2;
+export default PromotionCodesContent;

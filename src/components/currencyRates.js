@@ -6,7 +6,7 @@ import MiscellaneousSideMenu from './miscellaneousSideMenu';
 
 const { Content } = Layout;
 
-class Miscellaneous extends React.Component {
+class CurrencyRates extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,7 +24,7 @@ class Miscellaneous extends React.Component {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
-        render: text => <a>{text}</a>,
+        render: text => <span>{text}</span>,
       },
       {
         title: 'Age',
@@ -60,7 +60,7 @@ class Miscellaneous extends React.Component {
     return (
       <>
         <Layout>
-          <MiscellaneousSideMenu navKey="1" />
+          <MiscellaneousSideMenu navKey="2" />
           <Layout>
             <HeaderMenu />
             <Content
@@ -72,7 +72,7 @@ class Miscellaneous extends React.Component {
                 textAlign: "center"
               }}
             >
-              <h1>Miscellaneous Part 1</h1>
+              <h1>Currency Rates</h1>
               <hr></hr>
               <Table columns={columns} dataSource={data} />
             </Content>
@@ -84,4 +84,4 @@ class Miscellaneous extends React.Component {
   }
 }
 
-export default Miscellaneous;
+export default CurrencyRates;

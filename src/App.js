@@ -14,8 +14,8 @@ import AuthorRoyalties from './components/authorRoyalties';
 import UploadInvoiceData from './components/uploadInvoiceData';
 import UploadExcelInvoice from './components/uploadExcelInvoice';
 import UploadCSVInvoice from './components/uploadCSVInvoice';
-import Miscellaneous from './components/miscellaneous';
-import MiscellaneousPart2 from './components/miscellaneousPart2';
+import PromotionCodes from './components/promotionCodes';
+import CurrencyRates from './components/currencyRates';
 
 function App() {
   return (
@@ -34,8 +34,8 @@ function App() {
         <Route path="/uploadInvoiceData" component={UploadInvoiceData} />
         <Route path="/uploadExcelInvoice" component={UploadExcelInvoice} />
         <Route path="/uploadCSVInvoice" component={UploadCSVInvoice} />
-        <Route path="/miscellaneous" component={Miscellaneous} />
-        <Route path="/miscellaneousPart2" component={MiscellaneousPart2} />
+        <Route path="/promotionCodes" component={PromotionCodes} />
+        <Route path="/currencyRates" component={CurrencyRates} />
         <Route path="/uploadCSVInvoice" component={UploadCSVInvoice} />
         <Route component={Page404} />
       </Switch>

@@ -35,13 +35,13 @@ class SideMenu extends React.Component {
           >
             <Menu.Item key="1">
               <Icon type="alipay-circle" theme="filled" />
-              <span className="nav-text">Table 1</span>
-              <NavLink to="/miscellaneous" />
+              <span className="nav-text">Promotion Codes</span>
+              <NavLink to="/promotionCodes" />
             </Menu.Item>
             <Menu.Item key="2">
               <Icon type="file-excel" theme="filled" />
-              <span className="nav-text">Table 2 </span>
-              <NavLink to="/miscellaneousPart2" />
+              <span className="nav-text">Currency Rates </span>
+              <NavLink to="/currencyRates" />
             </Menu.Item>
           </Menu>
         </Sider>
