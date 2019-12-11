@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from 'react-redux';
 import { Table, Button, Spin, Input, InputNumber, Popconfirm, Form } from "antd";
-import { getPromotionCodesList } from '../actions/actions'
+import { getCurrencyRatesList } from '../actions/actions'
 import { apiCall } from '../Services/API';
 
 const EditableContext = React.createContext();
@@ -49,7 +49,7 @@ class EditableCell extends React.Component {
     return <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>;
   }
 }
-class PromotionCodesContent extends React.Component {
+class CurrencyRatesContent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -80,7 +80,7 @@ class PromotionCodesContent extends React.Component {
 
   componentDidMount() {
     this.setState({ loading: true });
-    this.props.getPromotionCodesList();
+    this.props.getCurrencyRatesList();
   }
 
   fetch = (params = {}) => { };
@@ -103,7 +103,7 @@ class PromotionCodesContent extends React.Component {
     }
   }
 
-  isEditing = record => record.Id === this.state.editingKey;
+  isEditing = record => record.CurrencyId === this.state.editingKey;
 
   cancel = () => {
     this.setState({ editingKey: '' });
@@ -115,7 +115,7 @@ class PromotionCodesContent extends React.Component {
         return;
       }
       const newData = [...this.state.list];
-      const index = newData.findIndex(item => key === item.Id);
+      const index = newData.findIndex(item => key === item.CurrencyId);
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
@@ -126,10 +126,10 @@ class PromotionCodesContent extends React.Component {
         debugger;
         //Record to be updated according to the index(row) selected.
         if (!newData[index].isNewObject)
-          apiCall.UpdatePromoCodes(newData[index])
+          apiCall.UpdateCurrencyRates(newData[index])
         else {
-          delete newData[index].Id;
-          apiCall.AddPromoCodes(newData[index])
+          // delete newData[index].CurrencyId;
+          apiCall.AddCurrencyRates(newData[index])
           newData[index].isNewObject = false
         }
       } else {
@@ -146,7 +146,7 @@ class PromotionCodesContent extends React.Component {
   resetObject = (obj) => {
     let newObject = {};
     Object.keys(obj).map(key => {
-      if (key === 'Id')
+      if (key === 'CurrencyId')
         return newObject[key] = (Math.random() % 100 + 1);
       else
         return newObject[key] = '';
@@ -158,6 +158,7 @@ class PromotionCodesContent extends React.Component {
   handleAdd = () => {
     const { mockData, list } = this.state;
     const formattedObject = this.resetObject(mockData);
+    debugger;
     list.unshift(formattedObject);
     this.setState({
       list: [...list],
@@ -184,39 +185,44 @@ class PromotionCodesContent extends React.Component {
               <EditableContext.Consumer>
                 {form => (
                   <Button type='ghost'
-                    onClick={() => this.save(form, record.Id)}
+                    onClick={() => this.save(form, record.CurrencyId)}
                     style={{ marginRight: 8 }}
                   >
                     Save
                   </Button>
                 )}
               </EditableContext.Consumer>
-              <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.Id)}>
+              <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.CurrencyId)}>
                 <Button type='ghost'>Cancel</Button>
               </Popconfirm>
             </span>
           ) : (
-              <Button type='ghost' disabled={editingKey !== ''} onClick={() => this.edit(record.Id)}>
+              <Button type='ghost' disabled={editingKey !== ''} onClick={() => this.edit(record.CurrencyId)}>
                 Edit
             </Button>
             );
         },
       },
       {
-        title: 'Code',
-        dataIndex: 'Promcode',
-        key: 'Promcode',
+        title: 'Month',
+        dataIndex: 'Month',
+        key: 'Month',
         render: text => <span>{text}</span>,
       },
       {
-        title: 'RefBy',
-        dataIndex: 'RefBy',
-        key: 'RefBy',
+        title: 'Year',
+        dataIndex: 'Year',
+        key: 'Year',
       },
       {
-        title: 'Active',
-        dataIndex: 'Active',
-        render: text => <span>{text ? 'true' : 'false'}</span>,
+        title: 'Rate',
+        dataIndex: 'Rate',
+        render: text => <span>{text}</span>,
+      },
+      {
+        title: 'Quarter',
+        dataIndex: 'Quarter',
+        render: text => <span>{text}</span>,
       },
     ];
 
@@ -228,10 +234,7 @@ class PromotionCodesContent extends React.Component {
         ...col,
         onCell: record => ({
           record,
-          inputType:
-            (col.dataIndex === 'Promcode' ||
-              col.dataIndex === 'RefBy' ||
-              col.dataIndex === 'Active') ? 'text' : 'bool',
+          inputType: 'text',
           dataIndex: col.dataIndex,
           title: col.title,
           editing: this.isEditing(record),
@@ -240,7 +243,7 @@ class PromotionCodesContent extends React.Component {
     });
     return (
       <>
-        <h1>Promotion Codes</h1>
+        <h1>Currency Rates</h1>
         <hr />
         <Spin
           tip='Please wait !!! While we get the content...'
@@ -257,7 +260,7 @@ class PromotionCodesContent extends React.Component {
                 <Table
                   components={components}
                   bordered
-                  rowKey={record => record.Id}
+                  rowKey={record => record.CurrencyId}
                   dataSource={list}
                   columns={editableColumns}
                   loading={loading}
@@ -275,13 +278,13 @@ class PromotionCodesContent extends React.Component {
     );
   }
 }
-const EditableFormTable = Form.create()(PromotionCodesContent);
+const EditableFormTable = Form.create()(CurrencyRatesContent);
 
 const mapStateToProps = (state) => {
   const { posReducer } = state;
-  if (posReducer !== null && posReducer.promoCodesList && posReducer.promoCodesList.length > 0)
+  if (posReducer !== null && posReducer.currencyRatesList && posReducer.currencyRatesList.length > 0)
     return {
-      list: posReducer.promoCodesList,
+      list: posReducer.currencyRatesList,
       loading: posReducer.loading,
       error: posReducer.error,
     };
@@ -292,7 +295,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getPromotionCodesList: () => dispatch(getPromotionCodesList()),
+    getCurrencyRatesList: () => dispatch(getCurrencyRatesList()),
   };
 };
 

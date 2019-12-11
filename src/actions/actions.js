@@ -48,6 +48,14 @@ export const GET_CURRENCY_LIST = 'GET_CURRENCY_LIST';
 export const GET_CURRENCY_LIST_SUCCESS = 'GET_CURRENCY_LIST_SUCCESS';
 export const GET_CURRENCY_LIST_ERROR = 'GET_CURRENCY_LIST_ERROR';
 
+export const GET_PROMOTION_CODES_LIST = 'GET_PROMOTION_CODES_LIST';
+export const GET_PROMOTION_CODES_LIST_SUCCESS = 'GET_PROMOTION_CODES_LIST_SUCCESS';
+export const GET_PROMOTION_CODES_LIST_ERROR = 'GET_PROMOTION_CODES_LIST_ERROR';
+
+export const GET_CURRENCY_RATES = 'GET_CURRENCY_RATES';
+export const GET_CURRENCY_RATES_SUCCESS = 'GET_CURRENCY_RATES_SUCCESS';
+export const GET_CURRENCY_RATES_ERROR = 'GET_CURRENCY_RATES_ERROR';
+
 // Monthly DirectSales
 export const _requestDirectSales = () => {
   return {
@@ -394,6 +402,65 @@ export const getCurrencyList = () => {
       dispatch(_getCurrencyListSuccess(data.data))
     }).catch((error) => {
       dispatch(_getCurrencyListError(error))
+    })
+  }
+}
+
+// PromotionCodes List
+export const _requestPromotionCodesList = () => {
+  return {
+    type: GET_PROMOTION_CODES_LIST
+  };
+}
+export const _getPromotionCodesListSuccess = (data) => {
+  return {
+    type: GET_PROMOTION_CODES_LIST_SUCCESS,
+    payload: data,
+  }
+}
+export const _getPromotionCodesListError = (error) => {
+  return {
+    type: GET_PROMOTION_CODES_LIST_ERROR,
+    error,
+  }
+}
+export const getPromotionCodesList = () => {
+  return dispatch => {
+    dispatch(_requestPromotionCodesList());
+    apiCall.GetPromotionCodesList().then(data => {
+      dispatch(_getPromotionCodesListSuccess(data.data))
+    }).catch((error) => {
+      dispatch(_getPromotionCodesListError(error))
+    })
+  }
+}
+
+
+// Currency List
+export const _requestCurrencyRatesList = () => {
+  return {
+    type: GET_CURRENCY_RATES
+  };
+}
+export const _getCurrencyRatesListSuccess = (data) => {
+  return {
+    type: GET_CURRENCY_RATES_SUCCESS,
+    payload: data,
+  }
+}
+export const _getCurrencyRatesListError = (error) => {
+  return {
+    type: GET_CURRENCY_RATES_ERROR,
+    error,
+  }
+}
+export const getCurrencyRatesList = () => {
+  return dispatch => {
+    dispatch(_requestCurrencyRatesList());
+    apiCall.GetCurrencyRatesList().then(data => {
+      dispatch(_getCurrencyRatesListSuccess(data.data))
+    }).catch((error) => {
+      dispatch(_getCurrencyRatesListError(error))
     })
   }
 }

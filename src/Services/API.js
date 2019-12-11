@@ -3,7 +3,6 @@ import qs from 'qs'
 const BASE_URL = 'http://52.151.114.149/acpdreporting';
 const DIRECT_SALES_BASE_URL = 'http://52.151.114.149/acpdreporting/api/DirectSales';
 const INVOICES_BASE_URL = 'http://52.151.114.149/acpdreporting/api/invoice';
-
 const config = {
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
@@ -101,12 +100,37 @@ const apiCall = {
   },
   UpdateInvoiceData(data) {
     data.Mode = '2';
-    return axios.post('http://52.151.114.149/acpdreporting/api/invoice/UpdateInvoiceData', data)
+    return axios.post(BASE_URL + '/api/invoice/UpdateInvoiceData', data)
   },
   AddInvoiceData(data) {
     data.Mode = '1'
     delete data.isNewObject;
-    return axios.post('http://52.151.114.149/acpdreporting/api/invoice/UpdateInvoiceData', data)
+    return axios.post(BASE_URL + '/api/invoice/UpdateInvoiceData', data)
+  },
+  GetPromotionCodesList() {
+    return axios.get(BASE_URL + '/api/lookup/GetPromotionalRefList')
+  },
+  GetCurrencyRatesList() {
+    return axios.get(BASE_URL + '/api/lookup/GetCurrencyConversionList')
+  },
+  UpdatePromoCodes(data) {
+    delete data.isNewObject;
+    return axios.post(BASE_URL + '/api/lookup/UpdatePromotionalRef', data)
+  },
+  AddPromoCodes(data) {
+    delete data.isNewObject;
+    return axios.post(BASE_URL + '/api/lookup/UpdatePromotionalRef', data)
+  },
+  UpdateCurrencyRates(data) {
+    delete data.isNewObject;
+    return axios.post(BASE_URL + '/api/lookup/UpdateCurrencyConversion', data)
+  },
+  AddCurrencyRates(data) {
+    delete data.isNewObject;
+    return axios.post(BASE_URL + '/api/lookup/UpdateCurrencyConversion', data)
+  },
+  DeleteCurrencyRates(data) {
+    return axios.post(BASE_URL + '/api/lookup/DeleteCurrencyConversion', data)
   },
 }
 export { apiCall };

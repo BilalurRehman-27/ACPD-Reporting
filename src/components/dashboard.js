@@ -67,7 +67,7 @@ class Dashboard extends React.Component {
       case "royalAuthority":
         return <Redirect to="/authorRoyalties" />;
       case "misc":
-        return <Redirect to="/miscellaneous" />;
+        return <Redirect to="/promotionCodes" />;
       default:
     }
     return (

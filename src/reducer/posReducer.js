@@ -36,6 +36,13 @@ import {
   GET_CURRENCY_LIST,
   GET_CURRENCY_LIST_SUCCESS,
   GET_CURRENCY_LIST_ERROR,
+  GET_PROMOTION_CODES_LIST,
+  GET_PROMOTION_CODES_LIST_SUCCESS,
+  GET_PROMOTION_CODES_LIST_ERROR,
+  GET_CURRENCY_RATES,
+  GET_CURRENCY_RATES_SUCCESS,
+  GET_CURRENCY_RATES_ERROR,
+
 } from '../actions/actions'
 const posReducerDefaultState = {
   loading: false,
@@ -244,6 +251,40 @@ export default (state = posReducerDefaultState, action = {}) => {
         loading: false,
       };
     case GET_CURRENCY_LIST_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+    case GET_PROMOTION_CODES_LIST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case GET_PROMOTION_CODES_LIST_SUCCESS:
+      return {
+        ...state,
+        promoCodesList: action.payload,
+        loading: false,
+      };
+    case GET_PROMOTION_CODES_LIST_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+    case GET_CURRENCY_RATES:
+      return {
+        ...state,
+        loading: true,
+      };
+    case GET_CURRENCY_RATES_SUCCESS:
+      return {
+        ...state,
+        currencyRatesList: action.payload,
+        loading: false,
+      };
+    case GET_CURRENCY_RATES_ERROR:
       return {
         ...state,
         error: action.error,

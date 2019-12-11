@@ -10,12 +10,7 @@ class PromotionCodes extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [],
-      pagination: {},
-      loading: false,
-      searchText: "",
     };
-    this.setSearchCriteria = React.createRef();
   }
 
   render() {
