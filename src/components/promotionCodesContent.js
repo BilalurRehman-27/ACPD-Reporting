@@ -123,7 +123,6 @@ class PromotionCodesContent extends React.Component {
           ...row,
         });
         this.setState({ list: newData, editingKey: '' });
-        debugger;
         //Record to be updated according to the index(row) selected.
         if (!newData[index].isNewObject)
           apiCall.UpdatePromoCodes(newData[index])

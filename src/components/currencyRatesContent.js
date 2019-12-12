@@ -123,7 +123,6 @@ class CurrencyRatesContent extends React.Component {
           ...row,
         });
         this.setState({ list: newData, editingKey: '' });
-        debugger;
         //Record to be updated according to the index(row) selected.
         if (!newData[index].isNewObject)
           apiCall.UpdateCurrencyRates(newData[index])
@@ -143,11 +142,16 @@ class CurrencyRatesContent extends React.Component {
     this.setState({ editingKey: key });
   }
 
+  async delete(obj) {
+    await apiCall.DeleteCurrencyRates(obj);
+    await this.props.getCurrencyRatesList();
+  }
+
   resetObject = (obj) => {
     let newObject = {};
     Object.keys(obj).map(key => {
       if (key === 'CurrencyId')
-        return newObject[key] = (Math.random() % 100 + 1);
+        return newObject[key] = (Math.random() % 100 + 1) * 1000;
       else
         return newObject[key] = '';
     })
@@ -157,11 +161,10 @@ class CurrencyRatesContent extends React.Component {
 
   handleAdd = () => {
     const { mockData, list } = this.state;
-    const formattedObject = this.resetObject(mockData);
-    debugger;
-    list.unshift(formattedObject);
+    const newObject = this.resetObject(mockData);
+    list.unshift(newObject);
     this.setState({
-      list: [...list],
+      list: list,
     });
   };
 
@@ -177,6 +180,7 @@ class CurrencyRatesContent extends React.Component {
       {
         title: 'operation',
         dataIndex: 'operation',
+        width: 200,
         render: (text, record) => {
           const { editingKey } = this.state;
           const editable = this.isEditing(record);
@@ -184,7 +188,7 @@ class CurrencyRatesContent extends React.Component {
             <span>
               <EditableContext.Consumer>
                 {form => (
-                  <Button type='ghost'
+                  <Button type='primary'
                     onClick={() => this.save(form, record.CurrencyId)}
                     style={{ marginRight: 8 }}
                   >
@@ -193,13 +197,18 @@ class CurrencyRatesContent extends React.Component {
                 )}
               </EditableContext.Consumer>
               <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.CurrencyId)}>
-                <Button type='ghost'>Cancel</Button>
+                <Button type='primary'>Cancel</Button>
               </Popconfirm>
             </span>
           ) : (
-              <Button type='ghost' disabled={editingKey !== ''} onClick={() => this.edit(record.CurrencyId)}>
-                Edit
-            </Button>
+              <>
+                <Button type='primary' disabled={editingKey !== ''} onClick={() => this.edit(record.CurrencyId)}>
+                  Edit
+            </Button>&nbsp;
+                <Button type='danger' disabled={editingKey !== ''} onClick={() => this.delete(record)}>
+                  Delete
+         </Button>
+              </>
             );
         },
       },
@@ -251,7 +260,7 @@ class CurrencyRatesContent extends React.Component {
         >
           {list.length > 0 &&
             <div style={{ paddingBottom: 50 }}>
-              <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16, float: 'left' }}>Add a row</Button>
+              <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16, float: 'left', backgroundColor: 'green' }}>Add a row</Button>
             </div>
           }
           {list.length > 0 &&

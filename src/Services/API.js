@@ -130,7 +130,13 @@ const apiCall = {
     return axios.post(BASE_URL + '/api/lookup/UpdateCurrencyConversion', data)
   },
   DeleteCurrencyRates(data) {
-    return axios.post(BASE_URL + '/api/lookup/DeleteCurrencyConversion', data)
+    const { CurrencyId, Month, Year } = data;
+    const filteredData = {
+      CurrencyId: CurrencyId,
+      Month: Month,
+      Year: Year
+    };
+    return axios.post(BASE_URL + '/api/lookup/DeleteCurrencyConversion', filteredData)
   },
 }
 export { apiCall };
