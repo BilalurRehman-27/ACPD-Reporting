@@ -1,7 +1,8 @@
 import React from "react";
 import { connect } from 'react-redux';
 import { Table, Button, Spin, Input, InputNumber, Popconfirm, Form } from "antd";
-import { getCurrencyRatesList } from '../actions/actions'
+import { getCurrencyRatesList, getYearList } from '../actions/actions'
+import CurrencyRatesModal from './currencyRatesModal'
 import { apiCall } from '../Services/API';
 
 const EditableContext = React.createContext();
@@ -59,8 +60,9 @@ class CurrencyRatesContent extends React.Component {
       searchText: "",
       editingKey: '',
       mockData: {},
+      isAddRecord: false,
+      visible: false,
     };
-    this.setSearchCriteria = React.createRef();
   }
 
   handleTableChange = (pagination, filters, sorter) => {
@@ -80,6 +82,7 @@ class CurrencyRatesContent extends React.Component {
 
   componentDidMount() {
     this.setState({ loading: true });
+    this.props.getYearList();
     this.props.getCurrencyRatesList();
   }
 
@@ -110,7 +113,7 @@ class CurrencyRatesContent extends React.Component {
   };
 
   save(form, key) {
-    form.validateFields((error, row) => {
+    form.validateFields(async (error, row) => {
       if (error) {
         return;
       }
@@ -125,12 +128,8 @@ class CurrencyRatesContent extends React.Component {
         this.setState({ list: newData, editingKey: '' });
         //Record to be updated according to the index(row) selected.
         if (!newData[index].isNewObject)
-          apiCall.UpdateCurrencyRates(newData[index])
-        else {
-          // delete newData[index].CurrencyId;
-          apiCall.AddCurrencyRates(newData[index])
-          newData[index].isNewObject = false
-        }
+          await apiCall.UpdateCurrencyRates(newData[index])
+        await this.props.getCurrencyRatesList();
       } else {
         newData.push(row);
         this.setState({ list: newData, editingKey: '' });
@@ -160,17 +159,22 @@ class CurrencyRatesContent extends React.Component {
   }
 
   handleAdd = () => {
-    const { mockData, list } = this.state;
-    const newObject = this.resetObject(mockData);
-    list.unshift(newObject);
     this.setState({
-      list: list,
+      isAddRecord: true,
+      visible: true,
     });
   };
 
+  setModalStatus = status => {
+    this.setState({
+      visible: status,
+    });
+    this.props.getCurrencyRatesList();
+  };
+
   render() {
-    const { loading } = this.props;
-    const { list } = this.state;
+    const { loading, yearList } = this.props;
+    const { list, isAddRecord, visible = '' } = this.state;
     const components = {
       body: {
         cell: EditableCell,
@@ -258,9 +262,17 @@ class CurrencyRatesContent extends React.Component {
           tip='Please wait !!! While we get the content...'
           spinning={loading}
         >
+          {isAddRecord && (
+            <CurrencyRatesModal
+              getModalStatus={this.setModalStatus}
+              visible={visible}
+              yearsList={yearList}
+            />
+          )}
           {list.length > 0 &&
             <div style={{ paddingBottom: 50 }}>
-              <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16, float: 'left', backgroundColor: 'green' }}>Add a row</Button>
+              <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16, float: 'left', backgroundColor: 'green' }}>
+                Add Record </Button>
             </div>
           }
           {list.length > 0 &&
@@ -291,8 +303,13 @@ const EditableFormTable = Form.create()(CurrencyRatesContent);
 
 const mapStateToProps = (state) => {
   const { posReducer } = state;
-  if (posReducer !== null && posReducer.currencyRatesList && posReducer.currencyRatesList.length > 0)
+  if (posReducer !== null
+    && posReducer.yearsList
+    && posReducer.yearsList.length > 0
+    && posReducer.currencyRatesList
+    && posReducer.currencyRatesList.length > 0)
     return {
+      yearList: posReducer.yearsList ? posReducer.yearsList : null,
       list: posReducer.currencyRatesList,
       loading: posReducer.loading,
       error: posReducer.error,
@@ -305,6 +322,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
   return {
     getCurrencyRatesList: () => dispatch(getCurrencyRatesList()),
+    getYearList: () => dispatch(getYearList()),
   };
 };
 

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Table, Button, Spin, Input, InputNumber, Popconfirm, Form } from "antd";
 import { getPromotionCodesList } from '../actions/actions'
 import { apiCall } from '../Services/API';
+import PromotionalRatesModal from './promotionalRatesModal'
 
 const EditableContext = React.createContext();
 class EditableCell extends React.Component {
@@ -59,6 +60,8 @@ class PromotionCodesContent extends React.Component {
       searchText: "",
       editingKey: '',
       mockData: {},
+      isAddRecord: false,
+      visible: false
     };
     this.setSearchCriteria = React.createRef();
   }
@@ -110,7 +113,7 @@ class PromotionCodesContent extends React.Component {
   };
 
   save(form, key) {
-    form.validateFields((error, row) => {
+    form.validateFields(async (error, row) => {
       if (error) {
         return;
       }
@@ -125,12 +128,8 @@ class PromotionCodesContent extends React.Component {
         this.setState({ list: newData, editingKey: '' });
         //Record to be updated according to the index(row) selected.
         if (!newData[index].isNewObject)
-          apiCall.UpdatePromoCodes(newData[index])
-        else {
-          delete newData[index].Id;
-          apiCall.AddPromoCodes(newData[index])
-          newData[index].isNewObject = false
-        }
+          await apiCall.UpdatePromoCodes(newData[index])
+        await this.props.getPromotionCodesList();
       } else {
         newData.push(row);
         this.setState({ list: newData, editingKey: '' });
@@ -155,17 +154,22 @@ class PromotionCodesContent extends React.Component {
   }
 
   handleAdd = () => {
-    const { mockData, list } = this.state;
-    const formattedObject = this.resetObject(mockData);
-    list.unshift(formattedObject);
     this.setState({
-      list: [...list],
+      isAddRecord: true,
+      visible: true,
     });
+  };
+
+  setModalStatus = status => {
+    this.setState({
+      visible: status,
+    });
+    this.props.getPromotionCodesList();
   };
 
   render() {
     const { loading } = this.props;
-    const { list } = this.state;
+    const { list, isAddRecord, visible } = this.state;
     const components = {
       body: {
         cell: EditableCell,
@@ -245,6 +249,12 @@ class PromotionCodesContent extends React.Component {
           tip='Please wait !!! While we get the content...'
           spinning={loading}
         >
+          {isAddRecord && (
+            <PromotionalRatesModal
+              getModalStatus={this.setModalStatus}
+              visible={visible}
+            />
+          )}
           {list.length > 0 &&
             <div style={{ paddingBottom: 50 }}>
               <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16, float: 'left' }}>Add a row</Button>

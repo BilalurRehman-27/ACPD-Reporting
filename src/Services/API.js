@@ -118,7 +118,6 @@ const apiCall = {
     return axios.post(BASE_URL + '/api/lookup/UpdatePromotionalRef', data)
   },
   AddPromoCodes(data) {
-    delete data.isNewObject;
     return axios.post(BASE_URL + '/api/lookup/UpdatePromotionalRef', data)
   },
   UpdateCurrencyRates(data) {
@@ -126,7 +125,6 @@ const apiCall = {
     return axios.post(BASE_URL + '/api/lookup/UpdateCurrencyConversion', data)
   },
   AddCurrencyRates(data) {
-    delete data.isNewObject;
     return axios.post(BASE_URL + '/api/lookup/UpdateCurrencyConversion', data)
   },
   DeleteCurrencyRates(data) {
