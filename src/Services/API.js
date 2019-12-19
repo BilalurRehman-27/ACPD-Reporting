@@ -104,7 +104,6 @@ const apiCall = {
   },
   AddInvoiceData(data) {
     data.Mode = '1'
-    delete data.isNewObject;
     return axios.post(BASE_URL + '/api/invoice/UpdateInvoiceData', data)
   },
   GetPromotionCodesList() {

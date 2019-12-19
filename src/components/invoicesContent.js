@@ -4,6 +4,7 @@ import { Table, Button, Spin, Input, InputNumber, Popconfirm, Form } from "antd"
 import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
 import { getInvoicesData, getYearList, getCurrencyList } from '../actions/actions'
 import { apiCall } from '../Services/API';
+import InvoicesModal from './invoicesModal'
 
 const EditableContext = React.createContext();
 
@@ -62,6 +63,8 @@ class InvoicesContent extends React.Component {
       searchText: "",
       editingKey: '',
       mockData: {},
+      isAddRecord: false,
+      visible: false
     };
     this.setSearchCriteria = React.createRef();
   }
@@ -96,7 +99,6 @@ class InvoicesContent extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.list !== this.props.list) {
-      console.log(this.props.list);
       const { list } = this.props
       const pagination = { ...this.state.pagination };
       // Read total count from server
@@ -162,18 +164,22 @@ class InvoicesContent extends React.Component {
   }
 
   handleAdd = () => {
-    const { mockData, list } = this.state;
-    const formattedObject = this.resetObject(mockData);
     this.setState({
-      list: [...list, formattedObject],
+      isAddRecord: true,
+      visible: true,
     });
   };
 
-
+  setModalStatus = status => {
+    this.setState({
+      visible: status,
+    });
+    //this.props.getInvoicesData({});
+  };
 
   render() {
     const { loading, currencyList, yearList } = this.props;
-    const { list } = this.state;
+    const { list, isAddRecord, visible } = this.state;
     const components = {
       body: {
         cell: EditableCell,
@@ -301,8 +307,9 @@ class InvoicesContent extends React.Component {
             col.dataIndex === 'Revenue' ||
             col.dataIndex === 'Orders' ||
             col.dataIndex === 'Invoices' ||
-            col.dataIndex === 'TotalPrice' ||
-            col.dataIndex === 'TotalPrice') ? 'number' : 'text',
+            col.dataIndex === 'Quantity' ||
+            col.dataIndex === 'Units') ? 'number'
+            : 'text',
           dataIndex: col.dataIndex,
           title: col.title,
           editing: this.isEditing(record),
@@ -318,6 +325,13 @@ class InvoicesContent extends React.Component {
           tip='Please wait !!! While we get the content...'
           spinning={loading}
         >
+          {isAddRecord && (
+            <InvoicesModal
+              getModalStatus={this.setModalStatus}
+              visible={visible}
+              yearsList={yearList}
+            />
+          )}
           <MonthlySaleSearchCriteria ref={this.setSearchCriteria}
             yearList={yearList}
             currencyList={currencyList}
