@@ -15,85 +15,119 @@ class PromotionalRatesModal extends React.Component {
     });
   };
 
-  handleOk = async () => {
-    this.setState({
-      ModalText: 'The modal will be closed after two seconds',
-      confirmLoading: true,
-    });
-    this.props.getModalStatus(false);
-  };
-
-  handleCancel = () => {
-    console.log('Clicked cancel button');
-    this.setState({
-      visible: false,
-    });
-    this.props.getModalStatus(false);
-  };
-
-  handleSubmit = e => {
+  handleOk = async (e) => {
     e.preventDefault();
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
-
         console.log('Received values of form: ', values);
-        await apiCall.AddPromoCodes(values);
-        this.props.getModalStatus(false);
+        const mappedObject = {
+          Id: values.Id ? values.Id : 0,
+          Promcode: values.editedPromcode ? values.editedPromcode : values.promcode,
+          RefBy: values.editedRefBy ? values.editedRefBy : values.refBy,
+          Active: values.hasOwnProperty('editedActive') ? values.editedActive : values.active,
+        }
+        await apiCall.UpdatePromoCodes(mappedObject)
+        this.props.getModalStatus(false, true);
       }
     });
   };
 
+  handleCancel = () => {
+    this.props.getModalStatus(false, false);
+  };
+
+
   render() {
     const { confirmLoading } = this.state;
-    const { visible } = this.props;
+    const { visible, data, isEdit } = this.props;
     const { getFieldDecorator } = this.props.form;
     return (
       <div>
         <Modal
           title="Add Record"
           visible={visible}
-          onOk={this.handleOk}
           confirmLoading={confirmLoading}
-          onCancel={this.handleCancel}
           footer={[
-            null,
+            <>
+              <Button type="primary" key="back" onClick={this.handleOk}>
+                Save
+                      </Button>
+              <Button type="danger" key="back" onClick={this.handleCancel}>
+                Cancel
+                  </Button>
+            </>
           ]}
         >
-          <Form layout="vertical" onSubmit={this.handleSubmit}>
-            <Form.Item label="Code">
-              {getFieldDecorator('promcode', {
-                rules: [{ required: true, message: 'Please input your Code!' }],
-              })(
-                <Input
-                  // prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  type="text"
-                  placeholder="Code"
-                />,
-              )}
-            </Form.Item>
-            <Form.Item label="RefBy">
-              {getFieldDecorator('refBy', {
-                rules: [{ required: true, message: 'Please input your RefBy!' }],
-              })(
-                <Input
-                  // prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  type="text"
-                  placeholder="RefBy"
-                />,
-              )}
-            </Form.Item>
-            <Form.Item>
-              {getFieldDecorator('active', {
-                initialValue: true,
-              })(
-                <Checkbox>Status</Checkbox>
-              )}
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" className="login-form-button">
-                Save
-          </Button>
-            </Form.Item>
+          <Form layout="vertical" >
+            {!isEdit ?
+              <>
+                <Form.Item label="Code">
+                  {getFieldDecorator('promcode', {
+                    rules: [{ required: true, message: 'Please input your Code!' }],
+                  })(
+                    <Input
+                      // prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                      type="text"
+                      placeholder="Code"
+                    />,
+                  )}
+                </Form.Item>
+                <Form.Item label="RefBy">
+                  {getFieldDecorator('refBy', {
+                    rules: [{ required: true, message: 'Please input your RefBy!' }],
+                  })(
+                    <Input
+                      // prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                      type="text"
+                      placeholder="RefBy"
+                    />,
+                  )}
+                </Form.Item>
+                <Form.Item>
+                  {getFieldDecorator('active', {
+                    initialValue: true,
+                  })(
+                    <Checkbox>Status</Checkbox>
+                  )}
+                </Form.Item>
+              </> :
+              <>
+                <Form.Item label="Id" style={{ display: 'none' }}>
+                  {getFieldDecorator('Id', {
+                    initialValue: data.record.Id,
+                  })}
+                </Form.Item>
+                <Form.Item label="Code">
+                  {getFieldDecorator('editedPromcode', {
+                    rules: [{ required: true, message: 'Please input your Code!' }],
+                    initialValue: data.record.Promcode,
+                  })(
+                    <Input
+                      type="text"
+                      placeholder="Code"
+                    />,
+                  )}
+                </Form.Item>
+                <Form.Item label="RefBy">
+                  {getFieldDecorator('editedRefBy', {
+                    rules: [{ required: true, message: 'Please input your RefBy!' }],
+                    initialValue: data.record.RefBy,
+                  })(
+                    <Input
+                      type="text"
+                      placeholder="RefBy"
+                    />,
+                  )}
+                </Form.Item>
+                <Form.Item>
+                  {getFieldDecorator('editedActive', {
+                    initialValue: data.record.Active,
+                    valuePropName: 'checked'
+                  })(
+                    <Checkbox defaultValue={data.record.Active}>Status</Checkbox>
+                  )}
+                </Form.Item>
+              </>}
           </Form>
         </Modal>
       </div>

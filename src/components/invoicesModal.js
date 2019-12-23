@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Form, Input, Button, Checkbox, DatePicker } from 'antd';
+import { Modal, Form, Input, Button, DatePicker } from 'antd';
 import { apiCall } from '../Services/API';
 
 class InvoicesModal extends React.Component {

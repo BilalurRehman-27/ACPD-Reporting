@@ -113,14 +113,12 @@ const apiCall = {
     return axios.get(BASE_URL + '/api/lookup/GetCurrencyConversionList')
   },
   UpdatePromoCodes(data) {
-    delete data.isNewObject;
     return axios.post(BASE_URL + '/api/lookup/UpdatePromotionalRef', data)
   },
   AddPromoCodes(data) {
     return axios.post(BASE_URL + '/api/lookup/UpdatePromotionalRef', data)
   },
   UpdateCurrencyRates(data) {
-    delete data.isNewObject;
     return axios.post(BASE_URL + '/api/lookup/UpdateCurrencyConversion', data)
   },
   AddCurrencyRates(data) {
