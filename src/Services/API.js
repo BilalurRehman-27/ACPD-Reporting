@@ -89,9 +89,13 @@ const apiCall = {
     return axios.get(BASE_URL + `/api/lookup/GetCurrencyList`)
   },
   DownloadAffiliateReport() {
+    const downloadURL = BASE_URL + `/api/AffiliateSales/DownloadReport`;
+    window.open(downloadURL, '_blank');
     return axios.get(BASE_URL + `/api/AffiliateSales/DownloadReport`)
   },
   DownloadAuthorRoyaltyReport() {
+    const downloadURL = BASE_URL + `/api/AuthorRoyalty/DownloadReport`;
+    window.open(downloadURL, '_blank');
     return axios.get(BASE_URL + `/api/AuthorRoyalty/DownloadReport`)
   },
   DownloadDirectSalesMonthlyReport(data) {

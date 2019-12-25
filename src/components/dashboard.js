@@ -74,10 +74,7 @@ class Dashboard extends React.Component {
       <div>
         <Layout>
           <Header style={{ background: "#fff", padding: 0 }}>
-            <center>
-              <Logo />
-              <h1><b>Reporting Dashboard</b></h1>
-            </center>
+            <Logo />
           </Header>
           <Content
 
@@ -90,6 +87,9 @@ class Dashboard extends React.Component {
             }}
           >
             <div>
+              <center>
+                <h1><b>Reporting Dashboard</b></h1>
+              </center>
               <Button
                 style={buttonsStyle}
                 size="large"

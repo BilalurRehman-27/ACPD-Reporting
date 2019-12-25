@@ -95,7 +95,6 @@ class CurrencyRatesContent extends React.Component {
     const { loading, yearList } = this.props;
     const { list, shouldPopupOpen, visible = false, editedObject, isEdit } = this.state;
     const columns = [
-
       {
         title: 'Action',
         render: (record) =>

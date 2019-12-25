@@ -5,54 +5,6 @@ import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
 import { getInvoicesData, getYearList, getCurrencyList } from '../actions/actions'
 import { apiCall } from '../Services/API';
 import InvoicesModal from './invoicesModal'
-
-const EditableContext = React.createContext();
-
-class EditableCell extends React.Component {
-  getInput = () => {
-    if (this.props.inputType === 'number') {
-      return <InputNumber />;
-    }
-    return <Input />;
-  };
-
-  renderCell = ({ getFieldDecorator }) => {
-    const {
-      editing,
-      dataIndex,
-      title,
-      inputType,
-      record,
-      index,
-      children,
-      ...restProps
-    } = this.props;
-    return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item style={{ margin: 0 }}>
-            {getFieldDecorator(dataIndex, {
-              rules: [
-                {
-                  required: true,
-                  message: `Please Input ${title}!`,
-                },
-              ],
-              initialValue: record[dataIndex],
-            })(this.getInput())}
-          </Form.Item>
-        ) : (
-            children
-          )}
-      </td>
-    );
-  };
-
-  render() {
-    return <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>;
-  }
-}
-
 class InvoicesContent extends React.Component {
   constructor(props) {
     super(props);
@@ -60,11 +12,10 @@ class InvoicesContent extends React.Component {
       list: [],
       pagination: {},
       loading: false,
-      searchText: "",
-      editingKey: '',
-      mockData: {},
-      isAddRecord: false,
-      visible: false
+      editedObject: {},
+      shouldPopupOpen: false,
+      isEdit: false,
+      visible: false,
     };
     this.setSearchCriteria = React.createRef();
   }
@@ -113,11 +64,7 @@ class InvoicesContent extends React.Component {
       });
     }
   }
-  isEditing = record => record.RowNumber === this.state.editingKey;
 
-  cancel = () => {
-    this.setState({ editingKey: '' });
-  };
 
   save(form, key) {
     form.validateFields((error, row) => {
@@ -148,73 +95,45 @@ class InvoicesContent extends React.Component {
   }
 
   edit(key) {
-    this.setState({ editingKey: key });
+    this.setState({
+      editedObject: key,
+      isEdit: true,
+      visible: true,
+      shouldPopupOpen: true
+    });
   }
 
-  resetObject = (obj) => {
-    let newObject = {};
-    Object.keys(obj).map(key => {
-      if (key === 'RowNumber')
-        return newObject[key] = 0;
-      else
-        return newObject[key] = '';
-    })
-    newObject.isNewObject = true;
-    return newObject;
-  }
 
   handleAdd = () => {
     this.setState({
-      isAddRecord: true,
+      shouldPopupOpen: true,
       visible: true,
+      isEdit: false
     });
   };
 
-  setModalStatus = status => {
+  setModalStatus = (status, shouldRefresh) => {
+    if (shouldRefresh) {
+      this.props.getCurrencyRatesList();
+    }
     this.setState({
       visible: status,
     });
-    //this.props.getInvoicesData({});
   };
 
   render() {
     const { loading, currencyList, yearList } = this.props;
-    const { list, isAddRecord, visible } = this.state;
-    const components = {
-      body: {
-        cell: EditableCell,
-      },
-    };
+    const { list, shouldPopupOpen, visible = false, editedObject, isEdit } = this.state;
 
     const columns = [
       {
-        title: 'operation',
-        dataIndex: 'operation',
-        render: (text, record) => {
-          const { editingKey } = this.state;
-          const editable = this.isEditing(record);
-          return editable ? (
-            <span>
-              <EditableContext.Consumer>
-                {form => (
-                  <Button type='ghost'
-                    onClick={() => this.save(form, record.RowNumber)}
-                    style={{ marginRight: 8 }}
-                  >
-                    Save
-                  </Button>
-                )}
-              </EditableContext.Consumer>
-              <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.RowNumber)}>
-                <Button type='ghost'>Cancel</Button>
-              </Popconfirm>
-            </span>
-          ) : (
-              <Button type='ghost' disabled={editingKey !== ''} onClick={() => this.edit(record.RowNumber)}>
-                Edit
+        title: 'Action',
+        render: (record) =>
+          <>
+            <Button type='primary' onClick={() => this.edit({ record })}>
+              Edit
             </Button>
-            );
-        },
+          </>
       },
       {
         title: "Company Name",
@@ -294,29 +213,6 @@ class InvoicesContent extends React.Component {
       },
     ];
 
-    const editableColumns = columns.map(col => {
-      if (col.dataIndex === 'operation') {
-        return col;
-      }
-      return {
-        ...col,
-        onCell: record => ({
-          record,
-          inputType: (col.dataIndex === 'TotalTax' ||
-            col.dataIndex === 'TotalPrice' ||
-            col.dataIndex === 'Revenue' ||
-            col.dataIndex === 'Orders' ||
-            col.dataIndex === 'Invoices' ||
-            col.dataIndex === 'Quantity' ||
-            col.dataIndex === 'Units') ? 'number'
-            : 'text',
-          dataIndex: col.dataIndex,
-          title: col.title,
-          editing: this.isEditing(record),
-        })
-      };
-    });
-
     return (
       <>
         <h1> Invoices</h1>
@@ -325,11 +221,13 @@ class InvoicesContent extends React.Component {
           tip='Please wait !!! While we get the content...'
           spinning={loading}
         >
-          {isAddRecord && (
+          {shouldPopupOpen && (
             <InvoicesModal
               getModalStatus={this.setModalStatus}
               visible={visible}
               yearsList={yearList}
+              data={editedObject}
+              isEdit={isEdit}
             />
           )}
           <MonthlySaleSearchCriteria ref={this.setSearchCriteria}
@@ -351,21 +249,15 @@ class InvoicesContent extends React.Component {
           }
           {list.length > 0 &&
             <>
-              <EditableContext.Provider value={this.props.form}>
-                <Table
-                  scroll={{ x: 1350 }}
-                  components={components}
-                  bordered
-                  rowKey={record => record.RowNumber}
-                  dataSource={list}
-                  columns={editableColumns}
-                  loading={loading}
-                  rowClassName="editable-row"
-                  pagination={{
-                    onChange: this.cancel,
-                  }}
-                />
-              </EditableContext.Provider>
+              <Table
+                bordered
+                scroll={{ x: 1290 }}
+                rowKey={record => record.RowNumber}
+                dataSource={list}
+                columns={columns}
+                loading={loading}
+                rowClassName="editable-row"
+              />
             </>
           }
         </Spin>

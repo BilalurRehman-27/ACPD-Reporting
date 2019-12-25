@@ -40,8 +40,8 @@ class AuthorRoyaltiesContent extends React.Component {
     this.props.getAuthorRoyaltiesSale(searchResult);
   }
   handleExport = async () => {
-    const responseData = await this.props.downloadAuthorRoyalties();
-    message.success(responseData);
+    await this.props.downloadAuthorRoyalties();
+    message.success("File Downloaded successfully");
   }
   fetch = (params = {}) => {
     console.log("params:", params);
