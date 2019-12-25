@@ -48,6 +48,7 @@ class InvoicesModal extends React.Component {
         else {
           apiCall.UpdateInvoiceData(mappedObject)
         }
+        this.props.form.resetFields();
         this.props.getModalStatus(false, true);
       }
     });

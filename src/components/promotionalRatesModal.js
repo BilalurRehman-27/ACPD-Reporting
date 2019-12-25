@@ -27,6 +27,7 @@ class PromotionalRatesModal extends React.Component {
           Active: values.hasOwnProperty('editedActive') ? values.editedActive : values.active,
         }
         await apiCall.UpdatePromoCodes(mappedObject)
+        this.props.form.resetFields();
         this.props.getModalStatus(false, true);
       }
     });

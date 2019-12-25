@@ -35,6 +35,7 @@ class CurrencyRatesModal extends React.Component {
         else {
           await apiCall.AddCurrencyRates(mappedObject)
         }
+        this.props.form.resetFields();
         this.props.getModalStatus(false, true);
 
       }
