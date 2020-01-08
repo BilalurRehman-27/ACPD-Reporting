@@ -1,4 +1,3 @@
-
 import {
   GET_DIRECT_SALES,
   GET_DIRECT_SALES_SUCCESS,
@@ -42,8 +41,13 @@ import {
   GET_CURRENCY_RATES,
   GET_CURRENCY_RATES_SUCCESS,
   GET_CURRENCY_RATES_ERROR,
-
-} from '../actions/actions'
+  GET_SALES_TYPE_LIST,
+  GET_SALES_TYPE_LIST_SUCCESS,
+  GET_SALES_TYPE_LIST_ERROR,
+  GET_COUNTRY_LIST,
+  GET_COUNTRY_LIST_SUCCESS,
+  GET_COUNTRY_LIST_ERROR,
+} from '../actions/actions';
 const posReducerDefaultState = {
   loading: false,
   data: [],
@@ -56,7 +60,7 @@ export default (state = posReducerDefaultState, action = {}) => {
       return {
         ...state,
         loading: true,
-      }
+      };
     case GET_DIRECT_SALES_SUCCESS:
       return {
         ...state,
@@ -90,7 +94,7 @@ export default (state = posReducerDefaultState, action = {}) => {
       return {
         ...state,
         loading: true,
-      }
+      };
     case GET_INVOICE_SALES_SUCCESS:
       return {
         ...state,
@@ -285,6 +289,40 @@ export default (state = posReducerDefaultState, action = {}) => {
         loading: false,
       };
     case GET_CURRENCY_RATES_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+    case GET_SALES_TYPE_LIST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case GET_SALES_TYPE_LIST_SUCCESS:
+      return {
+        ...state,
+        salesTypeList: action.payload,
+        loading: false,
+      };
+    case GET_SALES_TYPE_LIST_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+    case GET_COUNTRY_LIST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case GET_COUNTRY_LIST_SUCCESS:
+      return {
+        ...state,
+        countryList: action.payload,
+        loading: false,
+      };
+    case GET_COUNTRY_LIST_ERROR:
       return {
         ...state,
         error: action.error,

@@ -23,7 +23,7 @@
 
 .logo {
   height: 32px;
-  background-image: url("images/accountingcpd.png");
+  background-image: url('images/accountingcpd.png');
   background-size: 16px 80px;
   background: rgba(255, 255, 255, 0.2);
 }
@@ -57,12 +57,12 @@
 }
 
 .notfound .notfound-404 h1 {
-  font-family: "Titillium Web", sans-serif;
+  font-family: 'Titillium Web', sans-serif;
   font-size: 186px;
   font-weight: 900;
   margin: 0px;
   text-transform: uppercase;
-  background: url("images/text.png");
+  background: url('images/text.png');
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: cover;
@@ -70,14 +70,14 @@
 }
 
 .notfound h2 {
-  font-family: "Titillium Web", sans-serif;
+  font-family: 'Titillium Web', sans-serif;
   font-size: 26px;
   font-weight: 700;
   margin: 0;
 }
 
 .notfound p {
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 0px;
@@ -85,7 +85,7 @@
 }
 
 .notfound a {
-  font-family: "Titillium Web", sans-serif;
+  font-family: 'Titillium Web', sans-serif;
   display: inline-block;
   text-transform: uppercase;
   color: #fff;
@@ -123,4 +123,11 @@
 
 .ant-layout-header {
   height: auto !important;
+}
+
+.ant-advanced-search-form {
+  padding: 24px;
+  background: #fbfbfb;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
 }

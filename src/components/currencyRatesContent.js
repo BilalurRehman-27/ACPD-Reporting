@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 import { connect } from 'react-redux';
-import { Table, Button, Spin, Form } from "antd";
-import { getCurrencyRatesList, getYearList } from '../actions/actions'
-import CurrencyRatesModal from './currencyRatesModal'
+import { Table, Button, Spin } from 'antd';
+import { getCurrencyRatesList, getYearList } from '../actions/actions';
+import CurrencyRatesModal from './currencyRatesModal';
 import { apiCall } from '../Services/API';
 
 class CurrencyRatesContent extends React.Component {
@@ -23,14 +23,14 @@ class CurrencyRatesContent extends React.Component {
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     this.setState({
-      pagination: pager
+      pagination: pager,
     });
     this.fetch({
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
       sortOrder: sorter.order,
-      ...filters
+      ...filters,
     });
   };
 
@@ -40,12 +40,12 @@ class CurrencyRatesContent extends React.Component {
     this.props.getCurrencyRatesList();
   }
 
-  fetch = (params = {}) => { };
+  fetch = (params = {}) => {};
 
   componentDidUpdate(prevProps) {
     if (prevProps.list !== this.props.list) {
       console.log(this.props.list);
-      const { list } = this.props
+      const { list } = this.props;
       const pagination = { ...this.state.pagination };
       // Read total count from server
       // pagination.total = data.totalCount;
@@ -55,7 +55,7 @@ class CurrencyRatesContent extends React.Component {
         loading: false,
         list: list,
         mockData: list[list.length - 1],
-        pagination
+        pagination,
       });
     }
   }
@@ -65,7 +65,7 @@ class CurrencyRatesContent extends React.Component {
       editedObject: key,
       isEdit: true,
       visible: true,
-      shouldPopupOpen: true
+      shouldPopupOpen: true,
     });
   }
 
@@ -78,7 +78,7 @@ class CurrencyRatesContent extends React.Component {
     this.setState({
       shouldPopupOpen: true,
       visible: true,
-      isEdit: false
+      isEdit: false,
     });
   };
 
@@ -93,18 +93,27 @@ class CurrencyRatesContent extends React.Component {
 
   render() {
     const { loading, yearList } = this.props;
-    const { list, shouldPopupOpen, visible = false, editedObject, isEdit } = this.state;
+    const {
+      list,
+      shouldPopupOpen,
+      visible = false,
+      editedObject,
+      isEdit,
+    } = this.state;
     const columns = [
       {
         title: 'Action',
-        render: (record) =>
+        render: record => (
           <>
             <Button type='primary' onClick={() => this.edit({ record })}>
               Edit
-        </Button> &nbsp; <Button type='danger' onClick={() => this.delete(record)}>
+            </Button>{' '}
+            &nbsp;{' '}
+            <Button type='danger' onClick={() => this.delete(record)}>
               Delete
-         </Button>
+            </Button>
           </>
+        ),
       },
       {
         title: 'Month',
@@ -142,16 +151,26 @@ class CurrencyRatesContent extends React.Component {
               visible={visible}
               yearsList={yearList}
               data={editedObject}
-              isEdit={isEdit} />
+              isEdit={isEdit}
+            />
           )}
 
-          {list.length > 0 &&
+          {list.length > 0 && (
             <div style={{ paddingBottom: 50 }}>
-              <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16, float: 'left', backgroundColor: 'green' }}>
-                Add Record </Button>
+              <Button
+                onClick={this.handleAdd}
+                type='primary'
+                style={{
+                  marginBottom: 16,
+                  float: 'left',
+                  backgroundColor: 'green',
+                }}
+              >
+                Add Record{' '}
+              </Button>
             </div>
-          }
-          {list.length > 0 &&
+          )}
+          {list.length > 0 && (
             <>
               <Table
                 bordered
@@ -162,20 +181,22 @@ class CurrencyRatesContent extends React.Component {
                 sorting={true}
               />
             </>
-          }
+          )}
         </Spin>
       </>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { posReducer } = state;
-  if (posReducer !== null
-    && posReducer.yearsList
-    && posReducer.yearsList.length > 0
-    && posReducer.currencyRatesList
-    && posReducer.currencyRatesList.length > 0)
+  if (
+    posReducer !== null &&
+    posReducer.yearsList &&
+    posReducer.yearsList.length > 0 &&
+    posReducer.currencyRatesList &&
+    posReducer.currencyRatesList.length > 0
+  )
     return {
       yearList: posReducer.yearsList ? posReducer.yearsList : null,
       list: posReducer.currencyRatesList,
@@ -194,4 +215,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CurrencyRatesContent);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CurrencyRatesContent);

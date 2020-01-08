@@ -1,10 +1,15 @@
-import React from "react";
+import React from 'react';
 import { connect } from 'react-redux';
-import { Table, Button, Spin, Input, InputNumber, Popconfirm, Form } from "antd";
+import { Table, Button, Spin, Form } from 'antd';
 import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
-import { getInvoicesData, getYearList, getCurrencyList } from '../actions/actions'
-import { apiCall } from '../Services/API';
-import InvoicesModal from './invoicesModal'
+import {
+  getInvoicesData,
+  getYearList,
+  getCurrencyList,
+  getSalesTypeList,
+  getCountryList,
+} from '../actions/actions';
+import InvoicesModal from './invoicesModal';
 class InvoicesContent extends React.Component {
   constructor(props) {
     super(props);
@@ -24,14 +29,14 @@ class InvoicesContent extends React.Component {
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     this.setState({
-      pagination: pager
+      pagination: pager,
     });
     this.fetch({
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
       sortOrder: sorter.order,
-      ...filters
+      ...filters,
     });
   };
 
@@ -39,18 +44,20 @@ class InvoicesContent extends React.Component {
     this.setState({ loading: true });
     this.props.getYearList();
     this.props.getCurrencyList();
+    this.props.getSalesTypeList();
+    this.props.getCountryList();
   }
 
-  fetch = (params = {}) => { };
+  fetch = (params = {}) => {};
 
   handleClick = async () => {
     const searchResult = await this.setSearchCriteria.current.validateFields();
     this.props.getInvoicesData(searchResult);
-  }
+  };
 
   componentDidUpdate(prevProps) {
     if (prevProps.list !== this.props.list) {
-      const { list } = this.props
+      const { list } = this.props;
       const pagination = { ...this.state.pagination };
       // Read total count from server
       // pagination.total = data.totalCount;
@@ -60,38 +67,9 @@ class InvoicesContent extends React.Component {
         loading: false,
         list: list,
         mockData: list[list.length - 1],
-        pagination
+        pagination,
       });
     }
-  }
-
-
-  save(form, key) {
-    form.validateFields((error, row) => {
-      if (error) {
-        return;
-      }
-      const newData = [...this.state.list];
-      const index = newData.findIndex(item => key === item.RowNumber);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        this.setState({ list: newData, editingKey: '' });
-        //Record to be updated according to the index(row) selected.
-        if (!newData[index].isNewObject)
-          apiCall.UpdateInvoiceData(newData[index])
-        else {
-          apiCall.AddInvoiceData(newData[index])
-          newData[index].isNewObject = false
-        }
-      } else {
-        newData.push(row);
-        this.setState({ list: newData, editingKey: '' });
-      }
-    });
   }
 
   edit(key) {
@@ -99,16 +77,15 @@ class InvoicesContent extends React.Component {
       editedObject: key,
       isEdit: true,
       visible: true,
-      shouldPopupOpen: true
+      shouldPopupOpen: true,
     });
   }
-
 
   handleAdd = () => {
     this.setState({
       shouldPopupOpen: true,
       visible: true,
-      isEdit: false
+      isEdit: false,
     });
   };
 
@@ -122,94 +99,115 @@ class InvoicesContent extends React.Component {
   };
 
   render() {
-    const { loading, currencyList, yearList } = this.props;
-    const { list, shouldPopupOpen, visible = false, editedObject, isEdit } = this.state;
+    const {
+      loading,
+      currencyList,
+      yearList,
+      salesTypeList,
+      countryList,
+    } = this.props;
+    const {
+      list,
+      shouldPopupOpen,
+      visible = false,
+      editedObject,
+      isEdit,
+    } = this.state;
 
     const columns = [
       {
         title: 'Action',
-        render: (record) =>
+        render: record => (
           <>
             <Button type='primary' onClick={() => this.edit({ record })}>
               Edit
             </Button>
           </>
+        ),
       },
       {
-        title: "Company Name",
-        dataIndex: "CompanyName",
+        title: 'Company Name',
+        dataIndex: 'CompanyName',
         sorter: true,
         render: name => {
           return `${name}`;
         },
       },
       {
-        title: "First Name",
-        dataIndex: "FirstName",
+        title: 'First Name',
+        dataIndex: 'FirstName',
         sorter: true,
         render: name => {
           return `${name}`;
         },
       },
       {
-        title: "Last Name",
-        dataIndex: "LastName",
+        title: 'Last Name',
+        dataIndex: 'LastName',
         sorter: true,
         render: lastName => {
           return `${lastName}`;
         },
       },
       {
-        title: "Country",
-        dataIndex: "Country",
+        title: 'Country',
+        dataIndex: 'Country',
       },
       {
-        title: "Total Price",
-        dataIndex: "TotalPrice",
+        title: 'Total Price',
+        dataIndex: 'TotalPrice',
       },
       {
-        title: "Currency",
-        dataIndex: "CurrencyCode",
+        title: 'Currency',
+        dataIndex: 'CurrencyCode',
       },
       {
-        title: "Quantity",
-        dataIndex: "Quantity",
+        title: 'Quantity',
+        dataIndex: 'Quantity',
       },
       {
-        title: "Total Tax",
-        dataIndex: "TotalTax",
+        title: 'Total Tax',
+        dataIndex: 'TotalTax',
       },
       {
-        title: "SalesTypeId",
-        dataIndex: "SalesTypeId",
+        title: 'SalesType',
+        dataIndex: 'SalesTypeId',
+        render: saleType => {
+          const salTypeValue =
+            salesTypeList &&
+            salesTypeList.filter(val => {
+              return val.TypeId === saleType;
+            });
+          return salTypeValue[0].Name;
+        },
       },
       {
-        title: "Revenue Date",
-        dataIndex: "CreatedDate",
+        title: 'Revenue Date',
+        dataIndex: 'OrderDate',
         render: date => {
-          return new Date(date).toLocaleDateString()
-        }
+          return new Date(date).toLocaleDateString();
+        },
       },
       {
-        title: "Item Name",
-        dataIndex: "OrderItemName",
+        title: 'Item Name',
+        dataIndex: 'OrderItemName',
       },
       {
-        title: "Units",
-        dataIndex: "Units",
+        title: 'Units',
+        dataIndex: 'Units',
       },
       {
-        title: "Orders",
-        dataIndex: "Orders",
+        title: 'Orders',
+        dataIndex: 'Orders',
       },
       {
-        title: "Ref By",
-        dataIndex: "RefBy",
+        title: 'Ref By',
+        dataIndex: 'RefBy',
         ellipsis: true,
       },
       {
-        title: "Promo Code",
-        dataIndex: "PromotionalCode",
+        title: 'Promo Code',
+        dataIndex: 'PromoCode',
       },
     ];
 
@@ -228,26 +226,33 @@ class InvoicesContent extends React.Component {
               yearsList={yearList}
               data={editedObject}
               isEdit={isEdit}
+              salesTypeList={salesTypeList}
+              countryList={countryList}
+              currencyList={currencyList}
             />
           )}
-          <MonthlySaleSearchCriteria ref={this.setSearchCriteria}
+          <MonthlySaleSearchCriteria
+            ref={this.setSearchCriteria}
             yearList={yearList}
             currencyList={currencyList}
           />
           <div style={{ marginLeft: '85%', marginBottom: '2%' }}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              onClick={this.handleClick}>
+            <Button type='primary' htmlType='submit' onClick={this.handleClick}>
               Search
-          </Button>
+            </Button>
           </div>
-          {list.length > 0 &&
+          {list.length > 0 && (
             <div style={{ paddingBottom: 50 }}>
-              <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16, float: 'left' }}>Add a row</Button>
+              <Button
+                onClick={this.handleAdd}
+                type='primary'
+                style={{ marginBottom: 16, float: 'left' }}
+              >
+                Add a row
+              </Button>
             </div>
-          }
-          {list.length > 0 &&
+          )}
+          {list.length > 0 && (
             <>
               <Table
                 bordered
@@ -256,10 +261,10 @@ class InvoicesContent extends React.Component {
                 dataSource={list}
                 columns={columns}
                 loading={loading}
-                rowClassName="editable-row"
+                rowClassName='editable-row'
               />
             </>
-          }
+          )}
         </Spin>
       </>
     );
@@ -268,13 +273,20 @@ class InvoicesContent extends React.Component {
 
 const EditableFormTable = Form.create()(InvoicesContent);
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { posReducer } = state;
-  if (posReducer !== null && posReducer.data !== null && posReducer.yearsList && posReducer.currencyList)
+  if (
+    posReducer !== null &&
+    posReducer.data !== null &&
+    posReducer.yearsList &&
+    posReducer.currencyList
+  )
     return {
       list: posReducer.data,
       yearList: posReducer.yearsList ? posReducer.yearsList : null,
       currencyList: posReducer.currencyList ? posReducer.currencyList : null,
+      salesTypeList: posReducer.salesTypeList ? posReducer.salesTypeList : null,
+      countryList: posReducer.countryList ? posReducer.countryList : null,
       loading: posReducer.loading,
       error: posReducer.error,
     };
@@ -284,9 +296,12 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getInvoicesData: searchCriteria => dispatch(getInvoicesData(searchCriteria)),
+    getInvoicesData: searchCriteria =>
+      dispatch(getInvoicesData(searchCriteria)),
     getYearList: () => dispatch(getYearList()),
+    getSalesTypeList: () => dispatch(getSalesTypeList()),
     getCurrencyList: () => dispatch(getCurrencyList()),
+    getCountryList: () => dispatch(getCountryList()),
   };
 };
 

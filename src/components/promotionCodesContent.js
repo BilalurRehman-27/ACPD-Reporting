@@ -1,9 +1,8 @@
-import React from "react";
+import React from 'react';
 import { connect } from 'react-redux';
-import { Table, Button, Spin, Form } from "antd";
-import { getPromotionCodesList } from '../actions/actions'
-import { apiCall } from '../Services/API';
-import PromotionalRatesModal from './promotionalRatesModal'
+import { Table, Button, Spin } from 'antd';
+import { getPromotionCodesList } from '../actions/actions';
+import PromotionalRatesModal from './promotionalRatesModal';
 
 class PromotionCodesContent extends React.Component {
   constructor(props) {
@@ -23,14 +22,14 @@ class PromotionCodesContent extends React.Component {
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     this.setState({
-      pagination: pager
+      pagination: pager,
     });
     this.fetch({
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
       sortOrder: sorter.order,
-      ...filters
+      ...filters,
     });
   };
 
@@ -39,12 +38,12 @@ class PromotionCodesContent extends React.Component {
     this.props.getPromotionCodesList();
   }
 
-  fetch = (params = {}) => { };
+  fetch = (params = {}) => {};
 
   componentDidUpdate(prevProps) {
     if (prevProps.list !== this.props.list) {
       console.log(this.props.list);
-      const { list } = this.props
+      const { list } = this.props;
       const pagination = { ...this.state.pagination };
       // Read total count from server
       // pagination.total = data.totalCount;
@@ -54,7 +53,7 @@ class PromotionCodesContent extends React.Component {
         loading: false,
         list: list,
         mockData: list[list.length - 1],
-        pagination
+        pagination,
       });
     }
   }
@@ -64,7 +63,7 @@ class PromotionCodesContent extends React.Component {
       editedObject: key,
       isEdit: true,
       visible: true,
-      shouldPopupOpen: true
+      shouldPopupOpen: true,
     });
   }
 
@@ -72,7 +71,7 @@ class PromotionCodesContent extends React.Component {
     this.setState({
       shouldPopupOpen: true,
       visible: true,
-      isEdit: false
+      isEdit: false,
     });
   };
 
@@ -87,16 +86,23 @@ class PromotionCodesContent extends React.Component {
 
   render() {
     const { loading } = this.props;
-    const { list, shouldPopupOpen, visible = false, editedObject, isEdit } = this.state;
+    const {
+      list,
+      shouldPopupOpen,
+      visible = false,
+      editedObject,
+      isEdit,
+    } = this.state;
     const columns = [
       {
         title: 'Action',
-        render: (record) =>
+        render: record => (
           <>
             <Button type='primary' onClick={() => this.edit({ record })}>
               Edit
-              </Button>
+            </Button>
           </>
+        ),
       },
       {
         title: 'Code',
@@ -132,12 +138,22 @@ class PromotionCodesContent extends React.Component {
               isEdit={isEdit}
             />
           )}
-          {list.length > 0 &&
+          {list.length > 0 && (
             <div style={{ paddingBottom: 50 }}>
-              <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16, float: 'left', backgroundColor: 'green' }}>Add a row</Button>
+              <Button
+                onClick={this.handleAdd}
+                type='primary'
+                style={{
+                  marginBottom: 16,
+                  float: 'left',
+                  backgroundColor: 'green',
+                }}
+              >
+                Add a row
+              </Button>
             </div>
-          }
-          {list.length > 0 &&
+          )}
+          {list.length > 0 && (
             <>
               <Table
                 key={record => record.Id}
@@ -146,20 +162,24 @@ class PromotionCodesContent extends React.Component {
                 dataSource={list}
                 columns={columns}
                 loading={loading}
-                rowClassName="editable-row"
+                rowClassName='editable-row'
                 sorting={true}
               />
             </>
-          }
+          )}
         </Spin>
       </>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { posReducer } = state;
-  if (posReducer !== null && posReducer.promoCodesList && posReducer.promoCodesList.length > 0)
+  if (
+    posReducer !== null &&
+    posReducer.promoCodesList &&
+    posReducer.promoCodesList.length > 0
+  )
     return {
       list: posReducer.promoCodesList,
       loading: posReducer.loading,
@@ -176,4 +196,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PromotionCodesContent);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PromotionCodesContent);
