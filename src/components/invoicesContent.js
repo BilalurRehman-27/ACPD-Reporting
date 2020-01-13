@@ -10,6 +10,8 @@ import {
   getCountryList,
 } from '../actions/actions';
 import InvoicesModal from './invoicesModal';
+import { apiCall } from '../Services/API';
+
 class InvoicesContent extends React.Component {
   constructor(props) {
     super(props);
@@ -91,12 +93,17 @@ class InvoicesContent extends React.Component {
 
   setModalStatus = (status, shouldRefresh) => {
     if (shouldRefresh) {
-      this.props.getCurrencyRatesList();
+      this.props.getInvoicesData();
     }
     this.setState({
       visible: status,
     });
   };
+
+  async delete(obj) {
+    await apiCall.DeleteInvoiceData(obj);
+    await this.handleClick();
+  }
 
   render() {
     const {
@@ -117,10 +124,23 @@ class InvoicesContent extends React.Component {
     const columns = [
       {
         title: 'Action',
+        width: '300px',
         render: record => (
           <>
-            <Button type='primary' onClick={() => this.edit({ record })}>
+            <Button
+              size='small'
+              type='primary'
+              onClick={() => this.edit({ record })}
+            >
               Edit
+            </Button>{' '}
+            &nbsp;{' '}
+            <Button
+              size='small'
+              type='danger'
+              onClick={() => this.delete(record)}
+            >
+              Delete
             </Button>
           </>
         ),
@@ -256,7 +276,7 @@ class InvoicesContent extends React.Component {
             <>
               <Table
                 bordered
-                scroll={{ x: 1290 }}
+                scroll={{ x: 1300 }}
                 rowKey={record => record.RowNumber}
                 dataSource={list}
                 columns={columns}

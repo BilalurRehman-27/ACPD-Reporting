@@ -168,15 +168,27 @@ const apiCall = {
     return axios.post(BASE_URL + '/api/lookup/UpdateCurrencyConversion', data);
   },
   DeleteCurrencyRates(data) {
-    const { CurrencyId, Month, Year } = data;
-    const filteredData = {
-      CurrencyId: CurrencyId,
-      Month: Month,
-      Year: Year,
-    };
-    return axios.post(
-      BASE_URL + '/api/lookup/DeleteCurrencyConversion',
-      filteredData
+    const { CurrencyId } = data;
+    return axios.get(
+      BASE_URL + `/api/lookup/DeleteCurrencyConversion?id=${CurrencyId}`
+    );
+  },
+  DeleteInvoiceData(data) {
+    const { InvoicesItems } = data;
+    return axios.get(
+      INVOICES_BASE_URL +
+        `/DeleteInvoice?rowNumber=${InvoicesItems[0].RowNumber}&saleTypeId=${InvoicesItems[0].SalesTypeId}&currencyId=${InvoicesItems[0].CurrencyId}&invoiceNumber=${InvoicesItems[0].InvoiceNumber}`
+    );
+  },
+
+  DownloadInvoiceReport(data) {
+    const downloadURL =
+      INVOICES_BASE_URL +
+      `/MonthlyReport?month=${data.month}&year=${data.year}&currency=${data.currency}`;
+    window.open(downloadURL, '_blank');
+    return axios.get(
+      INVOICES_BASE_URL +
+        `/GetInvoiceOrderData?month=${data.month}&year=${data.year}&currency=${data.currency}`
     );
   },
 };
