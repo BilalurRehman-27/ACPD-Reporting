@@ -31,8 +31,14 @@ class SearchCriteria extends React.Component {
           <Form.Item label='Month'>
             {getFieldDecorator('month', {
               rules: [
-                { required: false, message: 'Please select valid month!' },
+                {
+                  required: false,
+                  message: 'Please select valid month!',
+                },
               ],
+              initialValue: new Date().toLocaleDateString('en', {
+                month: 'numeric',
+              }),
             })(
               <Select style={{ width: 170 }} placeholder='Select Month'>
                 <Option value='1'>January</Option>
@@ -54,6 +60,7 @@ class SearchCriteria extends React.Component {
             <Form.Item label='Year'>
               {getFieldDecorator('year', {
                 rules: [{ required: false, message: 'Please select year!' }],
+                initialValue: new Date().getFullYear().toString(),
               })(
                 <Select style={{ width: 170 }} placeholder='Select Year'>
                   {yearList.map((value, index) => (
@@ -71,6 +78,7 @@ class SearchCriteria extends React.Component {
                 rules: [
                   { required: false, message: 'Please select currency!' },
                 ],
+                initialValue: 'EUR',
               })(
                 <Select style={{ width: 170 }} placeholder='Select currency'>
                   {currencyList.map((value, index) => (

@@ -93,6 +93,7 @@ class CurrencyRatesContent extends React.Component {
 
   render() {
     const { loading, yearList } = this.props;
+    const { pagination } = this.state;
     const {
       list,
       shouldPopupOpen,
@@ -173,12 +174,12 @@ class CurrencyRatesContent extends React.Component {
           {list.length > 0 && (
             <>
               <Table
-                bordered
                 rowKey={record => record.CurrencyId}
                 dataSource={list}
                 columns={columns}
                 loading={loading}
-                sorting={true}
+                pagination={pagination}
+                onChange={this.handleTableChange}
               />
             </>
           )}

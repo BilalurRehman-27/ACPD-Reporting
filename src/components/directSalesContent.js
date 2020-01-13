@@ -1,9 +1,13 @@
-import React from "react";
+import React from 'react';
 import { connect } from 'react-redux';
-import { Table, Button, Spin, Icon, message } from "antd";
-import { apiCall } from '../Services/API'
+import { Table, Button, Spin, Icon, message } from 'antd';
+import { apiCall } from '../Services/API';
 import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
-import { getDirectSales, getYearList, getCurrencyList } from '../actions/actions'
+import {
+  getDirectSales,
+  getYearList,
+  getCurrencyList,
+} from '../actions/actions';
 
 class DirectSalesContent extends React.Component {
   constructor(props) {
@@ -28,28 +32,28 @@ class DirectSalesContent extends React.Component {
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     this.setState({
-      pagination: pager
+      pagination: pager,
     });
     this.fetch({
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
       sortOrder: sorter.order,
-      ...filters
+      ...filters,
     });
   };
 
-  fetch = (params = {}) => { };
+  fetch = (params = {}) => {};
 
   handleClick = async () => {
     const searchResult = await this.setSearchCriteria.current.validateFields();
     console.log(searchResult);
     this.props.getDirectSales(searchResult);
-  }
+  };
 
   componentDidUpdate(prevProps) {
     if (prevProps.list !== this.props.list) {
-      const { list } = this.props
+      const { list } = this.props;
       const pagination = { ...this.state.pagination };
       // Read total count from server
       // pagination.total = data.totalCount;
@@ -57,7 +61,7 @@ class DirectSalesContent extends React.Component {
       this.setState({
         loading: false,
         list: list,
-        pagination
+        pagination,
       });
     }
   }
@@ -65,95 +69,88 @@ class DirectSalesContent extends React.Component {
   handleExport = async () => {
     const searchResult = await this.setSearchCriteria.current.validateFields();
     apiCall.DownloadDirectSalesMonthlyReport(searchResult);
-    message.success("Done");
-  }
-
+    message.success('Done');
+  };
 
   render() {
     const { loading, currencyList, yearList } = this.props;
     const { list, pagination } = this.state;
     const columns = [
       {
-        title: "First Name",
-        dataIndex: "FirstName",
+        title: 'First Name',
+        dataIndex: 'FirstName',
         sorter: true,
         render: name => {
           return `${name}`;
         },
-        fixed: "left",
-        width: 100
+        fixed: 'left',
       },
       {
-        title: "Last Name",
-        dataIndex: "LastName",
+        title: 'Last Name',
+        dataIndex: 'LastName',
         sorter: true,
         render: lastName => {
           return `${lastName}`;
         },
-        fixed: "left",
-        width: 100
+        fixed: 'left',
       },
       {
-        title: "Country",
-        dataIndex: "Country",
+        title: 'Country',
+        dataIndex: 'Country',
         render: country => {
           return `${country}`;
-        }
+        },
       },
       {
-        title: "Total Price",
-        dataIndex: "TotalPrice",
+        title: 'Total Price',
+        dataIndex: 'TotalPrice',
       },
 
       {
-        title: "Total Tax",
-        dataIndex: "TotalTax",
+        title: 'Total Tax',
+        dataIndex: 'TotalTax',
       },
       {
-        title: "Revenue",
-        dataIndex: "Revenue",
+        title: 'Revenue',
+        dataIndex: 'Revenue',
       },
       {
-        title: "Created Date",
-        dataIndex: "CreatedDate",
+        title: 'Created Date',
+        dataIndex: 'CreatedDate',
         render: date => {
-          return new Date(date).toLocaleDateString()
-        }
+          return new Date(date).toLocaleDateString();
+        },
       },
       {
-        title: "Item Name",
-        dataIndex: "OrderItemName",
+        title: 'Item Name',
+        dataIndex: 'OrderItemName',
       },
       {
-        title: "Quantity",
-        dataIndex: "Quantity",
-
+        title: 'Sales Main Id',
+        dataIndex: 'OrderId',
       },
       {
-        title: "Orders",
-        dataIndex: "Orders",
+        title: 'Ref By',
+        dataIndex: 'RefBy',
       },
       {
-        title: "Ref By",
-        dataIndex: "RefBy",
-      },
-      {
-        title: "Promo Code",
-        dataIndex: "PromotionalCode",
+        title: 'Promo Code',
+        dataIndex: 'PromotionalCode',
         fixed: 'right',
       },
     ];
     return (
       <>
         <h1> Direct Sales</h1>
-        <div style={{ 'textAlign': 'right' }}>
+        <div style={{ textAlign: 'right' }}>
           <Button
-            type="ghost"
-            htmlType="submit"
-            style={{ "backgroundColor": "#4c4c4c33" }}
+            type='ghost'
+            htmlType='submit'
+            style={{ backgroundColor: '#4c4c4c33' }}
             onClick={this.handleExport}
-            title='Export to Excel'>
-            <Icon type="file-excel" theme="filled" />
+            title='Export to Excel'
+          >
+            <Icon type='file-excel' theme='filled' />
             Download Excel
           </Button>
         </div>
@@ -162,41 +159,46 @@ class DirectSalesContent extends React.Component {
           tip='Please wait !!! While we get the content...'
           spinning={loading}
         >
-          <MonthlySaleSearchCriteria ref={this.setSearchCriteria}
+          <MonthlySaleSearchCriteria
+            ref={this.setSearchCriteria}
             yearList={yearList}
-            currencyList={currencyList} />
+            currencyList={currencyList}
+          />
           <div style={{ marginLeft: '85%', marginBottom: '2%' }}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              onClick={this.handleClick}>
+            <Button type='primary' htmlType='submit' onClick={this.handleClick}>
               Search
-          </Button>
+            </Button>
           </div>
-          {list.length > 0 && <Table
-            scroll={{ x: 1290 }}
-            columns={columns}
-            rowKey={record => record.OrderId}
-            dataSource={list}
-            pagination={pagination}
-            loading={loading}
-            onChange={this.handleTableChange}
-          />}
+          {list.length > 0 && (
+            <Table
+              scroll={{ x: 1300 }}
+              columns={columns}
+              rowKey={record => record.OrderId}
+              dataSource={list}
+              pagination={pagination}
+              loading={loading}
+              onChange={this.handleTableChange}
+            />
+          )}
         </Spin>
       </>
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { posReducer } = state;
-  if (posReducer !== null && posReducer.data !== null && posReducer.yearsList && posReducer.currencyList)
+  if (
+    posReducer !== null &&
+    posReducer.data !== null &&
+    posReducer.yearsList &&
+    posReducer.currencyList
+  )
     return {
       list: posReducer.data,
       yearList: posReducer.yearsList ? posReducer.yearsList : null,
       currencyList: posReducer.currencyList ? posReducer.currencyList : null,
       loading: posReducer.loading,
       error: posReducer.error,
-
     };
   return {
     list: null,
