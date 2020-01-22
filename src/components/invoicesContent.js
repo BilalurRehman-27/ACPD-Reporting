@@ -50,7 +50,7 @@ class InvoicesContent extends React.Component {
     this.props.getCountryList();
   }
 
-  fetch = (params = {}) => {};
+  fetch = (params = {}) => { };
 
   handleClick = async () => {
     const searchResult = await this.setSearchCriteria.current.validateFields();
@@ -124,7 +124,7 @@ class InvoicesContent extends React.Component {
     const columns = [
       {
         title: 'Action',
-        width: '300px',
+        width: '150px',
         render: record => (
           <>
             <Button
@@ -146,8 +146,9 @@ class InvoicesContent extends React.Component {
         ),
       },
       {
-        title: 'Company Name',
-        dataIndex: 'CompanyName',
+        title: 'Invoice Number',
+        width: '150px',
+        dataIndex: 'InvoiceNumber',
         sorter: true,
         render: name => {
           return `${name}`;
@@ -170,24 +171,8 @@ class InvoicesContent extends React.Component {
         },
       },
       {
-        title: 'Country',
-        dataIndex: 'Country',
-      },
-      {
-        title: 'Total Price',
-        dataIndex: 'TotalPrice',
-      },
-      {
-        title: 'Currency',
-        dataIndex: 'CurrencyCode',
-      },
-      {
-        title: 'Quantity',
-        dataIndex: 'Quantity',
-      },
-      {
-        title: 'Total Tax',
-        dataIndex: 'TotalTax',
+        title: 'Revenue',
+        dataIndex: 'Revenue',
       },
       {
         title: 'SalesType',
@@ -202,7 +187,7 @@ class InvoicesContent extends React.Component {
         },
       },
       {
-        title: 'Revenue Date',
+        title: 'Date',
         dataIndex: 'OrderDate',
         render: date => {
           return new Date(date).toLocaleDateString();
@@ -210,24 +195,16 @@ class InvoicesContent extends React.Component {
       },
       {
         title: 'Item Name',
-        dataIndex: 'OrderItemName',
-      },
-      {
-        title: 'Units',
-        dataIndex: 'Units',
-      },
-      {
-        title: 'Orders',
-        dataIndex: 'Orders',
+        dataIndex: 'InvoicesItems',
+        render: items => items.map((item, index) => {
+          return item.ItemName
+        }),
+        width:'150px'
       },
       {
         title: 'Ref By',
         dataIndex: 'RefBy',
         ellipsis: true,
-      },
-      {
-        title: 'Promo Code',
-        dataIndex: 'PromoCode',
       },
     ];
 

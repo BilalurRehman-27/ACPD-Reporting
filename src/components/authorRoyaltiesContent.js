@@ -40,7 +40,8 @@ class AuthorRoyaltiesContent extends React.Component {
     this.props.getAuthorRoyaltiesSale(searchResult);
   }
   handleExport = async () => {
-    await this.props.downloadAuthorRoyalties();
+    const searchResult = await this.setSearchCriteria.current.validateFields();
+    await this.props.downloadAuthorRoyalties(searchResult);
     message.success("File Downloaded successfully");
   }
   fetch = (params = {}) => {
@@ -66,13 +67,10 @@ class AuthorRoyaltiesContent extends React.Component {
     }
   }
   render() {
-    const { loading } = this.props;
-    const { list, pagination, yearList, authorList } = this.state;
+    const {  } = this.props;
+    const { list, pagination, yearList, authorList, loading } = this.state;
     const columns = [
-      {
-        title: "Name",
-        dataIndex: "Author",
-      },
+
       {
         title: "Course",
         dataIndex: "Course",
@@ -82,21 +80,8 @@ class AuthorRoyaltiesContent extends React.Component {
         dataIndex: "Revenue",
       },
       {
-        title: "Royalty",
-        dataIndex: "Royalty",
-      },
-
-      {
-        title: "Payments",
-        dataIndex: "Payments",
-      },
-      {
-        title: "Total",
-        dataIndex: "Total",
-      },
-      {
-        title: "RoyYear",
-        dataIndex: "RoyYear",
+        title: "UnitsPurchased",
+        dataIndex: "UnitsPurchased",
       }
     ];
     return (
@@ -108,9 +93,10 @@ class AuthorRoyaltiesContent extends React.Component {
             htmlType="submit"
             style={{ "backgroundColor": "#4c4c4c33" }}
             onClick={this.handleExport}
-            title='Export to Excel'>
-            <Icon type="file-excel" theme="filled" />
+            title='Export to Excel'
+            loading={loading}>
             Download Excel
+            <Icon type="file-excel" theme="filled" />
           </Button>
         </div>
 
@@ -131,15 +117,18 @@ class AuthorRoyaltiesContent extends React.Component {
               Search
           </Button>
           </div>
-          <Table
-
-            columns={columns}
-            rowKey={record => record.ID}
-            dataSource={list}
-            pagination={pagination}
-            loading={loading}
-            onChange={this.handleTableChange}
-          />
+          {list.length > 0 && (
+            <>
+              <Table
+                columns={columns}
+                rowKey={record => record.ID}
+                dataSource={list}
+                pagination={pagination}
+                loading={loading}
+                onChange={this.handleTableChange}
+              />
+            </>
+          )}
         </Spin>
       </>
     );
@@ -168,7 +157,7 @@ const mapDispatchToProps = dispatch => {
     getAuthorRoyaltiesSale: searchCriteria => dispatch(getAuthorRoyaltiesSale(searchCriteria)),
     getYearList: () => dispatch(getYearList()),
     getAuthorList: () => dispatch(getAuthorList()),
-    downloadAuthorRoyalties: () => dispatch(downloadAuthorRoyalties()),
+    downloadAuthorRoyalties: (data) => dispatch(downloadAuthorRoyalties(data)),
   };
 };
 

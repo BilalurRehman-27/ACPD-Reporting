@@ -22,7 +22,7 @@ const apiCall = {
   GetMonthlyDirectSales(data) {
     return axios.get(
       DIRECT_SALES_BASE_URL +
-        `/GetDirectSales?month=${data.month}&year=${data.year}&currency=${data.currency}`
+      `/GetDirectSales?month=${data.month}&year=${data.year}&currency=${data.currency}`
     );
   },
   GetMonthlySummaryDirectSales(data) {
@@ -30,17 +30,17 @@ const apiCall = {
       case '1':
         return axios.get(
           DIRECT_SALES_BASE_URL +
-            `/GetRevenueSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
+          `/GetRevenueSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
         );
       case '2':
         return axios.get(
           DIRECT_SALES_BASE_URL +
-            `/GetOrderSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
+          `/GetOrderSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
         );
       case '3':
         return axios.get(
           DIRECT_SALES_BASE_URL +
-            `/GetUnitSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
+          `/GetUnitSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
         );
       default:
         return null;
@@ -49,7 +49,7 @@ const apiCall = {
   GetInvoicesData(data) {
     return axios.get(
       INVOICES_BASE_URL +
-        `/GetInvoiceOrderData?month=${data.month}&year=${data.year}&currency=${data.currency}`
+      `/GetInvoiceOrderData?month=${data.month}&year=${data.year}&currency=${data.currency}`
     );
   },
   GetMonthlySummaryInvoiceSales(data) {
@@ -57,17 +57,17 @@ const apiCall = {
       case '1':
         return axios.get(
           INVOICES_BASE_URL +
-            `/GetRevenueSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
+          `/GetRevenueSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
         );
       case '2':
         return axios.get(
           INVOICES_BASE_URL +
-            `/GetOrderSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
+          `/GetOrderSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
         );
       case '3':
         return axios.get(
           INVOICES_BASE_URL +
-            `/GetUnitSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
+          `/GetUnitSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
         );
       default:
         return null;
@@ -77,7 +77,7 @@ const apiCall = {
     if (data) {
       return axios.get(
         BASE_URL +
-          `/api/AffiliateSales/GetAffiliateData?name=${data.name}&year=${data.year}`
+        `/api/AffiliateSales/GetAffiliateData?name=${data.name}&year=${data.year}`
       );
     } else {
       return axios.get(BASE_URL + `/api/AffiliateSales/GetAffiliateData`);
@@ -85,26 +85,17 @@ const apiCall = {
   },
   GetAuthorRoyaltySalesReport(data) {
     if (data) {
-      const { name, year } = data;
-      if (name && year)
-        return axios.get(
-          BASE_URL +
-            `/api/AuthorRoyalty/GetAuthorRoyalty?name=${data.name}&year=${data.year}`
-        );
-      if (name) {
-        return axios.get(
-          BASE_URL + `/api/AuthorRoyalty/GetAuthorRoyalty?name=${data.name}`
-        );
-      }
-      if (year) {
-        return axios.get(
-          BASE_URL + `/api/AuthorRoyalty/GetAuthorRoyalty?year=${data.year}`
-        );
-      } else {
-        return axios.get(BASE_URL + `/api/AuthorRoyalty/GetAuthorRoyalty`);
-      }
-    } else {
-      return axios.get(BASE_URL + `/api/AuthorRoyalty/GetAuthorRoyalty`);
+      const { frommonth, fromyear, tomonth, toyear } = data;
+      return axios.get(
+        BASE_URL +
+        `/api/AuthorRoyalty/GetAuthorRoyalty?frommonth=${frommonth}&fromyear=${fromyear}&tomonth=${tomonth}&toyear=${toyear}`
+      );
+    }
+    else {
+      return axios.get(
+        BASE_URL +
+        `/api/AuthorRoyalty/GetAuthorRoyalty`
+      );
     }
   },
   GetYearList() {
@@ -130,10 +121,17 @@ const apiCall = {
     window.open(downloadURL, '_blank');
     return axios.get(BASE_URL + `/api/AffiliateSales/DownloadReport`);
   },
-  DownloadAuthorRoyaltyReport() {
-    const downloadURL = BASE_URL + `/api/AuthorRoyalty/DownloadReport`;
+  DownloadAuthorRoyaltyReport(data) {
+
+    const { frommonth, fromyear, tomonth, toyear } = data;
+    const downloadURL = BASE_URL + `/api/AuthorRoyalty/DownloadReport?frommonth=${frommonth}&fromyear=${fromyear}&tomonth=${tomonth}&toyear=${toyear}`;
     window.open(downloadURL, '_blank');
-    return axios.get(BASE_URL + `/api/AuthorRoyalty/DownloadReport`);
+
+    return axios.get(
+      BASE_URL +
+      `/api/AuthorRoyalty/DownloadReport?frommonth=${frommonth}&fromyear=${fromyear}
+            &tomonth=${tomonth}&toyear=${toyear}`
+    );
   },
   DownloadDirectSalesMonthlyReport(data) {
     const downloadURL =
@@ -177,7 +175,7 @@ const apiCall = {
     const { InvoicesItems } = data;
     return axios.get(
       INVOICES_BASE_URL +
-        `/DeleteInvoice?rowNumber=${InvoicesItems[0].RowNumber}&saleTypeId=${InvoicesItems[0].SalesTypeId}&currencyId=${InvoicesItems[0].CurrencyId}&invoiceNumber=${InvoicesItems[0].InvoiceNumber}`
+      `/DeleteInvoice?rowNumber=${InvoicesItems[0].RowNumber}&saleTypeId=${InvoicesItems[0].SalesTypeId}&currencyId=${InvoicesItems[0].CurrencyId}&invoiceNumber=${InvoicesItems[0].InvoiceNumber}`
     );
   },
 
@@ -188,7 +186,7 @@ const apiCall = {
     window.open(downloadURL, '_blank');
     return axios.get(
       INVOICES_BASE_URL +
-        `/GetInvoiceOrderData?month=${data.month}&year=${data.year}&currency=${data.currency}`
+      `/GetInvoiceOrderData?month=${data.month}&year=${data.year}&currency=${data.currency}`
     );
   },
 };

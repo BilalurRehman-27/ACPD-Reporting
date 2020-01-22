@@ -408,11 +408,11 @@ export const _getDownloadAuthorRoyaltyReportError = error => {
     error,
   };
 };
-export const downloadAuthorRoyalties = () => {
+export const downloadAuthorRoyalties = (data) => {
   return dispatch => {
     dispatch(_requestDownloadAuthorRoyaltyReport());
     apiCall
-      .DownloadAuthorRoyaltyReport()
+      .DownloadAuthorRoyaltyReport(data)
       .then(data => {
         dispatch(_getDownloadAuthorRoyaltyReportSuccess(data.data));
       })

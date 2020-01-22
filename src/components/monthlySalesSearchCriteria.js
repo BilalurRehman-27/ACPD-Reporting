@@ -78,7 +78,7 @@ class SearchCriteria extends React.Component {
                 rules: [
                   { required: false, message: 'Please select currency!' },
                 ],
-                initialValue: 'EUR',
+                initialValue: 'GBP',
               })(
                 <Select style={{ width: 170 }} placeholder='Select currency'>
                   {currencyList.map((value, index) => (
