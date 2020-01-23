@@ -66,8 +66,7 @@ class AuthorRoyaltiesContent extends React.Component {
       });
     }
   }
-  render() {
-    const {  } = this.props;
+  render() {    
     const { list, pagination, yearList, authorList, loading } = this.state;
     const columns = [
 

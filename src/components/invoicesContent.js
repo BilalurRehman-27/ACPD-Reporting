@@ -1,16 +1,16 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Table, Button, Spin, Form } from 'antd';
-import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
+import React from "react";
+import { connect } from "react-redux";
+import { Table, Button, Spin, Form } from "antd";
+import MonthlySaleSearchCriteria from "./monthlySalesSearchCriteria";
 import {
   getInvoicesData,
   getYearList,
   getCurrencyList,
   getSalesTypeList,
-  getCountryList,
-} from '../actions/actions';
-import InvoicesModal from './invoicesModal';
-import { apiCall } from '../Services/API';
+  getCountryList
+} from "../actions/actions";
+import InvoicesModal from "./invoicesModal";
+import { apiCall } from "../Services/API";
 
 class InvoicesContent extends React.Component {
   constructor(props) {
@@ -22,7 +22,7 @@ class InvoicesContent extends React.Component {
       editedObject: {},
       shouldPopupOpen: false,
       isEdit: false,
-      visible: false,
+      visible: false
     };
     this.setSearchCriteria = React.createRef();
   }
@@ -31,14 +31,14 @@ class InvoicesContent extends React.Component {
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     this.setState({
-      pagination: pager,
+      pagination: pager
     });
     this.fetch({
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
       sortOrder: sorter.order,
-      ...filters,
+      ...filters
     });
   };
 
@@ -50,7 +50,7 @@ class InvoicesContent extends React.Component {
     this.props.getCountryList();
   }
 
-  fetch = (params = {}) => { };
+  fetch = (params = {}) => {};
 
   handleClick = async () => {
     const searchResult = await this.setSearchCriteria.current.validateFields();
@@ -69,7 +69,7 @@ class InvoicesContent extends React.Component {
         loading: false,
         list: list,
         mockData: list[list.length - 1],
-        pagination,
+        pagination
       });
     }
   }
@@ -79,7 +79,7 @@ class InvoicesContent extends React.Component {
       editedObject: key,
       isEdit: true,
       visible: true,
-      shouldPopupOpen: true,
+      shouldPopupOpen: true
     });
   }
 
@@ -87,16 +87,17 @@ class InvoicesContent extends React.Component {
     this.setState({
       shouldPopupOpen: true,
       visible: true,
-      isEdit: false,
+      isEdit: false
     });
   };
 
-  setModalStatus = (status, shouldRefresh) => {
+  setModalStatus = async (status, shouldRefresh) => {
     if (shouldRefresh) {
-      this.props.getInvoicesData();
+      const searchResult = await this.setSearchCriteria.current.validateFields();
+      this.props.getInvoicesData(searchResult);
     }
     this.setState({
-      visible: status,
+      visible: status
     });
   };
 
@@ -111,72 +112,72 @@ class InvoicesContent extends React.Component {
       currencyList,
       yearList,
       salesTypeList,
-      countryList,
+      countryList
     } = this.props;
     const {
       list,
       shouldPopupOpen,
       visible = false,
       editedObject,
-      isEdit,
+      isEdit
     } = this.state;
 
     const columns = [
       {
-        title: 'Action',
-        width: '150px',
+        title: "Action",
+        width: "150px",
         render: record => (
           <>
             <Button
-              size='small'
-              type='primary'
+              size="small"
+              type="primary"
               onClick={() => this.edit({ record })}
             >
               Edit
-            </Button>{' '}
-            &nbsp;{' '}
+            </Button>{" "}
+            &nbsp;{" "}
             <Button
-              size='small'
-              type='danger'
+              size="small"
+              type="danger"
               onClick={() => this.delete(record)}
             >
               Delete
             </Button>
           </>
-        ),
+        )
       },
       {
-        title: 'Invoice Number',
-        width: '150px',
-        dataIndex: 'InvoiceNumber',
+        title: "Invoice Number",
+        width: "150px",
+        dataIndex: "InvoiceNumber",
         sorter: true,
         render: name => {
           return `${name}`;
-        },
+        }
       },
       {
-        title: 'First Name',
-        dataIndex: 'FirstName',
+        title: "First Name",
+        dataIndex: "FirstName",
         sorter: true,
         render: name => {
           return `${name}`;
-        },
+        }
       },
       {
-        title: 'Last Name',
-        dataIndex: 'LastName',
+        title: "Last Name",
+        dataIndex: "LastName",
         sorter: true,
         render: lastName => {
           return `${lastName}`;
-        },
+        }
       },
       {
-        title: 'Revenue',
-        dataIndex: 'Revenue',
+        title: "Revenue",
+        dataIndex: "Revenue"
       },
       {
-        title: 'SalesType',
-        dataIndex: 'SalesTypeId',
+        title: "SalesType",
+        dataIndex: "SalesTypeId",
         render: saleType => {
           const salTypeValue =
             salesTypeList &&
@@ -184,28 +185,32 @@ class InvoicesContent extends React.Component {
               return val.TypeId === saleType;
             });
           return salTypeValue[0].Name;
-        },
+        }
       },
       {
-        title: 'Date',
-        dataIndex: 'OrderDate',
+        title: "Date",
+        dataIndex: "OrderDate",
         render: date => {
           return new Date(date).toLocaleDateString();
-        },
+        }
       },
       {
-        title: 'Item Name',
-        dataIndex: 'InvoicesItems',
-        render: items => items.map((item, index) => {
-          return item.ItemName
-        }),
-        width:'150px'
+        title: "Item Name",
+        dataIndex: "InvoicesItems",
+        render: items =>
+          items.map((item, index) => {
+           return <span>
+              {item.ItemName}
+              <br />
+            </span>;
+          }),
+        width: "150px"
       },
       {
-        title: 'Ref By',
-        dataIndex: 'RefBy',
-        ellipsis: true,
-      },
+        title: "Ref By",
+        dataIndex: "RefBy",
+        ellipsis: true
+      }
     ];
 
     return (
@@ -213,7 +218,7 @@ class InvoicesContent extends React.Component {
         <h1> Invoices</h1>
         <hr />
         <Spin
-          tip='Please wait !!! While we get the content...'
+          tip="Please wait !!! While we get the content..."
           spinning={loading}
         >
           {shouldPopupOpen && (
@@ -233,8 +238,8 @@ class InvoicesContent extends React.Component {
             yearList={yearList}
             currencyList={currencyList}
           />
-          <div style={{ marginLeft: '85%', marginBottom: '2%' }}>
-            <Button type='primary' htmlType='submit' onClick={this.handleClick}>
+          <div style={{ marginLeft: "85%", marginBottom: "2%" }}>
+            <Button type="primary" htmlType="submit" onClick={this.handleClick}>
               Search
             </Button>
           </div>
@@ -242,8 +247,8 @@ class InvoicesContent extends React.Component {
             <div style={{ paddingBottom: 50 }}>
               <Button
                 onClick={this.handleAdd}
-                type='primary'
-                style={{ marginBottom: 16, float: 'left' }}
+                type="primary"
+                style={{ marginBottom: 16, float: "left" }}
               >
                 Add a row
               </Button>
@@ -258,7 +263,7 @@ class InvoicesContent extends React.Component {
                 dataSource={list}
                 columns={columns}
                 loading={loading}
-                rowClassName='editable-row'
+                rowClassName="editable-row"
               />
             </>
           )}
@@ -285,10 +290,10 @@ const mapStateToProps = state => {
       salesTypeList: posReducer.salesTypeList ? posReducer.salesTypeList : null,
       countryList: posReducer.countryList ? posReducer.countryList : null,
       loading: posReducer.loading,
-      error: posReducer.error,
+      error: posReducer.error
     };
   return {
-    list: null,
+    list: null
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -298,7 +303,7 @@ const mapDispatchToProps = dispatch => {
     getYearList: () => dispatch(getYearList()),
     getSalesTypeList: () => dispatch(getSalesTypeList()),
     getCurrencyList: () => dispatch(getCurrencyList()),
-    getCountryList: () => dispatch(getCountryList()),
+    getCountryList: () => dispatch(getCountryList())
   };
 };
 

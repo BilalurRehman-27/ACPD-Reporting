@@ -1,19 +1,19 @@
-import React from 'react';
-import { Modal, Form, Input, Button, Select } from 'antd';
-import { apiCall } from '../Services/API';
+import React from "react";
+import { Modal, Form, Input, Button, Select } from "antd";
+import { apiCall } from "../Services/API";
 
 const { Option } = Select;
 
 class CurrencyRatesModal extends React.Component {
   state = {
-    ModalText: 'Content of the modal',
+    ModalText: "Content of the modal",
     visible: false,
-    confirmLoading: false,
+    confirmLoading: false
   };
 
   showModal = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
   };
 
@@ -21,9 +21,11 @@ class CurrencyRatesModal extends React.Component {
     e.preventDefault();
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        console.log("Received values of form: ", values);
         const mappedObject = {
-          CurrencyId: values.currencyID ? values.currencyID : 0,
+          CurrencyId: values.editedCurrency
+            ? values.editedCurrency
+            : values.currency,
           Month: values.editedMonth
             ? parseInt(values.editedMonth)
             : parseInt(values.month),
@@ -34,14 +36,15 @@ class CurrencyRatesModal extends React.Component {
             ? parseInt(values.editedRate)
             : parseInt(values.rate),
           Quarter:
-            (values.editedQuarter ? values.editedQuarter : values.quarter) ||
-            '',
+            (values.editedQuarter ? values.editedQuarter : values.quarter) || ""
         };
-        if (values.hasOwnProperty('editedYear')) {
+        this.setState({ confirmLoading: true });
+        if (values.hasOwnProperty("editedYear")) {
           await apiCall.UpdateCurrencyRates(mappedObject);
         } else {
           await apiCall.AddCurrencyRates(mappedObject);
         }
+        this.setState({ confirmLoading: false});
         this.props.form.resetFields();
         this.props.getModalStatus(false, true);
       }
@@ -55,29 +58,29 @@ class CurrencyRatesModal extends React.Component {
   getMonth = key => {
     switch (key) {
       case 1:
-        return 'January';
+        return "January";
       case 2:
-        return 'February';
+        return "February";
       case 3:
-        return 'March';
+        return "March";
       case 4:
-        return 'April';
+        return "April";
       case 5:
-        return 'May';
+        return "May";
       case 6:
-        return 'June';
+        return "June";
       case 7:
-        return 'July';
+        return "July";
       case 8:
-        return 'August';
+        return "August";
       case 9:
-        return 'September';
+        return "September";
       case 10:
-        return 'October';
+        return "October";
       case 11:
-        return 'November';
+        return "November";
       case 12:
-        return 'December';
+        return "December";
       default:
         break;
     }
@@ -85,58 +88,63 @@ class CurrencyRatesModal extends React.Component {
 
   render() {
     const { confirmLoading } = this.state;
-    const { visible, yearsList, data, isEdit } = this.props;
+    const { visible, yearsList, data, isEdit, currencyList } = this.props;
     const { getFieldDecorator } = this.props.form;
     return (
       <div>
         <Modal
-          title={isEdit ? 'Edit Record' : 'Add Record'}
+          title={isEdit ? "Edit Record" : "Add Record"}
           visible={visible}
           confirmLoading={confirmLoading}
           footer={[
             <>
-              <Button type='primary' key='back' onClick={this.handleOk}>
+              <Button
+                type="primary"
+                key="back"
+                loading={confirmLoading}
+                onClick={this.handleOk}
+              >
                 Save
               </Button>
-              <Button type='danger' key='back' onClick={this.handleCancel}>
+              <Button type="danger" key="back" onClick={this.handleCancel}>
                 Cancel
               </Button>
-            </>,
+            </>
           ]}
         >
-          <Form layout='vertical'>
+          <Form layout="vertical">
             {!isEdit ? (
               <>
-                <Form.Item label='Month'>
-                  {getFieldDecorator('month', {
+                <Form.Item label="Month">
+                  {getFieldDecorator("month", {
                     rules: [
-                      { required: true, message: 'Please select valid Month!' },
-                    ],
+                      { required: true, message: "Please select valid Month!" }
+                    ]
                   })(
-                    <Select placeholder='Select Month'>
-                      <Option value='1'>January</Option>
-                      <Option value='2'>February</Option>
-                      <Option value='3'>March</Option>
-                      <Option value='4'>April</Option>
-                      <Option value='5'>May</Option>
-                      <Option value='6'>June</Option>
-                      <Option value='7'>July</Option>
-                      <Option value='8'>August</Option>
-                      <Option value='9'>September</Option>
-                      <Option value='10'>October</Option>
-                      <Option value='11'>November</Option>
-                      <Option value='12'>December</Option>
+                    <Select placeholder="Select Month">
+                      <Option value="1">January</Option>
+                      <Option value="2">February</Option>
+                      <Option value="3">March</Option>
+                      <Option value="4">April</Option>
+                      <Option value="5">May</Option>
+                      <Option value="6">June</Option>
+                      <Option value="7">July</Option>
+                      <Option value="8">August</Option>
+                      <Option value="9">September</Option>
+                      <Option value="10">October</Option>
+                      <Option value="11">November</Option>
+                      <Option value="12">December</Option>
                     </Select>
                   )}
                 </Form.Item>
                 {yearsList && yearsList.length && (
-                  <Form.Item label='Year'>
-                    {getFieldDecorator('year', {
+                  <Form.Item label="Year">
+                    {getFieldDecorator("year", {
                       rules: [
-                        { required: true, message: 'Please select Year!' },
-                      ],
+                        { required: true, message: "Please select Year!" }
+                      ]
                     })(
-                      <Select placeholder='Select Year'>
+                      <Select placeholder="Select Year">
                         {yearsList.map((value, index) => (
                           <Option key={index} value={value}>
                             {value}
@@ -146,63 +154,79 @@ class CurrencyRatesModal extends React.Component {
                     )}
                   </Form.Item>
                 )}
-                <Form.Item label='Rate'>
-                  {getFieldDecorator('rate', {
+                {currencyList && currencyList.length && (
+                  <Form.Item label="Currency">
+                    {getFieldDecorator("currency", {
+                      rules: [
+                        { required: true, message: "Please select currency!" }
+                      ],
+                      initialValue: 1
+                    })(
+                      <Select placeholder="Select currency">
+                        {currencyList.map((value, index) => (
+                          <Option
+                            key={value.CurrencyId}
+                            value={value.CurrencyId}
+                          >
+                            {value.CurrencyName}
+                          </Option>
+                        ))}
+                      </Select>
+                    )}
+                  </Form.Item>
+                )}
+                <Form.Item label="Rate">
+                  {getFieldDecorator("rate", {
                     rules: [
-                      { required: true, message: 'Please input your Rate!' },
-                    ],
-                  })(<Input type='number' placeholder='Rate' />)}
+                      { required: true, message: "Please input your Rate!" }
+                    ]
+                  })(<Input type="number" placeholder="Rate" />)}
                 </Form.Item>
-                <Form.Item label='Quarter'>
-                  {getFieldDecorator('quarter', {
+                <Form.Item label="Quarter">
+                  {getFieldDecorator("quarter", {
                     rules: [
-                      { required: true, message: 'Please input your Quarter!' },
-                    ],
-                  })(<Input type='text' placeholder='Quarter' />)}
+                      { required: false, message: "Please input your Quarter!" }
+                    ]
+                  })(<Input type="text" placeholder="Quarter" />)}
                 </Form.Item>
               </>
             ) : (
               <>
-                <Form.Item label='CurrencyID' style={{ display: 'none' }}>
-                  {getFieldDecorator('currencyID', {
-                    initialValue: data.record.CurrencyId,
-                  })}
-                </Form.Item>
-                <Form.Item label='Month'>
-                  {getFieldDecorator('editedMonth', {
+                <Form.Item label="Month">
+                  {getFieldDecorator("editedMonth", {
                     rules: [
-                      { required: true, message: 'Please select valid Month!' },
+                      { required: true, message: "Please select valid Month!" }
                     ],
-                    initialValue: data.record.Month.toString(),
+                    initialValue: data.record.Month.toString()
                   })(
-                    <Select placeholder='Select Month'>
-                      <Option value='1'>January</Option>
-                      <Option value='2'>February</Option>
-                      <Option value='3'>March</Option>
-                      <Option value='4'>April</Option>
-                      <Option value='5'>May</Option>
-                      <Option value='6'>June</Option>
-                      <Option value='7'>July</Option>
-                      <Option value='8'>August</Option>
-                      <Option value='9'>September</Option>
-                      <Option value='10'>October</Option>
-                      <Option value='11'>November</Option>
-                      <Option value='12'>December</Option>
+                    <Select placeholder="Select Month">
+                      <Option value="1">January</Option>
+                      <Option value="2">February</Option>
+                      <Option value="3">March</Option>
+                      <Option value="4">April</Option>
+                      <Option value="5">May</Option>
+                      <Option value="6">June</Option>
+                      <Option value="7">July</Option>
+                      <Option value="8">August</Option>
+                      <Option value="9">September</Option>
+                      <Option value="10">October</Option>
+                      <Option value="11">November</Option>
+                      <Option value="12">December</Option>
                     </Select>
                   )}
                 </Form.Item>
-                <Form.Item label='Year'>
-                  {getFieldDecorator('editedYear', {
+                <Form.Item label="Year">
+                  {getFieldDecorator("editedYear", {
                     rules: [
                       {
                         required: true,
-                        message: 'Please select Year!',
-                        isEdit: true,
-                      },
+                        message: "Please select Year!",
+                        isEdit: true
+                      }
                     ],
-                    initialValue: data.record.Year.toString(),
+                    initialValue: data.record.Year.toString()
                   })(
-                    <Select placeholder='Select Year'>
+                    <Select placeholder="Select Year">
                       {yearsList.map((value, index) => (
                         <Option key={index} value={value}>
                           {value}
@@ -211,24 +235,45 @@ class CurrencyRatesModal extends React.Component {
                     </Select>
                   )}
                 </Form.Item>
-                <Form.Item label='Rate'>
-                  {getFieldDecorator('editedRate', {
+                {currencyList && currencyList.length && (
+                  <Form.Item label="Currency">
+                    {getFieldDecorator("editedCurrency", {
+                      rules: [
+                        { required: true, message: "Please select currency!" }
+                      ],
+                      initialValue: data.record.CurrencyId
+                    })(
+                      <Select placeholder="Select currency">
+                        {currencyList.map((value, index) => (
+                          <Option
+                            key={value.CurrencyId}
+                            value={value.CurrencyId}
+                          >
+                            {value.CurrencyName}
+                          </Option>
+                        ))}
+                      </Select>
+                    )}
+                  </Form.Item>
+                )}
+                <Form.Item label="Rate">
+                  {getFieldDecorator("editedRate", {
                     rules: [
-                      { required: true, message: 'Please input your Rate!' },
+                      { required: true, message: "Please input your Rate!" }
                     ],
-                    initialValue: data.record.Rate.toString(),
-                  })(<Input type='number' placeholder='Rate' />)}
+                    initialValue: data.record.Rate.toString()
+                  })(<Input type="number" placeholder="Rate" />)}
                 </Form.Item>
-                <Form.Item label='Quarter'>
-                  {getFieldDecorator('editedQuarter', {
+                <Form.Item label="Quarter">
+                  {getFieldDecorator("editedQuarter", {
                     rules: [
                       {
                         required: false,
-                        message: 'Please input your Quarter!',
-                      },
+                        message: "Please input your Quarter!"
+                      }
                     ],
-                    initialValue: data.record.Quarter,
-                  })(<Input type='text' placeholder='Quarter' />)}
+                    initialValue: data.record.Quarter
+                  })(<Input type="text" placeholder="Quarter" />)}
                 </Form.Item>
               </>
             )}
@@ -239,7 +284,7 @@ class CurrencyRatesModal extends React.Component {
   }
 }
 
-const CurrencyRatesModalWrapper = Form.create({ name: 'form_in_modal' })(
+const CurrencyRatesModalWrapper = Form.create({ name: "form_in_modal" })(
   CurrencyRatesModal
 );
 export default CurrencyRatesModalWrapper;
