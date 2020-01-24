@@ -199,10 +199,12 @@ class InvoicesContent extends React.Component {
         dataIndex: "InvoicesItems",
         render: items =>
           items.map((item, index) => {
-           return <span>
-              {item.ItemName}
-              <br />
-            </span>;
+            return (
+              <span key={index}>
+                {item.ItemName}
+                <br />
+              </span>
+            );
           }),
         width: "150px"
       },
@@ -254,18 +256,17 @@ class InvoicesContent extends React.Component {
               </Button>
             </div>
           )}
-          {list.length > 0 && (
-            <>
+          {list.length > 0 && (        
               <Table
                 bordered
                 scroll={{ x: 1300 }}
+                key={record => record.RowNumber}
                 rowKey={record => record.RowNumber}
                 dataSource={list}
                 columns={columns}
                 loading={loading}
                 rowClassName="editable-row"
               />
-            </>
           )}
         </Spin>
       </>

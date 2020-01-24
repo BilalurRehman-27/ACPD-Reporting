@@ -131,3 +131,31 @@
   border: 1px solid #d9d9d9;
   border-radius: 6px;
 }
+
+.vertical-center-modal {
+  text-align: center;
+}
+
+.vertical-center-modal:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  width: 0;
+}
+
+
+.vertical-center-modal .ant-modal {
+  display: inline-block;
+  vertical-align: middle;
+  top: 0;
+  text-align: left;
+}
+
+.invoiceItems{
+  background-color:#34282821;
+}
+
+.invoice-items-margin-top {
+  margin-top: 5px;
+}

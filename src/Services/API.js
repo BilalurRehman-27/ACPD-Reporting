@@ -10,6 +10,22 @@ const config = {
   },
 };
 
+var months = {
+  "1": "Jan",
+  "2": "Feb",
+  "3": "Mar",
+  "4": "Apr",
+  "5": "May",
+  "6": "Jun",
+  "7": "Jul",
+  "8": "Aug",
+  "9": "Sep",
+  "10": "Oct",
+  "11": "Nov",
+  "12": "Dec"
+};
+
+
 const apiCall = {
   GetLoginToken(name, password) {
     const requestLogin = {
@@ -22,7 +38,14 @@ const apiCall = {
   GetMonthlyDirectSales(data) {
     return axios.get(
       DIRECT_SALES_BASE_URL +
-      `/GetDirectSales?month=${data.month}&year=${data.year}&currency=${data.currency}`
+      `/GetDirectSales?month=${data.month}&year=${data.year}&currency=${data.currency}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "bearer " + localStorage.Access_Token,
+          "Content-Type": "application/json"
+        }
+      }
     );
   },
   GetMonthlySummaryDirectSales(data) {
@@ -134,17 +157,53 @@ const apiCall = {
     );
   },
   DownloadDirectSalesMonthlyReport(data) {
-    const downloadURL =
-      BASE_URL +
-      `/api/Invoice/MonthlyReport?month=${data.month}&year=${data.year}&currency=${data.currency}`;
-    window.open(downloadURL, '_blank');
+    // const downloadURL =
+    //   BASE_URL +
+    //   `/api/Invoice/MonthlyReport?month=${data.month}&year=${data.year}&currency=${data.currency}`;
+    // window.open(downloadURL, '_blank');
+    var fileType = "application/vnd.ms-excel";
+    var name =
+      months[data.month] + "-" + data.year + "-" + data.currency + ".xlsx";
+    axios(
+      INVOICES_BASE_URL +
+        `/MonthlyReport?month=${data.month}&year=${data.year}&currency=${data.currency}`,
+      {
+        params: {},
+        responseType: "blob",
+        method: "GET",
+        withCredentials: true,
+        credentials: "include",
+        headers: {
+          Authorization: "bearer " + localStorage.Access_Token,
+          "Content-Type": "application/json"
+        }
+      }
+    )
+      .then(response => {
+        var blob = new Blob([response.data], { type: fileType });
+
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          window.navigator.msSaveOrOpenBlob(blob, name);
+        } else {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = name;
+          document.body.appendChild(link);
+          link.click();
+        }
+      })
+      .then(data => {
+        this.setState({
+          mainLoading: false
+        });
+      })
+      .catch(console.log);
   },
   UpdateInvoiceData(data) {
-    data.Mode = '2';
     return axios.post(BASE_URL + '/api/invoice/UpdateInvoiceData', data);
   },
   AddInvoiceData(data) {
-    data.Mode = '1';
     return axios.post(BASE_URL + '/api/invoice/UpdateInvoiceData', data);
   },
   GetPromotionCodesList() {
