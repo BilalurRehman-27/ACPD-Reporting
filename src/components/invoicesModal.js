@@ -15,7 +15,6 @@ import moment from "moment";
 
 const { Option } = Select;
 const { TextArea } = Input;
-let id = 0;
 
 class InvoicesModal extends React.PureComponent {
   constructor(props) {
@@ -23,7 +22,8 @@ class InvoicesModal extends React.PureComponent {
     this.state = {
       ModalText: "Content of the modal",
       visible: false,
-      confirmLoading: false
+      confirmLoading: false,
+      shouldRenderItems: true
     };
   }
 
@@ -51,6 +51,7 @@ class InvoicesModal extends React.PureComponent {
         break;
     }
   };
+
   handleOk = e => {
     e.preventDefault();
     this.props.form.validateFields(async (err, values) => {
@@ -65,7 +66,7 @@ class InvoicesModal extends React.PureComponent {
                 values.InvoicesItems[index] &&
                 values.InvoicesItems[index].RowNumber
                   ? values.InvoicesItems[index].RowNumber
-                  : 1,
+                  : 0,
               SalesTypeId: values.editedSalesTypeId
                 ? values.editedSalesTypeId
                 : values.salesTypeId,
@@ -124,9 +125,7 @@ class InvoicesModal extends React.PureComponent {
             ? values.editedPromoCode
             : values.promoCode,
           RefBy: values.editedRefBy ? values.editedRefBy : values.refBy,
-          PayPalID: values.editedPayPalID
-            ? values.editedPayPalID
-            : values.PayPalID,
+          PayPalID: null,
           InvoicesItems: invoiceItemsList
         };
         if (values.hasOwnProperty("editedFirstName")) {
@@ -158,7 +157,7 @@ class InvoicesModal extends React.PureComponent {
   handleAddItems = props => {
     const { form } = props;
     const keys = form.getFieldValue("keys");
-    const nextKeys = keys.concat(id++);
+    const nextKeys = keys.concat(Math.floor(Math.random()*1000));
     // can use data-binding to set
     // important! notify form to detect changes
     form.setFieldsValue({
@@ -186,89 +185,78 @@ class InvoicesModal extends React.PureComponent {
     const { form } = this.props;
     const { getFieldDecorator } = form;
     const formItems = invoiceItems.map((item, index) => (
-      <Form.Item required={false} key={index}>
-        <Col span={6}>
-          <Form.Item label="Item Name">
-            {getFieldDecorator(`itemName[${index}]`, {
-              rules: [
-                {
-                  required: true,
-                  message: "Please input your Item Name!"
-                }
-              ],
-              initialValue: item.ItemName
-            })(
-              <TextArea rows={4} type="text" placeholder="Item Name" required />
-            )}
-          </Form.Item>
-        </Col>
-        <Col span={6}>
-          <Form.Item label="Units">
-            {getFieldDecorator(`units[${index}]`, {
-              rules: [
-                {
-                  required: false,
-                  message: "Please input your Units!"
-                }
-              ],
-              initialValue: item.Units
-            })(<Input type="number" placeholder="Units" />)}
-          </Form.Item>
-        </Col>
-        <Col span={6}>
-          <Form.Item label="Orders">
-            {getFieldDecorator(`orders[${index}]`, {
-              rules: [
-                {
-                  required: false,
-                  message: "Please input your Orders!"
-                }
-              ],
-              initialValue: item.Orders
-            })(<Input type="number" placeholder="Orders" />)}
-          </Form.Item>
-        </Col>
-        <Col span={6}>
-          <Form.Item label="Item Code">
-            {getFieldDecorator(`itemCode[${index}]`, {
-              rules: [
-                {
-                  required: false,
-                  message: "Please input your Item Code!"
-                }
-              ],
-              initialValue: item.ItemCode
-            })(<Input type="text" placeholder="Item Code" />)}
-          </Form.Item>
-        </Col>
-        {/* {invoiceItems.length > 1 ? (
-                <Icon
-                  className="dynamic-delete-button"
-                  type="minus-circle-o"
-                  theme="twoTone"
-                  onClick={() => this.remove(index)}
+      <>
+        <Form.Item required={false} key={index}>
+          <Col span={6}>
+            <Form.Item label="Item Name">
+              {getFieldDecorator(`itemName[${index}]`, {
+                rules: [
+                  {
+                    required: true,
+                    message: "Please input your Item Name!"
+                  }
+                ],
+                initialValue: item.ItemName
+              })(
+                <TextArea
+                  rows={4}
+                  type="text"
+                  placeholder="Item Name"
+                  required
                 />
-              ) : null} */}
-      </Form.Item>
+              )}
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item label="Units">
+              {getFieldDecorator(`units[${index}]`, {
+                rules: [
+                  {
+                    required: false,
+                    message: "Please input your Units!"
+                  }
+                ],
+                initialValue: item.Units
+              })(<Input type="number" placeholder="Units" />)}
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item label="Orders">
+              {getFieldDecorator(`orders[${index}]`, {
+                rules: [
+                  {
+                    required: false,
+                    message: "Please input your Orders!"
+                  }
+                ],
+                initialValue: item.Orders
+              })(<Input type="number" placeholder="Orders" />)}
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item label="Item Code">
+              {getFieldDecorator(`itemCode[${index}]`, {
+                rules: [
+                  {
+                    required: false,
+                    message: "Please input your Item Code!"
+                  }
+                ],
+                initialValue: item.ItemCode
+              })(<Input type="text" placeholder="Item Code" />)}
+            </Form.Item>
+          </Col>
+        </Form.Item>        
+      </>
     ));
     return formItems;
   };
 
-  render() {
-    const { confirmLoading } = this.state;
-    const {
-      visible,
-      isEdit,
-      data,
-      salesTypeList,
-      countryList,
-      currencyList,
-      form
-    } = this.props;
-    const { getFieldDecorator, getFieldValue } = form;
+  addInvoices = keys => {
+    const { form } = this.props;
+    const { getFieldDecorator } = form;
     getFieldDecorator("keys", { initialValue: [] });
-    const keys = getFieldValue("keys");
-    const formItems = keys.map((k, index) => (
+    return keys.map((k, index) => (
       <Form.Item required={false} key={k}>
         <Col span={6}>
           <Form.Item label="Item Name">
@@ -330,6 +318,23 @@ class InvoicesModal extends React.PureComponent {
         ) : null}
       </Form.Item>
     ));
+  };
+
+  render() {
+    const { confirmLoading } = this.state;
+    const {
+      visible,
+      isEdit,
+      data,
+      salesTypeList,
+      countryList,
+      currencyList,
+      form
+    } = this.props;
+    const { getFieldValue, getFieldDecorator } = form;
+    getFieldDecorator("keys", { initialValue: [] });
+    const keys = getFieldValue("keys");
+    const formItems = keys && keys.length > 0 && this.addInvoices(keys);
     return (
       <Modal
         title={isEdit ? "Edit Record" : "Add Record"}
@@ -446,7 +451,7 @@ class InvoicesModal extends React.PureComponent {
                         placeholder="Select Country"
                       >
                         {countryList.map((value, index) => (
-                          <Option key={index} value={value.Id}>
+                          <Option key={index} value={value.Name}>
                             {value.Name}
                           </Option>
                         ))}
@@ -660,7 +665,7 @@ class InvoicesModal extends React.PureComponent {
                         placeholder="Select Country"
                       >
                         {countryList.map((value, index) => (
-                          <Option key={index} value={value.Id}>
+                          <Option key={index} value={value.Name}>
                             {value.Name}
                           </Option>
                         ))}
@@ -779,7 +784,7 @@ class InvoicesModal extends React.PureComponent {
                   </div>
                 </Col>
                 {this.renderInvoiceItems(data.record.InvoicesItems)}
-                {formItems}
+                {keys && keys.length > 0 ? this.addInvoices(keys) : null}
               </Row>
             </>
           )}

@@ -69,7 +69,7 @@ class DirectSalesContent extends React.Component {
   handleExport = async () => {
     const searchResult = await this.setSearchCriteria.current.validateFields();
     apiCall.DownloadDirectSalesMonthlyReport(searchResult);
-    message.success('Done');
+    message.info("Please wait.. Your file will be downloaded shortly");
   };
 
   render() {

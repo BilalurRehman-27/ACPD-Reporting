@@ -16,9 +16,10 @@ class PromotionalRatesModal extends React.Component {
   };
 
   handleOk = async (e) => {
-    e.preventDefault();
+    e.preventDefault();    
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
+        this.setState({confirmLoading:true});
         console.log('Received values of form: ', values);
         const mappedObject = {
           Id: values.Id ? values.Id : 0,
@@ -29,6 +30,7 @@ class PromotionalRatesModal extends React.Component {
         await apiCall.UpdatePromoCodes(mappedObject)
         this.props.form.resetFields();
         this.props.getModalStatus(false, true);
+        this.setState({confirmLoading:false});
       }
     });
   };
@@ -50,10 +52,10 @@ class PromotionalRatesModal extends React.Component {
           confirmLoading={confirmLoading}
           footer={[
             <>
-              <Button type="primary" key="back" onClick={this.handleOk}>
+              <Button type="primary" key="back" loading={confirmLoading} onClick={this.handleOk}>
                 Save
                       </Button>
-              <Button type="danger" key="back" onClick={this.handleCancel}>
+              <Button type="danger" key="cancel" onClick={this.handleCancel}>
                 Cancel
                   </Button>
             </>
