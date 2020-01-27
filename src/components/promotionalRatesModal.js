@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Modal, Form, Input, Button, Checkbox } from 'antd';
 import { apiCall } from '../Services/API';
 
@@ -15,22 +15,26 @@ class PromotionalRatesModal extends React.Component {
     });
   };
 
-  handleOk = async (e) => {
-    e.preventDefault();    
+  handleOk = async e => {
+    e.preventDefault();
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
-        this.setState({confirmLoading:true});
+        this.setState({ confirmLoading: true });
         console.log('Received values of form: ', values);
         const mappedObject = {
           Id: values.Id ? values.Id : 0,
-          Promcode: values.editedPromcode ? values.editedPromcode : values.promcode,
+          Promcode: values.editedPromcode
+            ? values.editedPromcode
+            : values.promcode,
           RefBy: values.editedRefBy ? values.editedRefBy : values.refBy,
-          Active: values.hasOwnProperty('editedActive') ? values.editedActive : values.active,
-        }
-        await apiCall.UpdatePromoCodes(mappedObject)
+          Active: values.hasOwnProperty('editedActive')
+            ? values.editedActive
+            : values.active,
+        };
+        await apiCall.UpdatePromoCodes(mappedObject);
         this.props.form.resetFields();
         this.props.getModalStatus(false, true);
-        this.setState({confirmLoading:false});
+        this.setState({ confirmLoading: false });
       }
     });
   };
@@ -39,7 +43,6 @@ class PromotionalRatesModal extends React.Component {
     this.props.getModalStatus(false, false);
   };
 
-
   render() {
     const { confirmLoading } = this.state;
     const { visible, data, isEdit } = this.props;
@@ -47,90 +50,95 @@ class PromotionalRatesModal extends React.Component {
     return (
       <div>
         <Modal
-          title="Add Record"
+          title='Add Record'
           visible={visible}
           confirmLoading={confirmLoading}
           footer={[
             <>
-              <Button type="primary" key="back" loading={confirmLoading} onClick={this.handleOk}>
+              <Button
+                type='primary'
+                key='back'
+                loading={confirmLoading}
+                onClick={this.handleOk}
+              >
                 Save
-                      </Button>
-              <Button type="danger" key="cancel" onClick={this.handleCancel}>
+              </Button>
+              <Button type='danger' key='cancel' onClick={this.handleCancel}>
                 Cancel
-                  </Button>
-            </>
+              </Button>
+            </>,
           ]}
         >
-          <Form layout="vertical" >
-            {!isEdit ?
+          <Form layout='vertical'>
+            {!isEdit ? (
               <>
-                <Form.Item label="Code">
+                <Form.Item label='Code'>
                   {getFieldDecorator('promcode', {
-                    rules: [{ required: true, message: 'Please input your Code!' }],
+                    rules: [
+                      { required: true, message: 'Please input your Code!' },
+                    ],
                   })(
                     <Input
                       // prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                      type="text"
-                      placeholder="Code"
-                    />,
+                      type='text'
+                      placeholder='Code'
+                    />
                   )}
                 </Form.Item>
-                <Form.Item label="RefBy">
+                <Form.Item label='RefBy'>
                   {getFieldDecorator('refBy', {
-                    rules: [{ required: true, message: 'Please input your RefBy!' }],
+                    rules: [
+                      { required: false, message: 'Please input your RefBy!' },
+                    ],
                   })(
                     <Input
                       // prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                      type="text"
-                      placeholder="RefBy"
-                    />,
+                      type='text'
+                      placeholder='RefBy'
+                    />
                   )}
                 </Form.Item>
                 <Form.Item>
                   {getFieldDecorator('active', {
                     initialValue: true,
-                  })(
-                    <Checkbox>Status</Checkbox>
-                  )}
+                  })(<Checkbox>Status</Checkbox>)}
                 </Form.Item>
-              </> :
+              </>
+            ) : (
               <>
-                <Form.Item label="Id" style={{ display: 'none' }}>
+                <Form.Item label='Id' style={{ display: 'none' }}>
                   {getFieldDecorator('Id', {
                     initialValue: data.record.Id,
                   })}
                 </Form.Item>
-                <Form.Item label="Code">
+                <Form.Item label='Code'>
                   {getFieldDecorator('editedPromcode', {
-                    rules: [{ required: true, message: 'Please input your Code!' }],
+                    rules: [
+                      { required: true, message: 'Please input your Code!' },
+                    ],
                     initialValue: data.record.Promcode,
-                  })(
-                    <Input
-                      type="text"
-                      placeholder="Code"
-                    />,
-                  )}
+                  })(<Input type='text' placeholder='Code' />)}
                 </Form.Item>
-                <Form.Item label="RefBy">
+                <Form.Item label='RefBy'>
                   {getFieldDecorator('editedRefBy', {
-                    rules: [{ required: true, message: 'Please input your RefBy!' }],
+                    rules: [
+                      { required: false, message: 'Please input your RefBy!' },
+                    ],
                     initialValue: data.record.RefBy,
-                  })(
-                    <Input
-                      type="text"
-                      placeholder="RefBy"
-                    />,
-                  )}
+                  })(<Input type='text' placeholder='RefBy' />)}
                 </Form.Item>
                 <Form.Item>
                   {getFieldDecorator('editedActive', {
                     initialValue: data.record.Active,
-                    valuePropName: 'checked'
+                    valuePropName: 'checked',
                   })(
-                    <Checkbox defaultValue={data.record.Active}>Status</Checkbox>
+                    <Checkbox defaultValue={data.record.Active}>
+                      Status
+                    </Checkbox>
                   )}
                 </Form.Item>
-              </>}
+              </>
+            )}
           </Form>
         </Modal>
       </div>
@@ -138,5 +146,7 @@ class PromotionalRatesModal extends React.Component {
   }
 }
 
-const PromotionalRatesModalWrapper = Form.create({ name: 'form_in_modal' })(PromotionalRatesModal);
-export default PromotionalRatesModalWrapper
+const PromotionalRatesModalWrapper = Form.create({ name: 'form_in_modal' })(
+  PromotionalRatesModal
+);
+export default PromotionalRatesModalWrapper;

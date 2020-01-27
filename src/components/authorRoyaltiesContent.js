@@ -1,13 +1,13 @@
-import React from "react";
-import { connect } from "react-redux";
-import { Table, Button, Spin, Icon, message } from "antd";
-import GenericSearchCriteria from "./genericSearchCriteria";
+import React from 'react';
+import { connect } from 'react-redux';
+import { Table, Button, Spin, Icon, message } from 'antd';
+import AuthorRoyaltySearchCriteria from './authorRoyaltySearchCriteria';
 import {
   getAuthorRoyaltiesSale,
   getYearList,
   getAuthorList,
-  downloadAuthorRoyalties
-} from "../actions/actions";
+  downloadAuthorRoyalties,
+} from '../actions/actions';
 
 class AuthorRoyaltiesContent extends React.Component {
   constructor(props) {
@@ -17,7 +17,7 @@ class AuthorRoyaltiesContent extends React.Component {
       pagination: {},
       loading: false,
       authorList: [],
-      yearList: []
+      yearList: [],
     };
     this.setSearchCriteria = React.createRef();
   }
@@ -30,27 +30,28 @@ class AuthorRoyaltiesContent extends React.Component {
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     this.setState({
-      pagination: pager
+      pagination: pager,
     });
     this.fetch({
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
       sortOrder: sorter.order,
-      ...filters
+      ...filters,
     });
   };
   handleClick = async () => {
+    this.setState({ loading: true });
     const searchResult = await this.setSearchCriteria.current.validateFields();
     this.props.getAuthorRoyaltiesSale(searchResult);
   };
   handleExport = async () => {
     const searchResult = await this.setSearchCriteria.current.validateFields();
     await this.props.downloadAuthorRoyalties(searchResult);
-    message.info("Please wait.. Your file will be downloaded shortly");
+    message.info('Please wait.. Your file will be downloaded shortly');
   };
   fetch = (params = {}) => {
-    console.log("params:", params);
+    console.log('params:', params);
     this.setState({ loading: true });
     this.props.getAuthorRoyaltiesSale();
     this.props.getYearList();
@@ -67,7 +68,7 @@ class AuthorRoyaltiesContent extends React.Component {
         list: list,
         pagination,
         yearList: yearList,
-        authorList: authorList
+        authorList: authorList,
       });
     }
   }
@@ -75,47 +76,47 @@ class AuthorRoyaltiesContent extends React.Component {
     const { list, pagination, yearList, authorList, loading } = this.state;
     const columns = [
       {
-        title: "Course",
-        dataIndex: "Course"
+        title: 'Course',
+        dataIndex: 'Course',
       },
       {
-        title: "Revenue",
-        dataIndex: "Revenue"
+        title: 'Revenue',
+        dataIndex: 'Revenue',
       },
       {
-        title: "UnitsPurchased",
-        dataIndex: "UnitsPurchased"
-      }
+        title: 'UnitsPurchased',
+        dataIndex: 'UnitsPurchased',
+      },
     ];
     return (
       <>
         <h1>Royal Authorities Report Dashboard</h1>
-        <div style={{ textAlign: "right" }}>
+        <div style={{ textAlign: 'right' }}>
           <Button
-            type="ghost"
-            htmlType="submit"
-            style={{ backgroundColor: "#4c4c4c33" }}
+            type='ghost'
+            htmlType='submit'
+            style={{ backgroundColor: '#4c4c4c33' }}
             onClick={this.handleExport}
-            title="Export to Excel"
+            title='Export to Excel'
             loading={loading}
           >
             Download Excel
-            <Icon type="file-excel" theme="filled" />
+            <Icon type='file-excel' theme='filled' />
           </Button>
         </div>
 
         <hr />
         <Spin
-          tip="Please wait !!! While we get the content..."
+          tip='Please wait !!! While we get the content...'
           spinning={loading}
         >
-          <GenericSearchCriteria
+          <AuthorRoyaltySearchCriteria
             ref={this.setSearchCriteria}
             yearsList={yearList}
             nameList={authorList}
           />
-          <div style={{ marginLeft: "85%", marginBottom: "2%" }}>
-            <Button type="primary" htmlType="submit" onClick={this.handleClick}>
+          <div style={{ marginLeft: '85%', marginBottom: '2%' }}>
+            <Button type='primary' htmlType='submit' onClick={this.handleClick}>
               Search
             </Button>
           </div>
@@ -141,19 +142,22 @@ const mapStateToProps = state => {
   const { posReducer } = state;
   if (
     posReducer !== null &&
-    posReducer.data && posReducer.data.length !== 0 &&
-    posReducer.yearsList && posReducer.yearsList.length !== 0 &&
-    posReducer.authorList && posReducer.authorList.length !== 0
+    posReducer.data &&
+    posReducer.data.length !== 0 &&
+    posReducer.yearsList &&
+    posReducer.yearsList.length !== 0 &&
+    posReducer.authorList &&
+    posReducer.authorList.length !== 0
   )
     return {
       list: posReducer.data,
       loading: posReducer.loading,
       error: posReducer.error,
       yearList: posReducer.yearsList ? posReducer.yearsList : null,
-      authorList: posReducer.authorList ? posReducer.authorList : null
+      authorList: posReducer.authorList ? posReducer.authorList : null,
     };
   return {
-    list: null
+    list: null,
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -163,7 +167,7 @@ const mapDispatchToProps = dispatch => {
     getYearList: () => dispatch(getYearList()),
     getAuthorList: () => dispatch(getAuthorList()),
     downloadAuthorRoyalties: async data =>
-      dispatch(downloadAuthorRoyalties(data))
+      dispatch(downloadAuthorRoyalties(data)),
   };
 };
 
