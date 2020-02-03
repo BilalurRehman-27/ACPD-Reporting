@@ -345,11 +345,11 @@ export const _getDownloadAffiliateReportError = error => {
     error,
   };
 };
-export const downloadAffiliateReport = () => {
+export const downloadAffiliateReport = data => {
   return dispatch => {
     dispatch(_requestDownloadAffiliateReport());
     apiCall
-      .DownloadAffiliateReport()
+      .DownloadAffiliateReport(data)
       .then(data => {
         dispatch(_getDownloadAffiliateReportSuccess(data.data));
       })
@@ -408,7 +408,7 @@ export const _getDownloadAuthorRoyaltyReportError = error => {
     error,
   };
 };
-export const downloadAuthorRoyalties = (data) => {
+export const downloadAuthorRoyalties = data => {
   return dispatch => {
     dispatch(_requestDownloadAuthorRoyaltyReport());
     apiCall

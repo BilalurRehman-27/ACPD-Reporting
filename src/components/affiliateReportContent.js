@@ -46,8 +46,8 @@ class AffiliateReportContent extends React.Component {
     this.props.getAffiliatedSalesReports(searchResult);
   };
   handleExport = async () => {
-    const responseData = await this.props.downloadAffiliateReport();
-    message.success(responseData);
+    const searchResult = await this.setSearchCriteria.current.validateFields();
+    await this.props.downloadAffiliateReport(searchResult);
   };
   fetch = (params = {}) => {
     console.log('params:', params);
@@ -57,11 +57,20 @@ class AffiliateReportContent extends React.Component {
     this.props.getProfBodyList();
   };
   componentDidUpdate(prevProps) {
-    if (prevProps.list !== this.props.list) {
-      const { list, yearList, profList } = this.props;
+    if (
+      prevProps.list !== this.props.list ||
+      prevProps.error !== this.props.error
+    ) {
+      const { list, yearList, profList, error } = this.props;
       const pagination = { ...this.state.pagination };
       pagination.total = list.length;
-
+      if (error)
+        message.warning(
+          'There was an error while downloading. Please try again later'
+        );
+      // else {
+      //   message.info('Please wait... Your file will be downloaded shortly');
+      // }
       this.setState({
         loading: false,
         list: list,
@@ -145,18 +154,7 @@ class AffiliateReportContent extends React.Component {
     return (
       <>
         <h1>Affiliate Report Dashboard</h1>
-        <div style={{ textAlign: 'right' }}>
-          <Button
-            type='ghost'
-            htmlType='submit'
-            style={{ backgroundColor: '#4c4c4c33' }}
-            onClick={this.handleExport}
-            title='Export to Excel'
-          >
-            <Icon type='file-excel' theme='filled' />
-            Download Excel
-          </Button>
-        </div>
+        <div style={{ textAlign: 'right' }}></div>
 
         <hr />
         <Spin
@@ -169,18 +167,29 @@ class AffiliateReportContent extends React.Component {
             nameList={profList}
           />
           <div style={{ marginLeft: '85%', marginBottom: '2%' }}>
-            <Button type='primary' htmlType='submit' onClick={this.handleClick}>
+            {/* <Button type='primary' htmlType='submit' onClick={this.handleClick}>
               Search
+            </Button> */}
+            <Button
+              type='ghost'
+              htmlType='submit'
+              style={{ backgroundColor: '#4c4c4c33' }}
+              onClick={this.handleExport}
+              title='Export to Excel'
+            >
+              <Icon type='file-excel' theme='filled' />
+              Download Excel
             </Button>
           </div>
-          <Table
+          {/* <Table
+            hideDefaultSelections={true}
             columns={columns}
             rowKey={record => record.Id}
             dataSource={list}
             pagination={pagination}
             loading={loading}
             onChange={this.handleTableChange}
-          />
+          /> */}
         </Spin>
       </>
     );
@@ -212,7 +221,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(getAffiliatedSalesReports(searchCriteria)),
     getYearList: () => dispatch(getYearList()),
     getProfBodyList: () => dispatch(getProfBodyList()),
-    downloadAffiliateReport: () => dispatch(downloadAffiliateReport()),
+    downloadAffiliateReport: data => dispatch(downloadAffiliateReport(data)),
   };
 };
 

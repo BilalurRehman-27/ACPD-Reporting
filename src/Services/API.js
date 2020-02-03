@@ -1,5 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
+import moment from 'moment';
 const BASE_URL = 'http://52.151.114.149/acpdreporting';
 const DIRECT_SALES_BASE_URL =
   'http://52.151.114.149/acpdreporting/api/DirectSales';
@@ -97,7 +98,6 @@ const apiCall = {
   },
   GetAffiliatedSalesReport(data) {
     if (data) {
-      const { frommonth, fromyear, tomonth, toyear, selectedRange } = data;
       return axios.get(
         BASE_URL +
           `/api/AffiliateSales/GetAffiliateData?name=${data.name}&year=${data.year}`
@@ -135,10 +135,23 @@ const apiCall = {
   GetCountryList() {
     return axios.get(BASE_URL + `/api/lookup/GetCountryList`);
   },
-  DownloadAffiliateReport() {
-    const downloadURL = BASE_URL + `/api/AffiliateSales/DownloadReport`;
-    window.open(downloadURL, '_blank');
-    return axios.get(BASE_URL + `/api/AffiliateSales/DownloadReport`);
+  DownloadAffiliateReport(data) {
+    const downloadURL = BASE_URL + `api/CustomReports/DownloadReport`;
+    if (data.hasOwnProperty('frommonth')) {
+      return axios.get(
+        downloadURL +
+          `?frommonth=${data.frommonth}&fromyear=${data.fromyear}&tomonth=${data.tomonth}&toyear=${data.toyear}&name=${data.name}`
+      );
+    } else {
+      return axios.get(
+        downloadURL +
+          `?fromdate=${moment(data.fromMonth).format(
+            'YYYY-MM-DD'
+          )}&todate=${moment(data.toMonth).format('YYYY-MM-DD')}&name=${
+            data.name
+          }`
+      );
+    }
   },
   DownloadAuthorRoyaltyReport(data) {
     if (data) {
