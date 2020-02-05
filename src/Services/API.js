@@ -291,5 +291,8 @@ const apiCall = {
         `/GetInvoiceOrderData?month=${data.month}&year=${data.year}&currency=${data.currency}`
     );
   },
+  GetCourseList(){
+    return axios.get(BASE_URL + '/api/lookup/GetCourseList')
+  }
 };
 export { apiCall };

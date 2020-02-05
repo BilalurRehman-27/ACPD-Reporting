@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment'
 import { Table, Button, Spin, Form } from 'antd';
 import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
 import {
@@ -8,6 +9,8 @@ import {
   getCurrencyList,
   getSalesTypeList,
   getCountryList,
+  getProfBodyList,
+  getCourseList,
 } from '../actions/actions';
 import InvoicesModal from './invoicesModal';
 import { apiCall } from '../Services/API';
@@ -48,9 +51,11 @@ class InvoicesContent extends React.Component {
     this.props.getCurrencyList();
     this.props.getSalesTypeList();
     this.props.getCountryList();
+    this.props.getProfBodyList();
+    this.props.getCourseList();
   }
 
-  fetch = (params = {}) => {};
+  fetch = (params = {}) => { };
 
   handleClick = async () => {
     const searchResult = await this.setSearchCriteria.current.validateFields();
@@ -113,6 +118,8 @@ class InvoicesContent extends React.Component {
       yearList,
       salesTypeList,
       countryList,
+      profBodyList,
+      courseList
     } = this.props;
     const {
       list,
@@ -191,7 +198,7 @@ class InvoicesContent extends React.Component {
         title: 'Date',
         dataIndex: 'OrderDate',
         render: date => {
-          return new Date(date).toLocaleDateString();
+          return moment(date).format('Do MMMM YYYY');
         },
       },
       {
@@ -202,7 +209,7 @@ class InvoicesContent extends React.Component {
             return (
               <span key={index}>
                 {item.ItemName}
-                <hr />
+                {items.length > 1 ? <hr /> : ''}
               </span>
             );
           }),
@@ -233,6 +240,8 @@ class InvoicesContent extends React.Component {
               salesTypeList={salesTypeList}
               countryList={countryList}
               currencyList={currencyList}
+              profBodyList={profBodyList}
+              courseList={courseList}
             />
           )}
           <MonthlySaleSearchCriteria
@@ -245,23 +254,21 @@ class InvoicesContent extends React.Component {
               Search
             </Button>
           </div>
-          {list.length > 0 && (
-            <div style={{ paddingBottom: 50 }}>
-              <Button
-                onClick={this.handleAdd}
-                type='primary'
-                style={{ marginBottom: 16, float: 'left' }}
-              >
-                Add a row
+          <div style={{ paddingBottom: 50 }}>
+            <Button
+              onClick={this.handleAdd}
+              type='primary'
+              style={{ marginBottom: 16, float: 'left' }}
+            >
+              Add Record
               </Button>
-            </div>
-          )}
+          </div>
           {list.length > 0 && (
             <Table
               bordered
               scroll={{ x: 1300 }}
-              key={record => record.RowNumber}
-              rowKey={record => record.RowNumber}
+              key={record => record.InvoiceNumber}
+              rowKey={record => record.InvoiceNumber}
               dataSource={list}
               columns={columns}
               loading={loading}
@@ -282,7 +289,9 @@ const mapStateToProps = state => {
     posReducer !== null &&
     posReducer.data !== null &&
     posReducer.yearsList &&
-    posReducer.currencyList
+    posReducer.currencyList &&
+    posReducer.courseList &&
+    posReducer.profList
   )
     return {
       list: posReducer.data,
@@ -290,6 +299,8 @@ const mapStateToProps = state => {
       currencyList: posReducer.currencyList ? posReducer.currencyList : null,
       salesTypeList: posReducer.salesTypeList ? posReducer.salesTypeList : null,
       countryList: posReducer.countryList ? posReducer.countryList : null,
+      profBodyList: posReducer.profList ? posReducer.profList : null,
+      courseList: posReducer.courseList ? posReducer.courseList : null,
       loading: posReducer.loading,
       error: posReducer.error,
     };
@@ -305,6 +316,8 @@ const mapDispatchToProps = dispatch => {
     getSalesTypeList: () => dispatch(getSalesTypeList()),
     getCurrencyList: () => dispatch(getCurrencyList()),
     getCountryList: () => dispatch(getCountryList()),
+    getProfBodyList: () => dispatch(getProfBodyList()),
+    getCourseList: () => dispatch(getCourseList()),
   };
 };
 

@@ -164,3 +164,7 @@
   justify-content: center;
   align-items: center;
 }
+
+.anticon-search{
+  background-color: grey;
+}

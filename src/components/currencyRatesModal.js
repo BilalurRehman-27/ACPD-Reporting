@@ -92,6 +92,7 @@ class CurrencyRatesModal extends React.Component {
         <Modal
           title={isEdit ? 'Edit Record' : 'Add Record'}
           visible={visible}
+          closable={false}
           confirmLoading={confirmLoading}
           footer={[
             <>

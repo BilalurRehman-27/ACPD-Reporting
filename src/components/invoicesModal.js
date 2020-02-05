@@ -63,8 +63,8 @@ class InvoicesModal extends React.PureComponent {
             const invoiceItem = {
               RowNumber:
                 values.InvoicesItems &&
-                values.InvoicesItems[index] &&
-                values.InvoicesItems[index].RowNumber
+                  values.InvoicesItems[index] &&
+                  values.InvoicesItems[index].RowNumber
                   ? values.InvoicesItems[index].RowNumber
                   : 0,
               SalesTypeId: values.editedSalesTypeId
@@ -85,7 +85,7 @@ class InvoicesModal extends React.PureComponent {
               ItemName: name,
               Units: values.units[index],
               Orders: values.orders[index],
-              ItemCode: values.itemCode[index]
+              //ItemCode: values.itemCode[index]
             };
             invoiceItemsList.push(invoiceItem);
             return invoiceItem;
@@ -157,7 +157,7 @@ class InvoicesModal extends React.PureComponent {
   handleAddItems = props => {
     const { form } = props;
     const keys = form.getFieldValue("keys");
-    const nextKeys = keys.concat(Math.floor(Math.random()*1000));
+    const nextKeys = keys.concat(Math.floor(Math.random() * 1000));
     // can use data-binding to set
     // important! notify form to detect changes
     form.setFieldsValue({
@@ -182,12 +182,12 @@ class InvoicesModal extends React.PureComponent {
   };
 
   renderInvoiceItems = (invoiceItems = []) => {
-    const { form } = this.props;
+    const { form, courseList } = this.props;
     const { getFieldDecorator } = form;
     const formItems = invoiceItems.map((item, index) => (
       <>
         <Form.Item required={false} key={index}>
-          <Col span={6}>
+          <Col span={8}>
             <Form.Item label="Item Name">
               {getFieldDecorator(`itemName[${index}]`, {
                 rules: [
@@ -198,12 +198,16 @@ class InvoicesModal extends React.PureComponent {
                 ],
                 initialValue: item.ItemName
               })(
-                <TextArea
-                  rows={4}
-                  type="text"
-                  placeholder="Item Name"
-                  required
-                />
+                <Select
+                  style={{ width: 200 }}
+                  placeholder="Select Sales Type"
+                >
+                  {courseList.map((value, index) => (
+                    <Option key={index} value={value.CourseID}>
+                      {value.CourseName}
+                    </Option>
+                  ))}
+                </Select>
               )}
             </Form.Item>
           </Col>
@@ -233,8 +237,8 @@ class InvoicesModal extends React.PureComponent {
               })(<Input type="number" placeholder="Orders" />)}
             </Form.Item>
           </Col>
-          <Col span={6}>
-            <Form.Item label="Item Code">
+          {/* <Col span={6}>
+            <Form.Item label="Item Code" visible={false}>
               {getFieldDecorator(`itemCode[${index}]`, {
                 rules: [
                   {
@@ -245,20 +249,20 @@ class InvoicesModal extends React.PureComponent {
                 initialValue: item.ItemCode
               })(<Input type="text" placeholder="Item Code" />)}
             </Form.Item>
-          </Col>
-        </Form.Item>        
+          </Col> */}
+        </Form.Item>
       </>
     ));
     return formItems;
   };
 
   addInvoices = keys => {
-    const { form } = this.props;
+    const { form,courseList } = this.props;
     const { getFieldDecorator } = form;
     getFieldDecorator("keys", { initialValue: [] });
     return keys.map((k, index) => (
       <Form.Item required={false} key={k}>
-        <Col span={6}>
+        <Col span={8}>
           <Form.Item label="Item Name">
             {getFieldDecorator(`itemName[${k}]`, {
               rules: [
@@ -268,7 +272,16 @@ class InvoicesModal extends React.PureComponent {
                 }
               ]
             })(
-              <TextArea rows={4} type="text" placeholder="Item Name" required />
+              <Select
+                style={{ width: 200 }}
+                placeholder="Select Sales Type"
+              >
+                {courseList.map((value, index) => (
+                  <Option key={index} value={value.CourseID}>
+                    {value.CourseName}
+                  </Option>
+                ))}
+              </Select>
             )}
           </Form.Item>
         </Col>
@@ -296,8 +309,8 @@ class InvoicesModal extends React.PureComponent {
             })(<Input type="number" placeholder="Orders" />)}
           </Form.Item>
         </Col>
-        <Col span={6}>
-          <Form.Item label="Item Code">
+        {/* <Col span={6}>
+          <Form.Item label="Item Code" visible={false}>
             {getFieldDecorator(`itemCode[${k}]`, {
               rules: [
                 {
@@ -307,7 +320,7 @@ class InvoicesModal extends React.PureComponent {
               ]
             })(<Input type="text" placeholder="Item Code" />)}
           </Form.Item>
-        </Col>
+        </Col> */}
         {keys.length > 0 ? (
           <Icon
             className="dynamic-delete-button"
@@ -329,6 +342,8 @@ class InvoicesModal extends React.PureComponent {
       salesTypeList,
       countryList,
       currencyList,
+      profBodyList,
+      courseList,
       form
     } = this.props;
     const { getFieldValue, getFieldDecorator } = form;
@@ -450,7 +465,7 @@ class InvoicesModal extends React.PureComponent {
                         style={{ width: 170 }}
                         placeholder="Select Country"
                       >
-                        {countryList.map((value, index) => (
+                        {countryList && countryList.map((value, index) => (
                           <Option key={index} value={value.Name}>
                             {value.Name}
                           </Option>
@@ -508,12 +523,12 @@ class InvoicesModal extends React.PureComponent {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item label="Revenue Date">
+                  <Form.Item label="Order Date">
                     {getFieldDecorator("revenueDate", {
                       rules: [
                         {
                           required: false,
-                          message: "Please input your Revenue Date!"
+                          message: "Please input your Order Date!"
                         }
                       ]
                     })(<DatePicker style={{ width: "100%" }} />)}
@@ -537,7 +552,18 @@ class InvoicesModal extends React.PureComponent {
                       rules: [
                         { required: false, message: "Please input your RefBy!" }
                       ]
-                    })(<Input type="text" placeholder="RefBy" />)}
+                    })(
+                      <Select
+                        style={{ width: 170 }}
+                        placeholder="Select Ref By"
+                      >
+                        {profBodyList.map((value, index) => (
+                          <Option key={index} value={value.ProfBody}>
+                            {value.ProfBody}
+                          </Option>
+                        ))}
+                      </Select>
+                    )}
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -561,233 +587,242 @@ class InvoicesModal extends React.PureComponent {
               </Row>
             </>
           ) : (
-            <>
-              <Row gutter={24}>
-                <Form.Item label="RowNumber" style={{ display: "none" }}>
-                  {getFieldDecorator("RowNumber", {
-                    initialValue: data.record.RowNumber
-                  })}
-                </Form.Item>
-                <Form.Item label="InvoicesItems" style={{ display: "none" }}>
-                  {getFieldDecorator("InvoicesItems", {
-                    initialValue: data.record.InvoicesItems
-                  })}
-                </Form.Item>
-                <Col span={8}>
-                  <Form.Item label="Invoice Number">
-                    {getFieldDecorator("editedInvoiceNumber", {
-                      rules: [
-                        {
-                          required: true,
-                          message: "Please input your Invoice Nuber!"
-                        }
-                      ],
-                      initialValue: data.record.InvoiceNumber
-                    })(<Input type="text" placeholder="Invoice Nuber" />)}
+              <>
+                <Row gutter={24}>
+                  <Form.Item label="RowNumber" style={{ display: "none" }}>
+                    {getFieldDecorator("RowNumber", {
+                      initialValue: data.record.RowNumber
+                    })}
                   </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label="SalesType">
-                    {getFieldDecorator("editedSalesTypeId", {
-                      rules: [
-                        {
-                          required: true,
-                          message: "Please input your SalesTypeId!"
-                        }
-                      ],
-                      initialValue: data.record.InvoicesItems[0].SalesTypeId
-                    })(
-                      <Select
+                  <Form.Item label="InvoicesItems" style={{ display: "none" }}>
+                    {getFieldDecorator("InvoicesItems", {
+                      initialValue: data.record.InvoicesItems
+                    })}
+                  </Form.Item>
+                  <Col span={8}>
+                    <Form.Item label="Invoice Number">
+                      {getFieldDecorator("editedInvoiceNumber", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Please input your Invoice Nuber!"
+                          }
+                        ],
+                        initialValue: data.record.InvoiceNumber
+                      })(<Input type="text" placeholder="Invoice Nuber" />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="SalesType">
+                      {getFieldDecorator("editedSalesTypeId", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Please input your SalesTypeId!"
+                          }
+                        ],
+                        initialValue: data.record.InvoicesItems[0].SalesTypeId
+                      })(
+                        <Select
+                          style={{ width: 170 }}
+                          placeholder="Select Sales Type"
+                        >
+                          {salesTypeList.map((value, index) => (
+                            <Option key={index} value={value.TypeId}>
+                              {value.Name}
+                            </Option>
+                          ))}
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="Company Name">
+                      {getFieldDecorator("editedCompanyName", {
+                        rules: [
+                          {
+                            required: false,
+                            message: "Please input your Company Name!"
+                          }
+                        ],
+                        initialValue: data.record.CompanyName
+                      })(<Input type="text" placeholder="Company Name" />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="First Name">
+                      {getFieldDecorator("editedFirstName", {
+                        rules: [
+                          {
+                            required: false,
+                            message: "Please input your First Name!"
+                          }
+                        ],
+                        initialValue: data.record.FirstName
+                      })(<Input type="text" placeholder="First Name" />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="Last Name">
+                      {getFieldDecorator("editedLastName", {
+                        rules: [
+                          {
+                            required: false,
+                            message: "Please input your Last Name!"
+                          }
+                        ],
+                        initialValue: data.record.LastName
+                      })(<Input type="text" placeholder="Last Name" />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="Country">
+                      {getFieldDecorator("editedCountry", {
+                        rules: [
+                          {
+                            required: false,
+                            message: "Please input your Country!"
+                          }
+                        ],
+                        initialValue: data.record.Country
+                      })(
+                        <Select
+                          style={{ width: 170 }}
+                          placeholder="Select Country"
+                        >
+                          {countryList && countryList.map((value, index) => (
+                            <Option key={index} value={value.Name}>
+                              {value.Name}
+                            </Option>
+                          ))}
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="Total Price">
+                      {getFieldDecorator("editedTotalPrice", {
+                        rules: [
+                          {
+                            required: false,
+                            message: "Please input your Total Price!"
+                          }
+                        ],
+                        initialValue: data.record.TotalPrice
+                      })(<Input type="number" placeholder="Total Price" />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="Currency">
+                      {getFieldDecorator("editedCurrencyId", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Please input your Currency!"
+                          }
+                        ],
+                        initialValue: data.record.InvoicesItems[0].CurrencyId
+                      })(
+                        <Select
+                          style={{ width: 170 }}
+                          placeholder="Select Currency"
+                        >
+                          {currencyList.map((value, index) => (
+                            <Option key={index} value={value.CurrencyId}>
+                              {value.CurrencyName}
+                            </Option>
+                          ))}
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="Total Tax">
+                      {getFieldDecorator("editedTotalTax", {
+                        rules: [
+                          {
+                            required: false,
+                            message: "Please input your Total Tax!"
+                          }
+                        ],
+                        initialValue: data.record.TotalTax
+                      })(<Input type="number" placeholder="Total Tax" />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item
+                      label="Order Date"
+                      hasFeedback
+                      validateStatus="success"
+                    >
+                      {getFieldDecorator("editedCreatedDate", {
+                        rules: [
+                          {
+                            required: false,
+                            message: "Please input your Order Date!"
+                          }
+                        ],
+                        initialValue: moment(
+                          new Date(data.record.OrderDate).toLocaleDateString(),
+                          "MM-DD-YYYY"
+                        )
+                      })(<DatePicker style={{ width: "100%" }} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="Promo Code">
+                      {getFieldDecorator("editedPromoCode", {
+                        rules: [
+                          {
+                            required: false,
+                            message: "Please input your Promo Code!"
+                          }
+                        ],
+                        initialValue: data.record.PromoCode
+                      })(<Input type="text" placeholder="Promo Code" />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="RefBy">
+                      {getFieldDecorator("editedRefBy", {
+                        rules: [
+                          { required: false, message: "Please input your RefBy!" }
+                        ],
+                        initialValue: data.record.RefBy
+                      })(<Select
                         style={{ width: 170 }}
-                        placeholder="Select Sales Type"
+                        placeholder="Select Ref By"
                       >
-                        {salesTypeList.map((value, index) => (
-                          <Option key={index} value={value.TypeId}>
-                            {value.Name}
+                        {profBodyList.map((value, index) => (
+                          <Option key={index} value={value.ProfBody}>
+                            {value.ProfBody}
                           </Option>
                         ))}
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label="Company Name">
-                    {getFieldDecorator("editedCompanyName", {
-                      rules: [
-                        {
-                          required: false,
-                          message: "Please input your Company Name!"
-                        }
-                      ],
-                      initialValue: data.record.CompanyName
-                    })(<Input type="text" placeholder="Company Name" />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label="First Name">
-                    {getFieldDecorator("editedFirstName", {
-                      rules: [
-                        {
-                          required: false,
-                          message: "Please input your First Name!"
-                        }
-                      ],
-                      initialValue: data.record.FirstName
-                    })(<Input type="text" placeholder="First Name" />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label="Last Name">
-                    {getFieldDecorator("editedLastName", {
-                      rules: [
-                        {
-                          required: false,
-                          message: "Please input your Last Name!"
-                        }
-                      ],
-                      initialValue: data.record.LastName
-                    })(<Input type="text" placeholder="Last Name" />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label="Country">
-                    {getFieldDecorator("editedCountry", {
-                      rules: [
-                        {
-                          required: false,
-                          message: "Please input your Country!"
-                        }
-                      ],
-                      initialValue: data.record.Country
-                    })(
-                      <Select
-                        style={{ width: 170 }}
-                        placeholder="Select Country"
-                      >
-                        {countryList.map((value, index) => (
-                          <Option key={index} value={value.Name}>
-                            {value.Name}
-                          </Option>
-                        ))}
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label="Total Price">
-                    {getFieldDecorator("editedTotalPrice", {
-                      rules: [
-                        {
-                          required: false,
-                          message: "Please input your Total Price!"
-                        }
-                      ],
-                      initialValue: data.record.TotalPrice
-                    })(<Input type="number" placeholder="Total Price" />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label="Currency">
-                    {getFieldDecorator("editedCurrencyId", {
-                      rules: [
-                        {
-                          required: true,
-                          message: "Please input your Currency!"
-                        }
-                      ],
-                      initialValue: data.record.InvoicesItems[0].CurrencyId
-                    })(
-                      <Select
-                        style={{ width: 170 }}
-                        placeholder="Select Currency"
-                      >
-                        {currencyList.map((value, index) => (
-                          <Option key={index} value={value.CurrencyId}>
-                            {value.CurrencyName}
-                          </Option>
-                        ))}
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label="Total Tax">
-                    {getFieldDecorator("editedTotalTax", {
-                      rules: [
-                        {
-                          required: false,
-                          message: "Please input your Total Tax!"
-                        }
-                      ],
-                      initialValue: data.record.TotalTax
-                    })(<Input type="number" placeholder="Total Tax" />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item
-                    label="Revenue Date"
-                    hasFeedback
-                    validateStatus="success"
-                  >
-                    {getFieldDecorator("editedCreatedDate", {
-                      rules: [
-                        {
-                          required: false,
-                          message: "Please input your Revenue Date!"
-                        }
-                      ],
-                      initialValue: moment(
-                        new Date(data.record.OrderDate).toLocaleDateString(),
-                        "MM-DD-YYYY"
-                      )
-                    })(<DatePicker style={{ width: "100%" }} />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label="Promo Code">
-                    {getFieldDecorator("editedPromoCode", {
-                      rules: [
-                        {
-                          required: false,
-                          message: "Please input your Promo Code!"
-                        }
-                      ],
-                      initialValue: data.record.PromoCode
-                    })(<Input type="text" placeholder="Promo Code" />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label="RefBy">
-                    {getFieldDecorator("editedRefBy", {
-                      rules: [
-                        { required: false, message: "Please input your RefBy!" }
-                      ],
-                      initialValue: data.record.RefBy
-                    })(<Input type="text" placeholder="RefBy" />)}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <div className="ant-col ant-form-item-label">
-                    <label htmlFor="form_in_modal_orders" title="Add">
-                      <b>Add Item</b>
-                    </label>
-                  </div>
-                  <div className="ant-col ant-form-item-control-wrapper">
-                    <span className="ant-form-item-children">
-                      <Button
-                        type="primary"
-                        onClick={() => this.handleAddItems(this.props)}
-                      >
-                        <Icon type="plus-circle" theme="twoTone" />
-                      </Button>
-                    </span>
-                  </div>
-                </Col>
-                {this.renderInvoiceItems(data.record.InvoicesItems)}
-                {keys && keys.length > 0 ? this.addInvoices(keys) : null}
-              </Row>
-            </>
-          )}
+                      </Select>)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <div className="ant-col ant-form-item-label">
+                      <label htmlFor="form_in_modal_orders" title="Add">
+                        <b>Add Item</b>
+                      </label>
+                    </div>
+                    <div className="ant-col ant-form-item-control-wrapper">
+                      <span className="ant-form-item-children">
+                        <Button
+                          type="primary"
+                          onClick={() => this.handleAddItems(this.props)}
+                        >
+                          <Icon type="plus-circle" theme="twoTone" />
+                        </Button>
+                      </span>
+                    </div>
+                  </Col>
+                  {this.renderInvoiceItems(data.record.InvoicesItems)}
+                  {keys && keys.length > 0 ? this.addInvoices(keys) : null}
+                </Row>
+              </>
+            )}
         </Form>
       </Modal>
     );

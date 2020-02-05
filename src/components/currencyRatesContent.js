@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Table, Button, Spin } from "antd";
+import { Table, Button, Spin, Input, Icon } from "antd";
+import Highlighter from 'react-highlight-words';
 import { getCurrencyRatesList, getYearList, getCurrencyList, } from "../actions/actions";
 import CurrencyRatesModal from "./currencyRatesModal";
 import { apiCall } from "../Services/API";
@@ -18,6 +19,84 @@ class CurrencyRatesContent extends React.Component {
       visible: false
     };
   }
+
+  getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            ref={node => {
+              this.searchInput = node;
+            }}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={e =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            onPressEnter={() =>
+              this.handleSearch(selectedKeys, confirm, dataIndex)
+            }
+            style={{ width: 188, marginBottom: 8, display: 'block' }}
+          />
+          <Button
+            type='primary'
+            onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}            
+            size='small'
+            style={{ width: 90, marginRight: 8 }}
+          >
+            Search
+        </Button>
+          <Button
+            onClick={() => this.handleReset(clearFilters)}
+            size='small'
+            style={{ width: 90 }}
+          >
+            Reset
+        </Button>
+        </div>
+      ),
+    filterIcon: filtered => (
+      <Icon type='search' style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
+    render: text =>
+      this.state.searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[this.state.searchText]}
+          autoEscape
+          textToHighlight={text.toString()}
+        />
+      ) : (
+          text
+        ),
+  });
+
+  handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    this.setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
+
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({ searchText: '' });
+  };
 
   handleTableChange = (pagination, filters, sorter) => {
     const pager = { ...this.state.pagination };
@@ -41,7 +120,7 @@ class CurrencyRatesContent extends React.Component {
     this.props.getCurrencyList();
   }
 
-  fetch = (params = {}) => {};
+  fetch = (params = {}) => { };
 
   componentDidUpdate(prevProps) {
     if (prevProps.list !== this.props.list) {
@@ -124,7 +203,7 @@ class CurrencyRatesContent extends React.Component {
   };
 
   render() {
-    const { loading, yearList,currencyList } = this.props;
+    const { loading, yearList, currencyList } = this.props;
     const { pagination } = this.state;
     const {
       list,
@@ -162,17 +241,20 @@ class CurrencyRatesContent extends React.Component {
       {
         title: "Currency",
         dataIndex: "CurrencyCode",
-        render: text => <span>{text}</span>
+        render: text => <span>{text}</span>,
+        ...this.getColumnSearchProps('CurrencyCode'),
       },
       {
         title: "Rate",
         dataIndex: "Rate",
-        render: text => <span>{text}</span>
+        render: text => <span>{text}</span>,
+        ...this.getColumnSearchProps('Rate'),
       },
       {
         title: "Quarter",
         dataIndex: "Quarter",
-        render: text => <span>{text}</span>
+        render: text => <span>{text}</span>,
+        ...this.getColumnSearchProps('Quarter'),
       }
     ];
     return (

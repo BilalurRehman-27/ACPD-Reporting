@@ -46,7 +46,6 @@ class PromotionCodesContent extends React.Component {
         <Button
           type='primary'
           onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-          icon='search'
           size='small'
           style={{ width: 90, marginRight: 8 }}
         >
@@ -234,7 +233,7 @@ class PromotionCodesContent extends React.Component {
                   backgroundColor: 'green',
                 }}
               >
-                Add a row
+                Add Record
               </Button>
             </div>
           )}

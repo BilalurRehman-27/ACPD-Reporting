@@ -30,6 +30,11 @@ export const GET_PROF_LIST = 'GET_PROF_LIST';
 export const GET_PROF_LIST_SUCCESS = 'GET_PROF_LIST_SUCCESS';
 export const GET_PROF_LIST_ERROR = 'GET_PROF_LIST_ERROR';
 
+
+export const GET_COURSE_LIST = 'GET_COURSE_LIST';
+export const GET_COURSE_LIST_SUCCESS = 'GET_COURSE_LIST_SUCCESS';
+export const GET_COURSE_LIST_ERROR = 'GET_COURSE_LIST_ERROR';
+
 export const GET_AFFILIATE_REPORT = 'GET_AFFILIATE_REPORT';
 export const GET_AFFILIATE_REPORT_SUCCESS = 'GET_AFFILIATE_REPORT_SUCCESS';
 export const GET_AFFILIATE_REPORT_ERROR = 'GET_AFFILIATE_REPORT_ERROR';
@@ -291,6 +296,38 @@ export const getProfBodyList = data => {
       })
       .catch(error => {
         dispatch(_getProfListError(error));
+      });
+  };
+};
+
+//Course List Data
+export const _requestCourseList = () => {
+  return {
+    type: GET_COURSE_LIST,
+  };
+};
+export const _getCourseListSuccess = data => {
+  return {
+    type: GET_COURSE_LIST_SUCCESS,
+    payload: data,
+  };
+};
+export const _getCourseListError = error => {
+  return {
+    type: GET_COURSE_LIST_ERROR,
+    error,
+  };
+};
+export const getCourseList = data => {
+  return dispatch => {
+    dispatch(_requestCourseList());
+    apiCall
+      .GetCourseList(data)
+      .then(data => {
+        dispatch(_getCourseListSuccess(data.data));
+      })
+      .catch(error => {
+        dispatch(_getCourseListError(error));
       });
   };
 };

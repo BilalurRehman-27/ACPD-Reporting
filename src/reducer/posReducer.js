@@ -20,6 +20,9 @@ import {
   GET_PROF_LIST,
   GET_PROF_LIST_SUCCESS,
   GET_PROF_LIST_ERROR,
+  GET_COURSE_LIST,
+  GET_COURSE_LIST_SUCCESS,
+  GET_COURSE_LIST_ERROR,
   GET_AUTHOR_LIST,
   GET_AUTHOR_LIST_SUCCESS,
   GET_AUTHOR_LIST_ERROR,
@@ -170,6 +173,23 @@ export default (state = posReducerDefaultState, action = {}) => {
         loading: false,
       };
     case GET_PROF_LIST_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+    case GET_COURSE_LIST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case GET_COURSE_LIST_SUCCESS:
+      return {
+        ...state,
+        courseList: action.payload,
+        loading: false,
+      };
+    case GET_COURSE_LIST_ERROR:
       return {
         ...state,
         error: action.error,

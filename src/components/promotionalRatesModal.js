@@ -50,8 +50,9 @@ class PromotionalRatesModal extends React.Component {
     return (
       <div>
         <Modal
-          title='Add Record'
+          title={isEdit ? 'Edit Record' : 'Add Record'}
           visible={visible}
+          closable={false}
           confirmLoading={confirmLoading}
           footer={[
             <>
