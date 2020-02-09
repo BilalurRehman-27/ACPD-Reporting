@@ -199,11 +199,15 @@ class InvoicesModal extends React.PureComponent {
                 initialValue: item.ItemName
               })(
                 <Select
-                  style={{ width: 200 }}
-                  placeholder="Select Sales Type"
+                showSearch
+                style={{ width: 200 }}
+                placeholder="Select Item Name"
+                filterOption={(input, option) =>
+                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
                 >
                   {courseList.map((value, index) => (
-                    <Option key={index} value={value.CourseID}>
+                    <Option key={index} value={value.CourseName}>
                       {value.CourseName}
                     </Option>
                   ))}
@@ -257,7 +261,7 @@ class InvoicesModal extends React.PureComponent {
   };
 
   addInvoices = keys => {
-    const { form,courseList } = this.props;
+    const { form, courseList } = this.props;
     const { getFieldDecorator } = form;
     getFieldDecorator("keys", { initialValue: [] });
     return keys.map((k, index) => (
@@ -270,11 +274,16 @@ class InvoicesModal extends React.PureComponent {
                   required: true,
                   message: "Please input your Item Name!"
                 }
-              ]
+              ],
+              initialValue: 'CourseName'
             })(
               <Select
+                showSearch
                 style={{ width: 200 }}
-                placeholder="Select Sales Type"
+                placeholder="Select Item Name"
+                filterOption={(input, option) =>
+                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
               >
                 {courseList.map((value, index) => (
                   <Option key={index} value={value.CourseID}>
@@ -293,7 +302,8 @@ class InvoicesModal extends React.PureComponent {
                   required: false,
                   message: "Please input your Units!"
                 }
-              ]
+              ],
+              initialValue: '1'
             })(<Input type="number" placeholder="Units" />)}
           </Form.Item>
         </Col>
@@ -305,7 +315,8 @@ class InvoicesModal extends React.PureComponent {
                   required: false,
                   message: "Please input your Orders!"
                 }
-              ]
+              ],
+              initialValue: '1'
             })(<Input type="number" placeholder="Orders" />)}
           </Form.Item>
         </Col>
@@ -459,7 +470,7 @@ class InvoicesModal extends React.PureComponent {
                           message: "Please input your Country!"
                         }
                       ],
-                      initialValue: "Afghanistan"
+                      initialValue: "United Kingdom"
                     })(
                       <Select
                         style={{ width: 170 }}

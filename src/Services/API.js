@@ -38,7 +38,7 @@ const apiCall = {
   GetMonthlyDirectSales(data) {
     return axios.get(
       DIRECT_SALES_BASE_URL +
-        `/GetDirectSales?month=${data.month}&year=${data.year}&currency=${data.currency}`,
+      `/GetDirectSales?month=${data.month}&year=${data.year}&currency=${data.currency}`,
       {
         method: 'GET',
         headers: {
@@ -53,17 +53,17 @@ const apiCall = {
       case '1':
         return axios.get(
           DIRECT_SALES_BASE_URL +
-            `/GetRevenueSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
+          `/GetRevenueSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
         );
       case '2':
         return axios.get(
           DIRECT_SALES_BASE_URL +
-            `/GetOrderSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
+          `/GetOrderSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
         );
       case '3':
         return axios.get(
           DIRECT_SALES_BASE_URL +
-            `/GetUnitSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
+          `/GetUnitSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
         );
       default:
         return null;
@@ -72,7 +72,7 @@ const apiCall = {
   GetInvoicesData(data) {
     return axios.get(
       INVOICES_BASE_URL +
-        `/GetInvoiceOrderData?month=${data.month}&year=${data.year}&currency=${data.currency}`
+      `/GetInvoiceOrderData?month=${data.month}&year=${data.year}&currency=${data.currency}`
     );
   },
   GetMonthlySummaryInvoiceSales(data) {
@@ -80,17 +80,17 @@ const apiCall = {
       case '1':
         return axios.get(
           INVOICES_BASE_URL +
-            `/GetRevenueSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
+          `/GetRevenueSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
         );
       case '2':
         return axios.get(
           INVOICES_BASE_URL +
-            `/GetOrderSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
+          `/GetOrderSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
         );
       case '3':
         return axios.get(
           INVOICES_BASE_URL +
-            `/GetUnitSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
+          `/GetUnitSummary?month=${data.month}&year=${data.year}&currency=${data.currency}`
         );
       default:
         return null;
@@ -100,7 +100,7 @@ const apiCall = {
     if (data) {
       return axios.get(
         BASE_URL +
-          `/api/AffiliateSales/GetAffiliateData?name=${data.name}&year=${data.year}`
+        `/api/AffiliateSales/GetAffiliateData?name=${data.name}&year=${data.year}`
       );
     } else {
       return axios.get(BASE_URL + `/api/AffiliateSales/GetAffiliateData`);
@@ -111,7 +111,7 @@ const apiCall = {
       const { frommonth, fromyear, tomonth, toyear } = data;
       return axios.get(
         BASE_URL +
-          `/api/AuthorRoyalty/GetAuthorRoyalty?frommonth=${frommonth}&fromyear=${fromyear}&tomonth=${tomonth}&toyear=${toyear}`
+        `/api/AuthorRoyalty/GetAuthorRoyalty?frommonth=${frommonth}&fromyear=${fromyear}&tomonth=${tomonth}&toyear=${toyear}`
       );
     } else {
       return axios.get(BASE_URL + `/api/AuthorRoyalty/GetAuthorRoyalty`);
@@ -136,21 +136,83 @@ const apiCall = {
     return axios.get(BASE_URL + `/api/lookup/GetCountryList`);
   },
   DownloadAffiliateReport(data) {
-    const downloadURL = BASE_URL + `api/CustomReports/DownloadReport`;
+    const downloadURL = BASE_URL + `/api/CustomReports/DownloadReport`;    
+    var fileType = 'application/vnd.ms-excel';
+    const { frommonth, fromyear, tomonth, toyear, name } = data;
+    var fileName = 'AffiliateReport' + fromyear + '-' + toyear + '.xlsx';
     if (data.hasOwnProperty('frommonth')) {
       return axios.get(
         downloadURL +
-          `?frommonth=${data.frommonth}&fromyear=${data.fromyear}&tomonth=${data.tomonth}&toyear=${data.toyear}&name=${data.name}`
-      );
+        `?frommonth=${frommonth}&fromyear=${fromyear}&tomonth=${tomonth}&toyear=${toyear}&name=${name}`
+        , {
+          params: {},
+          responseType: 'blob',
+          method: 'GET',
+          withCredentials: true,
+          credentials: 'include',
+          headers: {
+            Authorization: 'bearer ' + localStorage.Access_Token,
+            'Content-Type': 'application/json',
+          },
+        }).then(response => {
+          var blob = new Blob([response.data], { type: fileType });
+
+          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(blob, fileName);
+          } else {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+          }
+        })
+        .then(data => {
+          this.setState({
+            mainLoading: false,
+          });
+        })
+        .catch(console.log);
     } else {
       return axios.get(
         downloadURL +
-          `?fromdate=${moment(data.fromMonth).format(
-            'YYYY-MM-DD'
-          )}&todate=${moment(data.toMonth).format('YYYY-MM-DD')}&name=${
-            data.name
-          }`
-      );
+        `?fromdate=${moment(frommonth).format(
+          'YYYY-MM-DD'
+        )}&todate=${moment(tomonth).format('YYYY-MM-DD')}&name=${
+        name
+        }`,
+        {
+          params: {},
+          responseType: 'blob',
+          method: 'GET',
+          withCredentials: true,
+          credentials: 'include',
+          headers: {
+            Authorization: 'bearer ' + localStorage.Access_Token,
+            'Content-Type': 'application/json',
+          },
+        }
+      ).then(response => {
+        var blob = new Blob([response.data], { type: fileType });
+
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          window.navigator.msSaveOrOpenBlob(blob, fileName);
+        } else {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+        }
+      })
+        .then(data => {
+          this.setState({
+            mainLoading: false,
+          });
+        })
+        .catch(console.log);
     }
   },
   DownloadAuthorRoyaltyReport(data) {
@@ -161,7 +223,7 @@ const apiCall = {
       return axios
         .get(
           BASE_URL +
-            `/api/AuthorRoyalty/DownloadReport?frommonth=${frommonth}&fromyear=${fromyear}
+          `/api/AuthorRoyalty/DownloadReport?frommonth=${frommonth}&fromyear=${fromyear}
               &tomonth=${tomonth}&toyear=${toyear}`,
           {
             params: {},
@@ -209,7 +271,7 @@ const apiCall = {
       months[data.month] + '-' + data.year + '-' + data.currency + '.xlsx';
     axios(
       INVOICES_BASE_URL +
-        `/MonthlyReport?month=${data.month}&year=${data.year}&currency=${data.currency}`,
+      `/MonthlyReport?month=${data.month}&year=${data.year}&currency=${data.currency}`,
       {
         params: {},
         responseType: 'blob',
@@ -277,7 +339,7 @@ const apiCall = {
     const { InvoicesItems } = data;
     return axios.get(
       INVOICES_BASE_URL +
-        `/DeleteInvoice?rowNumber=${InvoicesItems[0].RowNumber}&saleTypeId=${InvoicesItems[0].SalesTypeId}&currencyId=${InvoicesItems[0].CurrencyId}&invoiceNumber=${InvoicesItems[0].InvoiceNumber}`
+      `/DeleteInvoice?rowNumber=${InvoicesItems[0].RowNumber}&saleTypeId=${InvoicesItems[0].SalesTypeId}&currencyId=${InvoicesItems[0].CurrencyId}&invoiceNumber=${InvoicesItems[0].InvoiceNumber}`
     );
   },
 
@@ -288,10 +350,10 @@ const apiCall = {
     window.open(downloadURL, '_blank');
     return axios.get(
       INVOICES_BASE_URL +
-        `/GetInvoiceOrderData?month=${data.month}&year=${data.year}&currency=${data.currency}`
+      `/GetInvoiceOrderData?month=${data.month}&year=${data.year}&currency=${data.currency}`
     );
   },
-  GetCourseList(){
+  GetCourseList() {
     return axios.get(BASE_URL + '/api/lookup/GetCourseList')
   }
 };

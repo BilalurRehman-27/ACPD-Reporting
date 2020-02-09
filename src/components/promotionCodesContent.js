@@ -28,38 +28,38 @@ class PromotionCodesContent extends React.Component {
       confirm,
       clearFilters,
     }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          ref={node => {
-            this.searchInput = node;
-          }}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={e =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            this.handleSearch(selectedKeys, confirm, dataIndex)
-          }
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
-        />
-        <Button
-          type='primary'
-          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-          size='small'
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
+        <div style={{ padding: 8 }}>
+          <Input
+            ref={node => {
+              this.searchInput = node;
+            }}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={e =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            onPressEnter={() =>
+              this.handleSearch(selectedKeys, confirm, dataIndex)
+            }
+            style={{ width: 188, marginBottom: 8, display: 'block' }}
+          />
+          <Button
+            type='primary'
+            onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+            size='small'
+            style={{ width: 90, marginRight: 8 }}
+          >
+            Search
         </Button>
-        <Button
-          onClick={() => this.handleReset(clearFilters)}
-          size='small'
-          style={{ width: 90 }}
-        >
-          Reset
+          <Button
+            onClick={() => this.handleReset(clearFilters)}
+            size='small'
+            style={{ width: 90 }}
+          >
+            Reset
         </Button>
-      </div>
-    ),
+        </div>
+      ),
     filterIcon: filtered => (
       <Icon type='search' style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
@@ -82,8 +82,8 @@ class PromotionCodesContent extends React.Component {
           textToHighlight={text.toString()}
         />
       ) : (
-        text
-      ),
+          text
+        ),
   });
 
   handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -119,11 +119,10 @@ class PromotionCodesContent extends React.Component {
     this.props.getPromotionCodesList();
   }
 
-  fetch = (params = {}) => {};
+  fetch = (params = {}) => { };
 
   componentDidUpdate(prevProps) {
     if (prevProps.list !== this.props.list) {
-      console.log(this.props.list);
       const { list } = this.props;
       const pagination = { ...this.state.pagination };
       // Read total count from server
@@ -223,7 +222,7 @@ class PromotionCodesContent extends React.Component {
             />
           )}
           {list.length > 0 && (
-            <div style={{ paddingBottom: 50 }}>
+            <div key={list.length} style={{ paddingBottom: 50 }}>
               <Button
                 onClick={this.handleAdd}
                 type='primary'
@@ -238,19 +237,17 @@ class PromotionCodesContent extends React.Component {
             </div>
           )}
           {list.length > 0 && (
-            <>
-              <Table
-                key={record => record.Id}
-                bordered
-                dataSource={list}
-                columns={columns}
-                loading={loading}
-                rowClassName='editable-row'
-                sorting={true}
-                pagination={pagination}
-                onChange={this.handleTableChange}
-              />
-            </>
+            <Table
+              key={record => record.Id}
+              bordered
+              dataSource={list}
+              columns={columns}
+              loading={loading}
+              rowClassName='editable-row'
+              sorting={true}
+              pagination={pagination}
+              onChange={this.handleTableChange}
+            />
           )}
         </Spin>
       </>
