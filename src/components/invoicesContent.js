@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment'
+import moment from 'moment';
 import { Table, Button, Spin, Form } from 'antd';
 import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
 import {
@@ -55,7 +55,7 @@ class InvoicesContent extends React.Component {
     this.props.getCourseList();
   }
 
-  fetch = (params = {}) => { };
+  fetch = (params = {}) => {};
 
   handleClick = async () => {
     const searchResult = await this.setSearchCriteria.current.validateFields();
@@ -119,7 +119,7 @@ class InvoicesContent extends React.Component {
       salesTypeList,
       countryList,
       profBodyList,
-      courseList
+      courseList,
     } = this.props;
     const {
       list,
@@ -134,7 +134,7 @@ class InvoicesContent extends React.Component {
         title: 'Action',
         width: '150px',
         render: record => (
-          <>
+          <div key={record.InvoiceNumber}>
             <Button
               size='small'
               type='primary'
@@ -150,10 +150,11 @@ class InvoicesContent extends React.Component {
             >
               Delete
             </Button>
-          </>
+          </div>
         ),
       },
       {
+        key: 'InvoiceNumber',
         title: 'Invoice Number',
         width: '150px',
         dataIndex: 'InvoiceNumber',
@@ -163,6 +164,7 @@ class InvoicesContent extends React.Component {
         },
       },
       {
+        key: 'FirstName',
         title: 'First Name',
         dataIndex: 'FirstName',
         sorter: true,
@@ -171,6 +173,7 @@ class InvoicesContent extends React.Component {
         },
       },
       {
+        key: 'LastName',
         title: 'Last Name',
         dataIndex: 'LastName',
         sorter: true,
@@ -179,22 +182,25 @@ class InvoicesContent extends React.Component {
         },
       },
       {
+        key: 'Revenue',
         title: 'Revenue',
         dataIndex: 'Revenue',
       },
       {
         title: 'SalesType',
         dataIndex: 'SalesTypeId',
+        key: 'SalesTypeId',
         render: saleType => {
           const salTypeValue =
             salesTypeList &&
             salesTypeList.filter(val => {
               return val.TypeId === saleType;
             });
-          return salTypeValue[0].Name;
+          return salTypeValue && salTypeValue[0].Name;
         },
       },
       {
+        key: 'OrderDate',
         title: 'Date',
         dataIndex: 'OrderDate',
         render: date => {
@@ -202,6 +208,7 @@ class InvoicesContent extends React.Component {
         },
       },
       {
+        key: 'ItemName',
         title: 'Item Name',
         dataIndex: 'InvoicesItems',
         render: items =>
@@ -261,18 +268,16 @@ class InvoicesContent extends React.Component {
               style={{ marginBottom: 16, float: 'left' }}
             >
               Add Record
-              </Button>
+            </Button>
           </div>
           {list.length > 0 && (
             <Table
-              bordered
               scroll={{ x: 1300 }}
-              key={record => record.InvoiceNumber}
-              rowKey={record => record.InvoiceNumber}
-              dataSource={list}
               columns={columns}
+              rowKey='InvoiceNumber'
+              dataSource={list}
               loading={loading}
-              rowClassName='editable-row'
+              onChange={this.handleTableChange}
             />
           )}
         </Spin>

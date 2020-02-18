@@ -1,10 +1,14 @@
-import React from "react";
-import { connect } from "react-redux";
-import { Table, Button, Spin, Input, Icon } from "antd";
+import React from 'react';
+import { connect } from 'react-redux';
+import { Table, Button, Spin, Input, Icon } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { getCurrencyRatesList, getYearList, getCurrencyList, } from "../actions/actions";
-import CurrencyRatesModal from "./currencyRatesModal";
-import { apiCall } from "../Services/API";
+import {
+  getCurrencyRatesList,
+  getYearList,
+  getCurrencyList,
+} from '../actions/actions';
+import CurrencyRatesModal from './currencyRatesModal';
+import { apiCall } from '../Services/API';
 
 class CurrencyRatesContent extends React.Component {
   constructor(props) {
@@ -16,7 +20,7 @@ class CurrencyRatesContent extends React.Component {
       editedObject: {},
       shouldPopupOpen: false,
       isEdit: false,
-      visible: false
+      visible: false,
     };
   }
 
@@ -27,38 +31,38 @@ class CurrencyRatesContent extends React.Component {
       confirm,
       clearFilters,
     }) => (
-        <div style={{ padding: 8 }}>
-          <Input
-            ref={node => {
-              this.searchInput = node;
-            }}
-            placeholder={`Search ${dataIndex}`}
-            value={selectedKeys[0]}
-            onChange={e =>
-              setSelectedKeys(e.target.value ? [e.target.value] : [])
-            }
-            onPressEnter={() =>
-              this.handleSearch(selectedKeys, confirm, dataIndex)
-            }
-            style={{ width: 188, marginBottom: 8, display: 'block' }}
-          />
-          <Button
-            type='primary'
-            onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}            
-            size='small'
-            style={{ width: 90, marginRight: 8 }}
-          >
-            Search
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            this.searchInput = node;
+          }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            this.handleSearch(selectedKeys, confirm, dataIndex)
+          }
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button
+          type='primary'
+          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          size='small'
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
         </Button>
-          <Button
-            onClick={() => this.handleReset(clearFilters)}
-            size='small'
-            style={{ width: 90 }}
-          >
-            Reset
+        <Button
+          onClick={() => this.handleReset(clearFilters)}
+          size='small'
+          style={{ width: 90 }}
+        >
+          Reset
         </Button>
-        </div>
-      ),
+      </div>
+    ),
     filterIcon: filtered => (
       <Icon type='search' style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
@@ -81,8 +85,8 @@ class CurrencyRatesContent extends React.Component {
           textToHighlight={text.toString()}
         />
       ) : (
-          text
-        ),
+        text
+      ),
   });
 
   handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -102,14 +106,14 @@ class CurrencyRatesContent extends React.Component {
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     this.setState({
-      pagination: pager
+      pagination: pager,
     });
     this.fetch({
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
       sortOrder: sorter.order,
-      ...filters
+      ...filters,
     });
   };
 
@@ -120,7 +124,7 @@ class CurrencyRatesContent extends React.Component {
     this.props.getCurrencyList();
   }
 
-  fetch = (params = {}) => { };
+  fetch = (params = {}) => {};
 
   componentDidUpdate(prevProps) {
     if (prevProps.list !== this.props.list) {
@@ -135,7 +139,7 @@ class CurrencyRatesContent extends React.Component {
         loading: false,
         list: list,
         mockData: list[list.length - 1],
-        pagination
+        pagination,
       });
     }
   }
@@ -145,7 +149,7 @@ class CurrencyRatesContent extends React.Component {
       editedObject: key,
       isEdit: true,
       visible: true,
-      shouldPopupOpen: true
+      shouldPopupOpen: true,
     });
   }
 
@@ -158,38 +162,38 @@ class CurrencyRatesContent extends React.Component {
     this.setState({
       shouldPopupOpen: true,
       visible: true,
-      isEdit: false
+      isEdit: false,
     });
   };
 
   getMonth = key => {
     switch (key) {
       case 1:
-        return "January";
+        return 'January';
       case 2:
-        return "February";
+        return 'February';
       case 3:
-        return "March";
+        return 'March';
       case 4:
-        return "April";
+        return 'April';
       case 5:
-        return "May";
+        return 'May';
       case 6:
-        return "June";
+        return 'June';
       case 7:
-        return "July";
+        return 'July';
       case 8:
-        return "August";
+        return 'August';
       case 9:
-        return "September";
+        return 'September';
       case 10:
-        return "October";
+        return 'October';
       case 11:
-        return "November";
+        return 'November';
       case 12:
-        return "December";
+        return 'December';
       default:
-        break;
+        return 'January';
     }
   };
 
@@ -198,7 +202,7 @@ class CurrencyRatesContent extends React.Component {
       this.props.getCurrencyRatesList();
     }
     this.setState({
-      visible: status
+      visible: status,
     });
   };
 
@@ -210,59 +214,60 @@ class CurrencyRatesContent extends React.Component {
       shouldPopupOpen,
       visible = false,
       editedObject,
-      isEdit
+      isEdit,
     } = this.state;
     const columns = [
       {
-        title: "Action",
+        title: 'Action',
         render: record => (
           <>
-            <Button type="primary" onClick={() => this.edit({ record })}>
+            <Button type='primary' onClick={() => this.edit({ record })}>
               Edit
-            </Button>{" "}
-            &nbsp;{" "}
-            <Button type="danger" onClick={() => this.delete(record)}>
+            </Button>{' '}
+            &nbsp;{' '}
+            <Button type='danger' onClick={() => this.delete(record)}>
               Delete
             </Button>
           </>
-        )
+        ),
       },
       {
-        title: "Month",
-        dataIndex: "Month",
-        key: "Month",
-        render: text => <span>{this.getMonth(text)}</span>
+        title: 'Month',
+        dataIndex: 'Month',
+        key: 'Month',
+        render: text => <span>{this.getMonth(text)}</span>,
       },
       {
-        title: "Year",
-        dataIndex: "Year",
-        key: "Year"
+        title: 'Year',
+        dataIndex: 'Year',
+        key: 'Year',
+        ...this.getColumnSearchProps('Year'),
       },
       {
-        title: "Currency",
-        dataIndex: "CurrencyCode",
+        title: 'Currency',
+        dataIndex: 'CurrencyCode',
         render: text => <span>{text}</span>,
         ...this.getColumnSearchProps('CurrencyCode'),
       },
       {
-        title: "Rate",
-        dataIndex: "Rate",
+        title: 'Rate',
+        dataIndex: 'Rate',
         render: text => <span>{text}</span>,
         ...this.getColumnSearchProps('Rate'),
       },
       {
-        title: "Quarter",
-        dataIndex: "Quarter",
+        title: 'Quarter',
+        dataIndex: 'Quarter',
         render: text => <span>{text}</span>,
         ...this.getColumnSearchProps('Quarter'),
-      }
+      },
     ];
     return (
       <>
         <h1>Currency Rates</h1>
         <hr />
         <Spin
-          tip="Please wait !!! While we get the content..."
+          tip='Please wait !!! While we get the content...'
           spinning={loading}
         >
           {shouldPopupOpen && (
@@ -280,14 +285,14 @@ class CurrencyRatesContent extends React.Component {
             <div style={{ paddingBottom: 50 }}>
               <Button
                 onClick={this.handleAdd}
-                type="primary"
+                type='primary'
                 style={{
                   marginBottom: 16,
-                  float: "left",
-                  backgroundColor: "green"
+                  float: 'left',
+                  backgroundColor: 'green',
                 }}
               >
-                Add Record{" "}
+                Add Record{' '}
               </Button>
             </div>
           )}
@@ -325,11 +330,11 @@ const mapStateToProps = state => {
       currencyList: posReducer.currencyList ? posReducer.currencyList : null,
       list: posReducer.currencyRatesList,
       loading: posReducer.loading,
-      error: posReducer.error
+      error: posReducer.error,
     };
   return {
     list: null,
-    loading: posReducer.loading
+    loading: posReducer.loading,
   };
 };
 const mapDispatchToProps = dispatch => {

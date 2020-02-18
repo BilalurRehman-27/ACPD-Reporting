@@ -1,9 +1,13 @@
-import React from "react";
+import React from 'react';
 import { connect } from 'react-redux';
 import { apiCall } from '../Services/API';
-import { Table, Button, Spin, Icon, message } from "antd";
+import { Table, Button, Spin, Icon, message } from 'antd';
 import MonthlySaleSearchCriteria from './monthlySalesSearchCriteria';
-import { getSummaryDirectSales, getYearList, getCurrencyList } from '../actions/actions'
+import {
+  getSummaryDirectSales,
+  getYearList,
+  getCurrencyList,
+} from '../actions/actions';
 
 class SummaryDirectSalesContent extends React.Component {
   constructor(props) {
@@ -12,7 +16,7 @@ class SummaryDirectSalesContent extends React.Component {
       list: [],
       pagination: {},
       loading: false,
-      searchText: "",
+      searchText: '',
     };
     this.setSearchCriteria = React.createRef();
   }
@@ -21,14 +25,14 @@ class SummaryDirectSalesContent extends React.Component {
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     this.setState({
-      pagination: pager
+      pagination: pager,
     });
     this.fetch({
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
       sortOrder: sorter.order,
-      ...filters
+      ...filters,
     });
   };
 
@@ -38,17 +42,17 @@ class SummaryDirectSalesContent extends React.Component {
     this.props.getCurrencyList();
   }
 
-  fetch = (params = {}) => { };
+  fetch = (params = {}) => {};
 
   handleClick = async () => {
     const searchResult = await this.setSearchCriteria.current.validateFields();
     this.props.getSummaryDirectSales(searchResult);
-  }
+  };
 
   componentDidUpdate(prevProps) {
     if (prevProps.list !== this.props.list) {
       console.log(this.props.list);
-      const { list } = this.props
+      const { list } = this.props;
       const pagination = { ...this.state.pagination };
       // Read total count from server
       // pagination.total = data.totalCount;
@@ -56,108 +60,108 @@ class SummaryDirectSalesContent extends React.Component {
       this.setState({
         loading: false,
         list: list,
-        pagination
+        pagination,
       });
     }
   }
 
-
   handleExport = async () => {
     const searchResult = await this.setSearchCriteria.current.validateFields();
     apiCall.DownloadDirectSalesMonthlyReport(searchResult);
-    message.success("Done");
-  }
+    message.success('Done');
+  };
 
   render() {
     const { loading, currencyList, yearList } = this.props;
     const { list, pagination } = this.state;
     const columns = [
       {
-        title: "Country",
-        dataIndex: "Country",
+        title: 'Country',
+        dataIndex: 'Country',
       },
       {
-        title: "AAT",
-        dataIndex: "AAT",
-        render: (value) => {
+        title: 'AAT',
+        dataIndex: 'AAT',
+        render: value => {
           return value ? value : '-';
-        }
+        },
       },
       {
-        title: "ACCA",
-        dataIndex: "ACCA",
-        render: (value) => {
+        title: 'ACCA',
+        dataIndex: 'ACCA',
+        render: value => {
           return value ? value : '-';
-        }
+        },
       },
       {
-        title: "AIA",
-        dataIndex: "AIA",
-        render: (value) => {
+        title: 'AIA',
+        dataIndex: 'AIA',
+        render: value => {
           return value ? value : '-';
-        }
+        },
       },
       {
-        title: "CA ANZ",
-        dataIndex: "CA ANZ",
-        render: (value) => {
+        title: 'CA ANZ',
+        dataIndex: 'CA ANZ',
+        render: value => {
           return value ? value : '-';
-        }
+        },
       },
       {
-        title: "CAI",
-        dataIndex: "CAI",
-        render: (value) => {
+        title: 'CAI',
+        dataIndex: 'CAI',
+        render: value => {
           return value ? value : '-';
-        }
+        },
       },
       {
-        title: "CAIT",
-        dataIndex: "CAIT",
-        render: (value) => {
+        title: 'CAIT',
+        dataIndex: 'CAIT',
+        render: value => {
           return value ? value : '-';
-        }
+        },
       },
       {
-        title: "ICSA",
-        dataIndex: "ICSA",
-        render: (value) => {
+        title: 'ICSA',
+        dataIndex: 'ICSA',
+        render: value => {
           return value ? value : '-';
-        }
+        },
       },
       {
-        title: "IFA",
-        dataIndex: "IFA",
-        render: (value) => {
+        title: 'IFA',
+        dataIndex: 'IFA',
+        render: value => {
           return value ? value : '-';
-        }
+        },
       },
       {
-        title: "No Code",
-        dataIndex: "No Code",
-        render: (value) => {
+        title: 'No Code',
+        dataIndex: 'No Code',
+        render: value => {
           return value ? value : '-';
-        }
+        },
       },
       {
-        title: "Other",
-        dataIndex: "Other",
-        render: (value) => {
+        title: 'Other',
+        dataIndex: 'Other',
+        render: value => {
           return value ? value : '-';
-        }
+        },
       },
     ];
     return (
       <>
         <h1>Summary Direct Sales</h1>
-        <div style={{ 'textAlign': 'right' }}>
+        <div style={{ textAlign: 'right' }}>
           <Button
-            type="ghost"
-            htmlType="submit"
-            style={{ "backgroundColor": "#4c4c4c33" }}
+            type='ghost'
+            htmlType='submit'
+            style={{ backgroundColor: '#4c4c4c33' }}
             onClick={this.handleExport}
-            title='Export to Excel'>
-            <Icon type="file-excel" theme="filled" />
+            title='Export to Excel'
+          >
+            <Icon type='file-excel' theme='filled' />
             Download Excel
           </Button>
         </div>
@@ -170,31 +174,36 @@ class SummaryDirectSalesContent extends React.Component {
             ref={this.setSearchCriteria}
             yearList={yearList}
             currencyList={currencyList}
-            isSummaryContent={true} />
+            isSummaryContent={true}
+          />
           <div style={{ marginLeft: '85%', marginBottom: '2%' }}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              onClick={this.handleClick}>
+            <Button type='primary' htmlType='submit' onClick={this.handleClick}>
               Search
-          </Button>
+            </Button>
           </div>
-          {list.length > 0 && <Table
-            columns={columns}
-            rowKey={record => record.OrderId}
-            dataSource={list}
-            pagination={pagination}
-            loading={loading}
-            onChange={this.handleTableChange}
-          />}
+          {list.length > 0 && (
+            <Table
+              columns={columns}
+              rowKey={record => record.Country}
+              dataSource={list}
+              pagination={pagination}
+              loading={loading}
+              onChange={this.handleTableChange}
+            />
+          )}
         </Spin>
       </>
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { posReducer } = state;
-  if (posReducer !== null && posReducer.data !== null && posReducer.yearsList && posReducer.currencyList)
+  if (
+    posReducer !== null &&
+    posReducer.data !== null &&
+    posReducer.yearsList &&
+    posReducer.currencyList
+  )
     return {
       list: posReducer.data,
       yearList: posReducer.yearsList ? posReducer.yearsList : null,
@@ -208,10 +217,14 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getSummaryDirectSales: searchCriteria => dispatch(getSummaryDirectSales(searchCriteria)),
+    getSummaryDirectSales: searchCriteria =>
+      dispatch(getSummaryDirectSales(searchCriteria)),
     getYearList: () => dispatch(getYearList()),
     getCurrencyList: () => dispatch(getCurrencyList()),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SummaryDirectSalesContent);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SummaryDirectSalesContent);

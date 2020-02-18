@@ -48,6 +48,7 @@ class AffiliateReportContent extends React.Component {
   handleExport = async () => {
     const searchResult = await this.setSearchCriteria.current.validateFields();
     await this.props.downloadAffiliateReport(searchResult);
+    message.warning('Please wait. Your file is being downloaded');
   };
   fetch = (params = {}) => {
     console.log('params:', params);
@@ -64,12 +65,10 @@ class AffiliateReportContent extends React.Component {
       const { list, yearList, profList, error } = this.props;
       const pagination = { ...this.state.pagination };
       pagination.total = list.length;
-      if (error)
-        message.warning(
-          'There was an error while downloading. Please try again later'
-        );
-      // else {
-      //   message.info('Please wait... Your file will be downloaded shortly');
+      // if (!error && list) {
+      //   message.success('File downloaded successfully');
+      // } else {
+      //   message.warn('There was some error. Please try again');
       // }
       this.setState({
         loading: false,

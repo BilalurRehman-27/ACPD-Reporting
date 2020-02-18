@@ -120,7 +120,7 @@ class AuthorRoyaltiesContent extends React.Component {
               Search
             </Button>
           </div>
-          {list.length > 0 && (
+          {list && list.length > 0 && (
             <>
               <Table
                 columns={columns}

@@ -184,7 +184,7 @@ class SummaryInvoicesContent extends React.Component {
           {list.length > 0 && (
             <Table
               columns={columns}
-              rowKey={record => record.OrderId}
+              rowKey={record => record.Country}
               dataSource={list}
               pagination={pagination}
               loading={loading}

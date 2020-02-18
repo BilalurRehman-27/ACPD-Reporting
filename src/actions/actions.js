@@ -30,7 +30,6 @@ export const GET_PROF_LIST = 'GET_PROF_LIST';
 export const GET_PROF_LIST_SUCCESS = 'GET_PROF_LIST_SUCCESS';
 export const GET_PROF_LIST_ERROR = 'GET_PROF_LIST_ERROR';
 
-
 export const GET_COURSE_LIST = 'GET_COURSE_LIST';
 export const GET_COURSE_LIST_SUCCESS = 'GET_COURSE_LIST_SUCCESS';
 export const GET_COURSE_LIST_ERROR = 'GET_COURSE_LIST_ERROR';
@@ -388,7 +387,7 @@ export const downloadAffiliateReport = data => {
     apiCall
       .DownloadAffiliateReport(data)
       .then(data => {
-        dispatch(_getDownloadAffiliateReportSuccess(data.data));
+        dispatch(_getDownloadAffiliateReportSuccess(data.size));
       })
       .catch(error => {
         dispatch(_getDownloadAffiliateReportError(error));
