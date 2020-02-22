@@ -103,7 +103,12 @@ class InvoicesModal extends React.PureComponent {
               ItemName: name,
               Units: values.units[index],
               Orders: values.orders[index],
-              ItemCode: values.itemCode ? values.itemCode[index] : null,
+              ItemCode:
+                values.InvoicesItems &&
+                values.InvoicesItems[index] &&
+                values.InvoicesItems[index].ItemCode
+                  ? values.InvoicesItems[index].ItemCode
+                  : '',
             };
             invoiceItemsList.push(invoiceItem);
             return invoiceItem;
