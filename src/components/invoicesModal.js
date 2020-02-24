@@ -320,7 +320,7 @@ class InvoicesModal extends React.PureComponent {
                   message: 'Please input your Item Name!',
                 },
               ],
-              initialValue: 'CourseName',
+              initialValue: courseList[0].CourseName,
             })(
               <Select
                 showSearch
@@ -333,7 +333,7 @@ class InvoicesModal extends React.PureComponent {
                 }
               >
                 {courseList.map((value, index) => (
-                  <Option key={index} value={value.CourseID}>
+                  <Option key={index} value={value.CourseNaeme}>
                     {value.CourseName}
                   </Option>
                 ))}
