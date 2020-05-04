@@ -334,7 +334,7 @@ class InvoicesModal extends React.PureComponent {
                 }
               >
                 {courseList.map((value, index) => (
-                  <Option key={index} value={value.CourseName}>
+                  <Option key={index} value={value.CourseNaeme}>
                     {value.CourseName}
                   </Option>
                 ))}
